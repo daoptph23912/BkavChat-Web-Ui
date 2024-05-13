@@ -1,0 +1,197 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.user-list {
+    flex: 15%;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.chat-area {
+    flex: 70%;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.user-list h1,
+.chat-area h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333333;
+}
+
+.user-list ul,
+.chat-area ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+.user-list li {
+    padding: 20px;
+    margin-left: 5px;
+}
+
+.chat-area li {
+    padding: 10px;
+    border-bottom: 1px solid #dddddd;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.user-list a:hover,
+.chat-area li:hover {
+    background-color: #f9f9f9;
+}
+
+.chat-area li {
+    text-align: right;
+}
+
+.chat-area li.sender {
+    text-align: left;
+}
+
+.input-area {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: calc(100% - 27%);
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.input-area input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #b0b1b3;
+    color: #ffffff;
+    border: none;
+    border-radius:50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.input-area button:hover {
+    background-color: #0056b3;
+}
+.input-area img{
+    width: 25px;
+    height: 20px;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+}
+
+#searchUser {
+    width: calc(130% - 20px);
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.chat-right {
+    margin-top: 0px;
+}
+
+.chat-left {
+    margin-top: 40px;
+}
+
+.user-chat {
+    list-style-type: none;
+}
+
+.user-chat li {
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.user-chat li:last-child {
+    border-bottom: none;
+}
+
+.user-chat li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.user-chat li a:hover {
+    color: #0066cc;
+}
+
+.user-chat li:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+.img-menu{
+    width: 30px;
+    height: 20px;
+    margin-right: 5px;
+}   
+.dropbtn {
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: auto;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 300px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
