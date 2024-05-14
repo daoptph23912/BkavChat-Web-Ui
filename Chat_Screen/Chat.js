@@ -1,23 +1,50 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Lấy danh sách người dùng từ localStorage
-  const userListData = JSON.parse(localStorage.getItem("userData"));
-  const userChatList = document.querySelector(".user-chat");
-  // Hiển thị danh sách người dùng
-  if (userListData && userListData.length > 0) {
-    userListData.forEach(function (user) {
-      const listItem = document.createElement("li");
-      const link = document.createElement("a");
-      link.textContent = user.fullName; // Tên người dùng
-      link.setAttribute("href", "#"); // Link tùy chỉnh
-      listItem.appendChild(link);
-      userChatList.appendChild(listItem);
-    });
-  } else {
-    const noUserMessage = document.createElement("li");
-    noUserMessage.textContent = "Không có người dùng nào.";
-    userChatList.appendChild(noUserMessage);
+document.addEventListener("DOMContentLoaded", async function () {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("token chưa lưu vào localStorage");
+    }
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    const response = await fetch(
+      "http://10.2.44.52:8888/api/message/list-friend",
+      requestOptions
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log(data.data);
+
+    const userChatList = document.querySelector(".user-chat");
+    if (data && data.length > 0) {
+      data.forEach(function (friend) {
+        const listItem = document.createElement("li");
+        const link = document.createElement("a");
+        link.textContent = friend.FriendID;
+        link.setAttribute("href", "#");
+        listItem.appendChild(link);
+        userChatList.appendChild(listItem);
+      });
+    } else {
+      const noUserMessage = document.createElement("li");
+      noUserMessage.textContent = "Không có người bạn nào.";
+      userChatList.appendChild(noUserMessage);
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    const userChatList = document.querySelector(".user-chat");
+    const errorMessage = document.createElement("li");
+    errorMessage.textContent = "Đã xảy ra lỗi khi lấy danh sách người dùng.";
+    userChatList.appendChild(errorMessage);
   }
 });
+
 document.addEventListener("DOMContentLoaded", function () {
   // Lấy tên người dùng đã đăng nhập từ localStorage
   const loggedInUserName = localStorage.getItem("loggedInUserName");
