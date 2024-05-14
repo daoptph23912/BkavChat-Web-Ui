@@ -53,14 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-
-    // Lấy dữ liệu từ các trường nhập
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
-    // Tạo một đối tượng chứa thông tin đăng nhập
     const loginData = {
-      Username: email, // Sử dụng email làm tên đăng nhập
+      Username: email,
       Password: password,
     };
 
