@@ -51,11 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Hiển thị tên người dùng trong phần chat area
   const chatTitle = document.querySelector(".chat-right");
   if (loggedInUserName) {
-    chatTitle.textContent = loggedInUserName; // Hiển thị tên người dùng nếu tồn tại
+    chatTitle.textContent = loggedInUserName;
   } else {
-    chatTitle.textContent = "Người dùng"; // Hiển thị một giá trị mặc định nếu không có tên người dùng
+    chatTitle.textContent = "Bạn chưa đăng nhập";
   }
 });
+
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchUser");
   const userList = document.querySelector(".user-chat");
@@ -75,71 +76,71 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Hiển thị tin nhắn đã lưu trong localStorage khi trang được tải lại
-  displaySavedMessages();
+// document.addEventListener("DOMContentLoaded", function () {
+//   // Hiển thị tin nhắn đã lưu trong localStorage khi trang được tải lại
+//   displaySavedMessages();
 
-  const messageInput = document.getElementById("messageInput");
-  const sendMessageBtn = document.getElementById("sendMessageBtn");
+//   const messageInput = document.getElementById("messageInput");
+//   const sendMessageBtn = document.getElementById("sendMessageBtn");
 
-  sendMessageBtn.addEventListener("click", function () {
-    const message = messageInput.value.trim();
-    if (message !== "") {
-      sendMessage(message);
-      messageInput.value = ""; // Xóa nội dung của input sau khi gửi
-    } else {
-      alert("Vui lòng nhập tin nhắn trước khi gửi.");
-    }
-  });
-});
+//   sendMessageBtn.addEventListener("click", function () {
+//     const message = messageInput.value.trim();
+//     if (message !== "") {
+//       sendMessage(message);
+//       messageInput.value = ""; // Xóa nội dung của input sau khi gửi
+//     } else {
+//       alert("Vui lòng nhập tin nhắn trước khi gửi.");
+//     }
+//   });
+// });
 
-function sendMessage(message) {
-  // Tạo một đối tượng tin nhắn với các thông tin cần thiết
-  const newMessage = {
-    user: getLoggedInUserName(), // Lấy tên người dùng đã đăng nhập
-    content: message,
-    timestamp: new Date().toLocaleString(), // Thời gian gửi tin nhắn
-  };
+// function sendMessage(message) {
+//   // Tạo một đối tượng tin nhắn với các thông tin cần thiết
+//   const newMessage = {
+//     user: getLoggedInUserName(), // Lấy tên người dùng đã đăng nhập
+//     content: message,
+//     timestamp: new Date().toLocaleString(), // Thời gian gửi tin nhắn
+//   };
 
-  // Lấy danh sách tin nhắn đã lưu từ localStorage (nếu có)
-  let messageList = JSON.parse(localStorage.getItem("messages")) || [];
+//   // Lấy danh sách tin nhắn đã lưu từ localStorage (nếu có)
+//   let messageList = JSON.parse(localStorage.getItem("messages")) || [];
 
-  // Thêm tin nhắn mới vào danh sách
-  messageList.push(newMessage);
+//   // Thêm tin nhắn mới vào danh sách
+//   messageList.push(newMessage);
 
-  // Lưu danh sách tin nhắn đã cập nhật vào localStorage
-  localStorage.setItem("messages", JSON.stringify(messageList));
+//   // Lưu danh sách tin nhắn đã cập nhật vào localStorage
+//   localStorage.setItem("messages", JSON.stringify(messageList));
 
-  // Hiển thị tin nhắn mới trong phần chat
-  displayMessage(newMessage);
-}
+//   // Hiển thị tin nhắn mới trong phần chat
+//   displayMessage(newMessage);
+// }
 
-function displayMessage(message) {
-  const chatArea = document.querySelector(".chat-area");
-  const messageItem = document.createElement("div");
-  messageItem.classList.add("message");
+// function displayMessage(message) {
+//   const chatArea = document.querySelector(".chat-area");
+//   const messageItem = document.createElement("div");
+//   messageItem.classList.add("message");
 
-  // Hiển thị thông tin tin nhắn
-  messageItem.innerHTML = `
-<span class="user">${message.user}:</span>
-<span class="content">${message.content}</span>
-<span class="timestamp">${message.timestamp}</span>
-`;
+//   // Hiển thị thông tin tin nhắn
+//   messageItem.innerHTML = `
+// <span class="user">${message.user}:</span>
+// <span class="content">${message.content}</span>
+// <span class="timestamp">${message.timestamp}</span>
+// `;
 
-  // Thêm tin nhắn vào phần chat
-  chatArea.appendChild(messageItem);
-}
+//   // Thêm tin nhắn vào phần chat
+//   chatArea.appendChild(messageItem);
+// }
 
-function getLoggedInUserName() {
-  return localStorage.getItem("loggedInUserName");
-}
+// function getLoggedInUserName() {
+//   return localStorage.getItem("loggedInUserName");
+// }
 
-function displaySavedMessages() {
-  const savedMessages = JSON.parse(localStorage.getItem("messages")) || [];
-  savedMessages.forEach((message) => {
-    displayMessage(message);
-  });
-}
+// function displaySavedMessages() {
+//   const savedMessages = JSON.parse(localStorage.getItem("messages")) || [];
+//   savedMessages.forEach((message) => {
+//     displayMessage(message);
+//   });
+// }
 document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("fileInputTrigger")
@@ -177,3 +178,77 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Lắng nghe sự kiện click trên nút "Gửi"
+  const sendMessageBtn = document.getElementById("sendMessageBtn");
+  sendMessageBtn.addEventListener("click", function () {
+    // Lấy nội dung tin nhắn từ trường input
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value.trim();
+    if (message !== "") {
+      // Gọi hàm gửi tin nhắn qua API
+      sendMessageToAPI(message);
+      // Xóa nội dung của input sau khi gửi
+      messageInput.value = "";
+    } else {
+      alert("Vui lòng nhập tin nhắn trước khi gửi.");
+    }
+  });
+});
+// Hàm gửi tin nhắn qua API
+function sendMessageToAPI(message) {
+  const token = getToken(); // Lấy token xác thực từ nơi bạn lưu trữ
+  const friendID = "661509e1a6041ace7f2f4cee"; // ID của người nhận
+  const url = "http://10.2.44.52:8888/api/message/send-message";
+
+  // Tạo FormData để gửi dữ liệu dạng form
+  const formData = new FormData();
+  formData.append("FriendID", friendID);
+  formData.append("Content", message);
+
+  // Gửi tin nhắn qua API
+  fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 1) {
+        // Hiển thị tin nhắn trên giao diện
+        displaySentMessage(message, data.data);
+      } else {
+        alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+    });
+}
+
+// Hàm hiển thị tin nhắn đã gửi lên giao diện
+function displaySentMessage(message, responseData) {
+  const chatArea = document.querySelector(".chat-area");
+
+  const messageItem = document.createElement("div");
+  messageItem.classList.add("message");
+  messageItem.classList.add("sender-messag  e"); // Tin nhắn của người gửi
+
+  // Hiển thị thông tin tin nhắn từ phản hồi của API
+  const content = responseData.Content;
+  const timestamp = new Date(responseData.CreatedAt).toLocaleTimeString();
+
+  messageItem.innerHTML = `
+      <img src="../images/hero-image-feature-img.jpg" class="avatar" alt="Sender Avatar">
+      <div class="content">
+          ${content}
+          <span class="timestamp">${timestamp}</span>
+      </div>
+  `;
+
+  chatArea.appendChild(messageItem);
+}

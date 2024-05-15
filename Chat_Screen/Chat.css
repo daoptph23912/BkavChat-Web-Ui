@@ -70,7 +70,7 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
-    width: calc(100% - 27%);
+    width: calc(100% - 25%);
     background-color: #ffffff;
     padding: 20px;
     display: flex;
@@ -87,28 +87,44 @@ body {
 }
 
 .input-area button {
-    padding: 10px 20px;
     margin-left: 10px;
     background-color: #b0b1b3;
     color: #ffffff;
     border: none;
-    border-radius:50%;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 40px;
+    height: 40px;
+    border-radius: 30px;
 }
 
 .input-area button:hover {
     background-color: #0056b3;
 }
 .input-area img{
-    width: 25px;
+    width: 20px;
     height: 20px;
+    display: flex;
+    padding-left: 5px;
 }
 
 .search-container {
     position: relative;
     display: inline-block;
 }
+.search-placehohoder{
+ position: relative;
+ padding-left: 30px;
+}
+.search-container .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* Điều chỉnh vị trí của icon theo ý muốn */
+    transform: translateY(-50%);
+    width: 20px; /* Điều chỉnh kích thước của icon theo ý muốn */
+    height: 20px;
+}
+
 
 #searchUser {
     width: calc(130% - 20px);
@@ -165,15 +181,16 @@ body {
     margin-right: 5px;
 }   
 .dropbtn {
-    border: none;
     cursor: pointer;
-    width: 30px;
-    height: auto;
+    width: 25px;
+    height: 15px;
+    display: flex;
+    padding-right: 10px;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
+.menu-search {
+    display: flex;
+    align-items: center;
 }
 
 .dropdown-content {
@@ -195,3 +212,62 @@ body {
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
+.input-container {
+    position: relative;
+    display: inline-block;
+    width: 95%;
+}
+
+.input-container input {
+    padding-right: 30px; /* Đảm bảo có đủ không gian cho icon */
+    width: 98%;
+}
+
+.input-container .icon {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 20px; /* Điều chỉnh kích thước của icon theo ý muốn */
+    height: 20px;
+}
+.chat-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    display: flex;
+    align-items: flex-start; /* Tin nhắn căn trái */
+    margin-bottom: 10px;
+}
+
+.sender-message {
+    justify-content: flex-end; 
+}
+
+.receiver-message {
+    justify-content: flex-start; /* Tin nhắn của người nhận căn trái */
+}
+
+.avatar {   
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 5px;
+    margin-top: 3px;
+}
+
+.content {
+    background-color: #e8e8e8; /* Màu nền tin nhắn */
+    color: #333; /* Màu chữ tin nhắn */
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #040202;
+    margin-top: 5px;
+}
+
