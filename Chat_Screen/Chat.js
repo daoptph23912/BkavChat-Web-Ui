@@ -95,23 +95,6 @@ function toggleTheme() {
     themeIcon.src = "moon.png";
   }
 }
-
-//Chức năng chọn file
-document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("fileInputTrigger")
-    .addEventListener("dblclick", function () {
-      document.getElementById("fileInput").click();
-    });
-  document
-    .getElementById("fileInput")
-    .addEventListener("change", function (event) {
-      const files = event.target.files;
-      for (let i = 0; i < files.length; i++) {
-        alert("Bạn đã chọn tệp: " + files[i].name);
-      }
-    });
-});
 //Chức năng menu
 document.addEventListener("DOMContentLoaded", function () {
   var dropdownMenu = document.getElementById("dropdownMenu");
@@ -192,19 +175,76 @@ function displaySentMessage(message, responseData) {
   `;
   chatArea.appendChild(messageItem);
 }
-//ICon Message
-document.addEventListener("DOMContentLoaded", function () {
-  const emojiButton = document.getElementById("emojiButton");
-  const emojiPicker = new EmojiPicker({ autoHide: false }); // Tạo một Emoji Picker với tùy chọn autoHide: false
 
-  // Khi nhấp vào nút "Chọn biểu tượng", hiển thị Emoji Picker
-  emojiButton.addEventListener("click", function () {
-    emojiPicker.togglePicker(emojiButton);
+//Icon Picker
+document.addEventListener("DOMContentLoaded", function () {
+  const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
+  const emojiSelector = document.getElementById("emojiSelector");
+  const emojiList = document.getElementById("emojiList");
+  const emojiSearch = document.getElementById("emojiSearch");
+  const messageInput = document.getElementById("messageInput");
+  const fileInputTrigger = document.getElementById("fileInputTrigger");
+  emojiSelectorIcon.addEventListener("click", () => {
+    emojiSelector.classList.toggle("active");
   });
 
-  // Khi người dùng chọn một biểu tượng, thêm nó vào ô nhập tin nhắn
-  emojiPicker.on("emoji", function (emoji) {
-    const messageInput = document.getElementById("messageInput");
-    messageInput.value += emoji.native; // Thêm biểu tượng vào ô nhập tin nhắn
+  fetch(
+    "https://emoji-api.com/emojis?access_key=0ab3b516c667a2f2156ee4b4000f34b7a9e1c8c6"
+  )
+    .then((res) => res.json())
+    .then((data) => loadEmoji(data));
+
+  function loadEmoji(data) {
+    data.forEach((emoji) => {
+      let li = document.createElement("h2");
+      li.setAttribute("emoji-name", emoji.slug);
+      li.textContent = emoji.character;
+      li.addEventListener("click", () => {
+        messageInput.value += emoji.character; // Thêm icon vào nội dung tin nhắn
+      });
+      emojiList.appendChild(li);
+    });
+  }
+
+  emojiSearch.addEventListener("keyup", (e) => {
+    let value = e.target.value;
+    let emojis = document.querySelectorAll("#emojiList h2");
+    emojis.forEach((emoji) => {
+      if (emoji.getAttribute("emoji-name").toLowerCase().includes(value)) {
+        emoji.style.display = "flex";
+      } else {
+        emoji.style.display = "none";
+      }
+    });
+  });
+  //check enter gửi tin nhắn
+  messageInput.addEventListener("keyup", (e) => {
+    if (e.keyCode === 13) {
+      let message = messageInput.value.trim();
+      if (message !== "") {
+        console.log("Đã gửi tin nhắn:", message);
+        messageInput.value = "";
+      }
+    }
+  });
+  //Chức năng chèn ảnh vào tin nhắn
+  fileInputTrigger.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const image = document.createElement("img");
+        image.src = event.target.result;
+        messageInput.insertAdjacentHTML(
+          "beforebegin",
+          `<img src="${event.target.result}" style="width: auto; height: auto;">`
+        );
+      };
+      reader.readAsDataURL(file);
+    }
   });
 });

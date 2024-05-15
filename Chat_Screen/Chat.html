@@ -8,9 +8,6 @@
   <link rel="stylesheet" href="Chat.css" />
   <script src="Chat.js"></script>
   <title>Message</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.css"
-    integrity="sha512-0Nyh7Nf4sn+T48aTb6VFkhJe0FzzcOlqqZMahy/rhZ8Ii5Q9ZXG/1CbunUuEbfgxqsQfWXjnErKZosDSHVKQhQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body class="light-mode">
@@ -107,24 +104,24 @@
     </div>
   </div>
   <div class="input-area">
-    <img style="margin-right: 5px; cursor: pointer " src="../images/file.png" id="fileInputTrigger" />
+    <img style="margin-right: 5px; cursor: pointer" src="../images/file.png" id="fileInputTrigger" />
     <div class="input-container">
       <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." />
-      <textarea name="cscs" id="textareaaaa"></textarea>
-      <img id="emojiButton" src="../images/icon.png" class="icon" alt="Icon" />
+      <div class="utility-group">
+        <li class="emoji-selector" id="emojiSelector">
+          <div class="input-container-icon">
+            <input id="emojiSearch" type="text" placeholder="Search...">
+          </div>
+          <ul id="emojiList" class="emoji-list"></ul>
+        </li>
+        <img id="emojiSelectorIcon" src="../images/icon.png" class="icon" alt="Icon" />
+      </div>
     </div>
     <button id="sendMessageBtn">
       <img class="img-send" src="../images/send.png" />
     </button>
     <input type="file" id="fileInput" style="display: none" />
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.js"
-    integrity="sha512-aGWPnmdBhJ0leVHhQaRASgb0InV/Z2BWsscdj1Vwt29Oic91wECPixuXsWESpFfCcYPLfOlBZzN2nqQdMxlGTQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script>
-    $('#textareaaaa').emoijioneArea()  
-  </script>
 </body>
 
 </html>

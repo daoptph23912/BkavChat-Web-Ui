@@ -253,6 +253,7 @@ body.light-mode {
 .input-container input {
     padding-right: 30px; /* Đảm bảo có đủ không gian cho icon */
     width: 98%;
+    /* margin-top: 33px; */
 }
 
 .input-container .icon {
@@ -306,4 +307,70 @@ body.light-mode {
     background-color: #ffffff;
     color: #000000; 
 }
-/* day-night */
+    .emoji-selector{
+        background-color: white;
+        border-radius: 1rem;
+        cursor: default;
+        display: block;
+        padding: 0;
+        border: 1px solid #eee;
+        position: absolute;
+        bottom: 0%;
+        width: 325px;
+        height: 350px;
+        z-index: 5;
+        opacity: 0;
+        pointer-events: none;
+        overflow: auto;
+        transition: bottom 0.3s ease, opacity 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        flex-direction: column;
+        justify-content: flex-end;
+        right: 5px;
+    }
+    .emoji-selector.active {
+        bottom: 110%;
+        opacity: 1;
+        pointer-events: all;
+    }
+    .emoji-list {
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding: 0 1rem 1rem;
+        border-radius: 0;
+    }
+    .emoji-list li {
+        height: 35px;
+        width: 35px;
+        border-radius: 0.25rem;
+        font-size: 1.5rem;
+    }
+    .icon:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+       
+    }
+    .emoji-list h2:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+       
+    }
+   .input-container-icon {
+        /* padding: 1rem; */
+        background-color: white;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+     .input-container-icon input {
+        border-radius: 25px;
+        border: 1px solid #eee; 
+        width: 90%;
+        outline: none;
+        margin-top: 10px;
+        margin-left: 5px;   
+      }
+  
+  
