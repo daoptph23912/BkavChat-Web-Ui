@@ -1,8 +1,10 @@
+//Chức năng icon xóa - ẩn hiện password
 const deleteFullName = document.getElementById("deleteFullName");
 const fullNameInput = document.getElementById("fullName");
 deleteFullName.addEventListener("click", function () {
   fullNameInput.value = "";
 });
+
 const deleteEmail = document.getElementById("deleteEmail");
 const emailInput = document.getElementById("email");
 deleteEmail.addEventListener("click", function () {
@@ -26,6 +28,8 @@ function togglePassword(inputField) {
     inputField.type = "password";
   }
 }
+
+//Chức năng đăng ký tài khoản
 const errorConfirmPw = document.getElementById("error-confirmPw");
 const errorUser = document.getElementById("error-User");
 document.addEventListener("DOMContentLoaded", async function () {
@@ -66,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     } catch (err) {
       console.error("Fetch error:", err);
-       errorUser.textContent="Tài khoản bị trùng vui lòng nhập lại "
+      errorUser.textContent = "Tài khoản bị trùng vui lòng nhập lại ";
       // alert("Vui lòng nhập lại tài khoản , tài khoản đã bị trùng.");
     }
   });

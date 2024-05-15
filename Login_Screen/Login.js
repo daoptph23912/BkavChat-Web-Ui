@@ -1,3 +1,4 @@
+//Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");
 deleteIcon.addEventListener("click", function () {
   const emailInput = document.getElementById("email");
@@ -12,7 +13,7 @@ togglePassword.addEventListener("click", function () {
     passwordInput.type = "password";
   }
 });
-
+//Chức năng đăng nhập
 const errorEmail = document.getElementById("error-email");
 const errorPassword = document.getElementById("error-password");
 document.addEventListener("DOMContentLoaded", async function () {
@@ -33,16 +34,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         },
         body: JSON.stringify(userData),
       });
-
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Máy chủ không phản hồi ");
       }
-
       const data = await response.json();
-
       if (data.status === 1) {
         alert("Đăng nhập thành công!");
-        localStorage.setItem("loggedInUserName", data.data.FullName);
+        localStorage.setItem("loggedInUserName", data.data.FullName); //lưu FullName vào localStorage
         localStorage.setItem("token", data.data.token);
         window.location.href = "/Chat_Screen/Chat.html";
       } else {
@@ -51,7 +49,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (err) {
       console.error("Fetch error:", err);
       errorEmail.textContent = "Tên người dùng hoặc mật khẩu không đúng";
-
       // alert("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     }
   });

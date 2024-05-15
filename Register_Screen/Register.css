@@ -74,11 +74,8 @@
     width: 1px;
     height: 1px;
     border-radius: 50%;
-    /* Tạo hình tròn */
     background-color: #4461f2;
-    /* Màu nền của hình tròn */
     box-shadow: 0 0 100px 100px rgba(68, 97, 242, 0.3);
-    /* Tạo shadow với độ mờ và màu tương tự như nền */
   }
 
   .content > .container > .description > .text-des > .content-text-des {
