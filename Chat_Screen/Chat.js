@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 //Hiển thị danh sách người dùng
+const chatArea = document.querySelector(".chat-area");
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const token = localStorage.getItem("token");
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       requestOptions
     );
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error("Lỗi server không phản hồi ");
     }
     const data = await response.json();
     console.log(data.data);
@@ -56,6 +57,39 @@ document.addEventListener("DOMContentLoaded", async function () {
         const link = document.createElement("a");
         link.textContent = friend.FriendID;
         link.setAttribute("href", "#");
+        //Lắng nghe trong mỗi liên kết
+        link.addEventListener("click", async function (event) {
+          event.preventDefault();
+          try {
+            const userInfoResponse = await fetch(
+              "http://10.2.44.52:8888/api/user/info",
+              {
+                method: "GET",
+                headers: myHeaders,
+                redirect: "follow",
+              }
+            );
+            if (!userInfoResponse.ok) {
+              throw new Error("Lỗi khi lấy thông tin người dùng");
+            }
+            const userInfo = await userInfoResponse.json();
+            // Mở cửa sổ chat với thông tin người dùng
+            openChatWindow(userInfo.data);
+            // Thêm tin nhắn mẫu vào khu vực chat
+            const chatArea = document.querySelector(".chat-area");
+            chatArea.innerHTML = `
+              <h1 class="chat-right">Người nhận: ${userInfo.data.FullName}</h1>
+              <div class="message sender-message">
+                <div class="content-sender">
+                  Mai bạn có rảnh không ?
+                  <span class="timestamp-sender">10:53</span>
+                </div>
+              </div>
+            `;
+          } catch (error) {
+            console.error("Lỗi khi tải dữ liệu:", error);
+          }
+        });
         listItem.appendChild(link);
         userChatList.appendChild(listItem);
       });
@@ -72,6 +106,26 @@ document.addEventListener("DOMContentLoaded", async function () {
     userChatList.appendChild(errorMessage);
   }
 });
+function addSampleMessage() {
+  const senderMessage = document.createElement("div");
+  senderMessage.classList.add("message", "sender-message");
+  senderMessage.innerHTML = `
+    <div class="content-sender">
+      Mai bạn có rảnh không ?
+      <span class="timestamp-sender">10:53</span>
+    </div>
+  `;
+  chatArea.appendChild(senderMessage);
+}
+function openChatWindow(userInfo) {
+  const chatWindow = document.querySelector(".chat-window");
+  chatWindow.innerHTML = `
+    <h1 class="chat-right">Recipient: ${userInfo.FullName}</h1>
+    <img src="${userInfo.Avatar}" alt="Avatar">
+    <p>Username: ${userInfo.Username}</p>
+  `;
+  addSampleMessage();
+}
 //Đăng xuất
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.querySelector("#logout");

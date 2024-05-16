@@ -185,7 +185,7 @@ body.light-mode {
 
 .user-chat li {
     padding: 20px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #000000;
 }
 
 .user-chat li:last-child {
@@ -291,16 +291,26 @@ body.light-mode {
     margin-top: 3px;
 }
 
-.content {
-    background-color: #e8e8e8; /* Màu nền tin nhắn */
+.content-receiver {
+    background-color: #bebebe; /* Màu nền tin nhắn */
     color: #333; /* Màu chữ tin nhắn */
     padding: 10px;
     border-radius: 10px;
 }
-
-.timestamp {
+.content-sender {
+    background-color: #1d87de;
+    color: #ffffff; 
+    padding: 10px;
+    border-radius: 10px;
+}
+.timestamp-receiver {
     font-size: 12px;
-    color: #040202;
+    color: #000000;
+    margin-top: 5px;
+}
+.timestamp-sender {
+    font-size: 12px;
+    color: #ffffff;
     margin-top: 5px;
 }
 .night-day{
