@@ -6,6 +6,18 @@ deleteIcon.addEventListener("click", function () {
 });
 const togglePassword = document.getElementById("togglePassword");
 const passwordInput = document.getElementById("password");
+const eyeIcon = togglePassword.querySelector("img");
+
+// togglePassword.addEventListener("click", function () {
+//   if (passwordInput.type === "password") {
+//     passwordInput.type = "text";
+//     eyeIcon.src =
+//       "../images/png-transparent-eye-eyes-password-security-show-password-essential-icon.png";
+//   } else {
+//     passwordInput.type = "password";
+//     eyeIcon.src = "../images/eye.png";
+//   }
+// });
 togglePassword.addEventListener("click", function () {
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
