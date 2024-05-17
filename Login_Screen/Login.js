@@ -1,3 +1,4 @@
+const LOGIN = "http://10.2.44.52:8888/api/auth/login";
 //Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");
 deleteIcon.addEventListener("click", function () {
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       Password: Password,
     };
     try {
-      const response = await fetch("http://10.2.44.52:8888/api/auth/login", {
+      const response = await fetch(LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

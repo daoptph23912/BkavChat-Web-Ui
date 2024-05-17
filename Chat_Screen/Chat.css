@@ -50,7 +50,7 @@ body.light-mode {
     overflow-y: auto;
 }
 
-.chat-area {
+.chat-window {
     flex: 70%;
     padding: 20px;
     background-color: #ffffff;

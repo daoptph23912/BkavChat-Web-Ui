@@ -1,3 +1,6 @@
+const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
+const INFOUSER = "http://10.2.44.52:8888/api/user/info";
+const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
 //lấy tên người dùng lưu ở localStorage
 document.addEventListener("DOMContentLoaded", function () {
   const loggedInUserName = localStorage.getItem("loggedInUserName");
@@ -25,113 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-//Hiển thị danh sách người dùng
-const chatArea = document.querySelector(".chat-area");
-document.addEventListener("DOMContentLoaded", async function () {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      throw new Error("token chưa lưu vào localStorage");
-    }
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-    const response = await fetch(
-      "http://10.2.44.52:8888/api/message/list-friend",
-      requestOptions
-    );
-    if (!response.ok) {
-      throw new Error("Lỗi server không phản hồi ");
-    }
-    const data = await response.json();
-    console.log(data.data);
-
-    const userChatList = document.querySelector(".user-chat");
-    if (data && data.length > 0) {
-      data.forEach(function (friend) {
-        const listItem = document.createElement("li");
-        const link = document.createElement("a");
-        link.textContent = friend.FriendID;
-        link.setAttribute("href", "#");
-        //Lắng nghe trong mỗi liên kết
-        link.addEventListener("click", async function (event) {
-          event.preventDefault();
-          try {
-            const userInfoResponse = await fetch(
-              "http://10.2.44.52:8888/api/user/info",
-              {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow",
-              }
-            );
-            if (!userInfoResponse.ok) {
-              throw new Error("Lỗi khi lấy thông tin người dùng");
-            }
-            const userInfo = await userInfoResponse.json();
-            // Mở cửa sổ chat với thông tin người dùng
-            openChatWindow(userInfo.data);
-            // Thêm tin nhắn mẫu vào khu vực chat
-            const chatArea = document.querySelector(".chat-area");
-            chatArea.innerHTML = `
-              <h1 class="chat-right">Người nhận: ${userInfo.data.FullName}</h1>
-              <div class="message sender-message">
-                <div class="content-sender">
-                  Mai bạn có rảnh không ?
-                  <span class="timestamp-sender">10:53</span>
-                </div>
-              </div>
-            `;
-          } catch (error) {
-            console.error("Lỗi khi tải dữ liệu:", error);
-          }
-        });
-        listItem.appendChild(link);
-        userChatList.appendChild(listItem);
-      });
-    } else {
-      const noUserMessage = document.createElement("li");
-      noUserMessage.textContent = "Không có người bạn nào.";
-      userChatList.appendChild(noUserMessage);
-    }
-  } catch (error) {
-    console.error("Fetch error:", error);
-    const userChatList = document.querySelector(".user-chat");
-    const errorMessage = document.createElement("li");
-    errorMessage.textContent = "Đã xảy ra lỗi khi lấy danh sách người dùng.";
-    userChatList.appendChild(errorMessage);
-  }
-});
-function addSampleMessage() {
-  const senderMessage = document.createElement("div");
-  senderMessage.classList.add("message", "sender-message");
-  senderMessage.innerHTML = `
-    <div class="content-sender">
-      Mai bạn có rảnh không ?
-      <span class="timestamp-sender">10:53</span>
-    </div>
-  `;
-  chatArea.appendChild(senderMessage);
-}
-function openChatWindow(userInfo) {
-  const chatWindow = document.querySelector(".chat-window");
-  chatWindow.innerHTML = `
-    <h1 class="chat-right">Recipient: ${userInfo.FullName}</h1>
-    <img src="${userInfo.Avatar}" alt="Avatar">
-    <p>Username: ${userInfo.Username}</p>
-  `;
-  addSampleMessage();
-}
 //Đăng xuất
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.querySelector("#logout");
   logoutLink.addEventListener("click", function (event) {
     event.preventDefault();
-    // Xóa token khỏi Local Storage
     localStorage.removeItem("token");
     window.location.href = "../Login_Screen/Login.html";
   });
@@ -164,72 +65,243 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-//Chức năng kiểm tra kiểm tra đã gửi tin nhắn chưa
-document.addEventListener("DOMContentLoaded", function () {
-  const sendMessageBtn = document.getElementById("sendMessageBtn");
-  sendMessageBtn.addEventListener("click", function () {
-    const messageInput = document.getElementById("messageInput");
-    const message = messageInput.value.trim();
-    if (message !== "") {
-      // Gọi hàm gửi tin nhắn qua API
-      sendMessageToAPI(message);
-      // Xóa nội dung của input sau khi gửi
-      messageInput.value = "";
-    } else {
-      alert("Vui lòng nhập tin nhắn trước khi gửi.");
+//Hiển thị danh sách người dùng
+document.addEventListener("DOMContentLoaded", async function () {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("token chưa lưu vào localStorage");
     }
-  });
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    const response = await fetch(
+      "http://10.2.44.52:8888/api/message/list-friend",
+      requestOptions
+    );
+    if (!response.ok) {
+      throw new Error("Lỗi server không phản hồi ");
+    }
+    const data = await response.json();
+    console.log(data.data);
+    const userChatList = document.querySelector(".user-chat");
+    if (data.data && data.data.length > 0) {
+      data.data.forEach(function (friend) {
+        const listItem = document.createElement("li");
+        const link = document.createElement("a");
+        link.textContent = friend.FullName;
+        link.setAttribute("href", "#");
+        link.style.flexGrow = "1";
+
+        const avatarWrapper = document.createElement("div");
+        avatarWrapper.style.position = "relative";
+        avatarWrapper.style.display = "flex";
+        avatarWrapper.style.alignItems = "center";
+
+        const avatar = document.createElement("img");
+        avatar.src = `http://10.2.44.52:8888${friend.Avatar}`;
+        avatar.style.width = "40px";
+        avatar.style.height = "40px";
+        avatar.style.borderRadius = "20px";
+        avatar.style.marginRight = "10px";
+
+        const statusDot = document.createElement("span");
+        statusDot.style.width = "10px";
+        statusDot.style.height = "10px";
+        statusDot.style.borderRadius = "50%"; 
+        statusDot.style.position = "absolute";
+        statusDot.style.bottom = "5px";
+        statusDot.style.right = "5px";
+        statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
+
+        avatarWrapper.appendChild(avatar);
+        avatarWrapper.appendChild(statusDot);
+
+        link.addEventListener("click", async function (event) {
+          event.preventDefault();
+          try {
+            const userInfoResponse = await fetch(
+              "http://10.2.44.52:8888/api/user/info",
+              {
+                method: "GET",
+                headers: myHeaders,
+                redirect: "follow",
+              }
+            );
+            if (!userInfoResponse.ok) {
+              throw new Error("Lỗi khi lấy thông tin người dùng");
+            }
+            const userInfo = await userInfoResponse.json();
+            openChatWindow(friend);
+          } catch (error) {
+            console.error("Lỗi khi tải dữ liệu:", error);
+          }
+        });
+        listItem.appendChild(avatarWrapper);
+        listItem.appendChild(link);
+        userChatList.appendChild(listItem);
+      });
+    } else {
+      const noUserMessage = document.createElement("li");
+      noUserMessage.textContent = "Không có người bạn nào.";
+      userChatList.appendChild(noUserMessage);
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    const userChatList = document.querySelector(".user-chat");
+    const errorMessage = document.createElement("li");
+    errorMessage.textContent = "Đã xảy ra lỗi khi lấy danh sách người dùng.";
+    userChatList.appendChild(errorMessage);
+  }
 });
-// Chức năng gửi tin nhắn
-function sendMessageToAPI(message) {
-  const token = getToken();
-  const friendID = "661509e1a6041ace7f2f4cee";
-  const url = "http://10.2.44.52:8888/api/message/send-message";
-  // Tạo form
+
+async function openChatWindow(friend) {
+  document.getElementById("recipientName").textContent = `${friend.FullName}`;
+  document.getElementById("recipientAvatar").src = `http://10.2.44.52:8888${friend.Avatar}`;
+
+  // const messagesContainer = document.getElementById("messages");
+  // messagesContainer.innerHTML = ""; 
+
+  // try {
+  //     const token = localStorage.getItem("token");
+  //     const myHeaders = new Headers();
+  //     myHeaders.append("Authorization", `Bearer ${token}`);
+  //     const response = await fetch(`http://10.2.44.52:8888/api/message/list/${friend.FriendID}`, {
+  //         method: "GET",
+  //         headers: myHeaders,
+  //     });
+  //     if (!response.ok) {
+  //         throw new Error("Lỗi khi lấy tin nhắn.");
+  //     }
+  //     const data = await response.json();
+  //     if (data.data && data.data.length > 0) {
+  //         data.data.forEach((message) => {
+  //             const messageElement = document.createElement("div");
+  //             messageElement.textContent = `${message.sender}: ${message.content}`;
+  //             messagesContainer.appendChild(messageElement);
+  //         });
+  //     } else {
+  //         const noMessagesElement = document.createElement("p");
+  //         noMessagesElement.textContent = "Chưa có tin nhắn nào.";
+  //         messagesContainer.appendChild(noMessagesElement);
+  //     }
+  // } catch (error) {
+  //     console.error("Lỗi khi tải tin nhắn:", error);
+  //     const errorElement = document.createElement("p");
+  //     errorElement.textContent = "Đã xảy ra lỗi khi tải tin nhắn.";
+  //     messagesContainer.appendChild(errorElement);
+  // }
+
+  const sendMessageBtn= document.getElementById('sendMessageBtn')
+  sendMessageBtn.addEventListener("click", function () {
+      const messageInput = document.getElementById("messageInput");
+      sendMessageToAPI(friend.FriendID, messageInput.value);
+      messageInput.innerText("")
+  })
+}
+// function fetchMessages(friendID) {
+//   const token = localStorage.getItem("token");
+//   fetch(`http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`, {
+//       method: "GET",
+//       headers: {
+//           Authorization: `Bearer ${token}`
+//       }
+//   })
+//   .then(response => response.json())
+//   .then(data => {
+//       if (data.status === 1 && data.data) {
+//           displayMessages(data.data);
+//       } else {
+//           console.log("No messages found");
+//       }
+//   })
+//   .catch(error => console.error("Error fetching messages:", error));
+// }
+
+
+function sendMessageToAPI(friendID, message) {
+  const token = localStorage.getItem("token");
   const formData = new FormData();
   formData.append("FriendID", friendID);
   formData.append("Content", message);
-  fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
+  const fileInput = document.getElementById("fileInput");
+  if (fileInput && fileInput.files.length > 0) {
+      formData.append("files", fileInput.files[0]);
+  }
+  fetch("http://10.2.44.52:8888/api/message/send-message", {
+      method: "POST",
+      headers: {
+          Authorization: `Bearer ${token}`,
+      },
+      body: formData,
   })
-    .then((response) => response.json())
-    .then((data) => {
+  .then(response => response.json())
+  .then(data => {
       if (data.status === 1) {
-        // Hiển thị tin nhắn trên giao diện
-        displaySentMessage(message, data.data);
+          const messageElement = document.createElement("div");
+          messageElement.classList.add("message", "sender-message");
+          messageElement.innerHTML = `
+              <div class="content-sender">
+                  <p>${message}</p>
+                  <span class="timestamp-sender">${new Date().toLocaleString()}</span>
+              </div>
+          `;
+          document.getElementById("messagesContainer").appendChild(messageElement);
       } else {
-        alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+          alert("Đã xảy ra lỗi khi gửi tin nhắn.");
       }
-    })
-    .catch((error) => {
+  })
+  .catch(error => {
       console.error("Error:", error);
       alert("Đã xảy ra lỗi khi gửi tin nhắn.");
-    });
+  });
 }
 
-// Hàm hiển thị tin nhắn đã gửi lên giao diện
-function displaySentMessage(message, responseData) {
-  const chatArea = document.querySelector(".chat-area");
-  const messageItem = document.createElement("div");
-  messageItem.classList.add("message");
-  messageItem.classList.add("sender-message");
-  // Hiển thị thông tin tin nhắn từ phản hồi của API
-  const content = responseData.Content;
-  const timestamp = new Date(responseData.CreatedAt).toLocaleTimeString();
-  messageItem.innerHTML = `
-      <img src="../images/hero-image-feature-img.jpg" class="avatar" alt="Sender Avatar">
-      <div class="content">
-          ${content}
-          <span class="timestamp">${timestamp}</span>
-      </div>
-  `;
-  chatArea.appendChild(messageItem);
-}
 
+function displayMessages(messages) {
+  const messagesContainer = document.getElementById("messagesContainer");
+  messages.forEach(message => {
+      const messageElement = document.createElement("div");
+      messageElement.classList.add("message");
+      if (message.isSender) {
+          messageElement.classList.add("sender-message");
+          messageElement.innerHTML = `
+              <div class="content-sender">
+                  <p>${message.content}</p>
+                  <span class="timestamp-sender">${new Date(message.timestamp).toLocaleString()}</span>
+              </div>
+          `;
+      } else {
+          messageElement.classList.add("receiver-message");
+          messageElement.innerHTML = `
+              <img src="../images/hero-image-feature-img.jpg" class="avatar" alt="Receiver Avatar">
+              <div class="content-receiver">
+                  <p>${message.content}</p>
+                  <span class="timestamp-receiver">${new Date(message.timestamp).toLocaleString()}</span>
+              </div>
+          `;
+      }
+      messagesContainer.appendChild(messageElement);
+  });
+}
+//Chức năng kiểm tra kiểm tra đã gửi tin nhắn chưa
+// document.addEventListener("DOMContentLoaded", function () {
+//   const sendMessageBtn = document.getElementById("sendMessageBtn");
+//   sendMessageBtn.addEventListener("click", function () {
+//     const messageInput = document.getElementById("messageInput");
+//     const message = messageInput.value.trim();
+//     if (message !== "") {
+//       sendMessageToAPI(message);
+//       messageInput.value = "";
+//     } else {
+//       alert("Vui lòng nhập tin nhắn trước khi gửi.");
+//     }
+//   });
+// });
 //Icon Picker
 document.addEventListener("DOMContentLoaded", function () {
   const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
