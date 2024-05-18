@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (loggedInUserName) {
     chatTitle.textContent = loggedInUserName;
   } else {
-    chatTitle.textContent = "Bạn chưa đăng nhập";
+    chatTitle.textContent = "Undefined";
   }
 });
 //chức năng tìm kiếm người dùng
@@ -29,14 +29,24 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 //Đăng xuất
+// document.addEventListener("DOMContentLoaded", function () {
+//   const logoutLink = document.querySelector("#logout");
+//   logoutLink.addEventListener("click", function (event) {
+//     event.preventDefault();
+//     localStorage.removeItem("token");
+//     window.location.href = "../Login_Screen/Login.html";
+//   });
+// });
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.querySelector("#logout");
   logoutLink.addEventListener("click", function (event) {
     event.preventDefault();
     localStorage.removeItem("token");
-    window.location.href = "../Login_Screen/Login.html";
+    window.history.pushState({}, "", "../Login_Screen/Login.html");
+    window.location.replace("../Login_Screen/Login.html");
   });
 });
+
 //Giao diện sáng tối
 function toggleTheme() {
   const body = document.body;
@@ -95,27 +105,32 @@ document.addEventListener("DOMContentLoaded", async function () {
         const link = document.createElement("a");
         link.textContent = friend.FullName;
         link.setAttribute("href", "#");
-        link.style.flexGrow = "1";
-
+        link.style.flexGrow = "1"; // Đặt flexGrow để chiếm không gian còn lại
+        link.style.textDecoration = "none"; // Loại bỏ gạch chân mặc định của liên kết
+        link.style.color = "inherit"; // Giữ nguyên màu sắc của văn bản liên kết
         const avatarWrapper = document.createElement("div");
         avatarWrapper.style.position = "relative";
         avatarWrapper.style.display = "flex";
         avatarWrapper.style.alignItems = "center";
 
         const avatar = document.createElement("img");
-        avatar.src = `http://10.2.44.52:8888${friend.Avatar}`;
+        // avatar.src = `http://10.2.44.52:8888${friend.Avatar}`;
+        avatar.src = `../images/icon-user.png`;
         avatar.style.width = "40px";
         avatar.style.height = "40px";
         avatar.style.borderRadius = "20px";
         avatar.style.marginRight = "10px";
+        avatar.style.backgroundColor = "#3498db";
+        avatar.style.objectFit = "cover";
 
         const statusDot = document.createElement("span");
         statusDot.style.width = "10px";
         statusDot.style.height = "10px";
-        statusDot.style.borderRadius = "50%"; 
+        statusDot.style.borderRadius = "50%";
         statusDot.style.position = "absolute";
         statusDot.style.bottom = "5px";
         statusDot.style.right = "5px";
+        statusDot.style.transform = "translate(25%, -25%)";
         statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
 
         avatarWrapper.appendChild(avatar);
@@ -136,6 +151,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               throw new Error("Lỗi khi lấy thông tin người dùng");
             }
             const userInfo = await userInfoResponse.json();
+            console.log(userInfo);
             openChatWindow(friend);
           } catch (error) {
             console.error("Lỗi khi tải dữ liệu:", error);
@@ -158,70 +174,135 @@ document.addEventListener("DOMContentLoaded", async function () {
     userChatList.appendChild(errorMessage);
   }
 });
-
+document.addEventListener("DOMContentLoaded", function () {
+  const initialMessage = document.getElementById("initialMessage");
+  const inputArea = document.getElementById("inputArea");
+  const recipientInfo = document.getElementById("recipientInfo");
+  initialMessage.style.display = "block";
+  inputArea.style.display = "none"; //none
+  recipientInfo.style.display = "none";
+});
 async function openChatWindow(friend) {
   document.getElementById("recipientName").textContent = `${friend.FullName}`;
-  document.getElementById("recipientAvatar").src = `http://10.2.44.52:8888${friend.Avatar}`;
+  document.getElementById("recipientAvatar").src = `../images/icon-user.png`;
+  // ).src = `http://10.2.44.52:8888${friend.Avatar}`;
+  document.getElementById("recipientInfo").style.display = "flex";
+  //chưa sửa
+  const messagesContainer = document.getElementById("messagesContainer");
+  const initialMessage = document.getElementById("initialMessage");
+  const inputArea = document.getElementById("inputArea");
 
-  // const messagesContainer = document.getElementById("messages");
-  // messagesContainer.innerHTML = ""; 
+  initialMessage.style.display = "none";
+  messagesContainer.innerHTML = "";
+  inputArea.style.display = "flex";
+  // Thêm trạng thái vào ảnh đại diện
+  const statusDot = document.createElement("span");
+  statusDot.style.width = "10px";
+  statusDot.style.height = "10px";
+  statusDot.style.borderRadius = "50%";
+  statusDot.style.position = "absolute";
+  statusDot.style.bottom = "5px";
+  statusDot.style.right = "5px";
+  statusDot.style.transform = "translate(25%, -25%)";
+  statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
 
-  // try {
-  //     const token = localStorage.getItem("token");
-  //     const myHeaders = new Headers();
-  //     myHeaders.append("Authorization", `Bearer ${token}`);
-  //     const response = await fetch(`http://10.2.44.52:8888/api/message/list/${friend.FriendID}`, {
-  //         method: "GET",
-  //         headers: myHeaders,
-  //     });
-  //     if (!response.ok) {
-  //         throw new Error("Lỗi khi lấy tin nhắn.");
-  //     }
-  //     const data = await response.json();
-  //     if (data.data && data.data.length > 0) {
-  //         data.data.forEach((message) => {
-  //             const messageElement = document.createElement("div");
-  //             messageElement.textContent = `${message.sender}: ${message.content}`;
-  //             messagesContainer.appendChild(messageElement);
-  //         });
-  //     } else {
-  //         const noMessagesElement = document.createElement("p");
-  //         noMessagesElement.textContent = "Chưa có tin nhắn nào.";
-  //         messagesContainer.appendChild(noMessagesElement);
-  //     }
-  // } catch (error) {
-  //     console.error("Lỗi khi tải tin nhắn:", error);
-  //     const errorElement = document.createElement("p");
-  //     errorElement.textContent = "Đã xảy ra lỗi khi tải tin nhắn.";
-  //     messagesContainer.appendChild(errorElement);
-  // }
+  // Đảm bảo không có trạng thái trùng lặp
+  const recipientAvatarWrapper = recipientAvatar.parentElement;
+  const existingStatusDot = recipientAvatarWrapper.querySelector("span");
+  if (existingStatusDot) {
+    recipientAvatarWrapper.removeChild(existingStatusDot);
+  }
+  recipientAvatarWrapper.appendChild(statusDot);
+  try {
+    const token = localStorage.getItem("token");
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    const response = await fetch(
+      `http://10.2.44.52:8888/api/message/get-message?FriendID=${friend.FriendID}`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Lỗi khi lấy tin nhắn.");
+    }
+    const data = await response.json();
+    if (data.status === 1 && data.data.length > 0) {
+      displayMessages(data.data);
+    } else {
+      displayNoMessages();
+    }
+  } catch (error) {
+    console.error("Lỗi khi tải tin nhắn:", error);
+    displayErrorMessage();
+  }
 
-  const sendMessageBtn= document.getElementById('sendMessageBtn')
-  sendMessageBtn.addEventListener("click", function () {
+  // đã sửa
+  document
+    .getElementById("sendMessageBtn")
+    .addEventListener("click", function () {
       const messageInput = document.getElementById("messageInput");
       sendMessageToAPI(friend.FriendID, messageInput.value);
-      messageInput.innerText("")
-  })
+      messageInput.value = "";
+    });
 }
-// function fetchMessages(friendID) {
-//   const token = localStorage.getItem("token");
-//   fetch(`http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`, {
-//       method: "GET",
-//       headers: {
-//           Authorization: `Bearer ${token}`
-//       }
-//   })
-//   .then(response => response.json())
-//   .then(data => {
-//       if (data.status === 1 && data.data) {
-//           displayMessages(data.data);
-//       } else {
-//           console.log("No messages found");
-//       }
-//   })
-//   .catch(error => console.error("Error fetching messages:", error));
-// }
+const recipientAvatar = document.getElementById("recipientAvatar");
+recipientAvatar.style.position = "relative";
+recipientAvatar.style.display = "inline-block";
+//them
+function displayMessages(messages) {
+  const messagesContainer = document.getElementById("messagesContainer");
 
+  messages.forEach((message) => {
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
+    let statusText = "";
+    if (message.isSend === 0) {
+      statusText = "Đã gửi";
+    } else if (message.isSend === 1) {
+      statusText = "Đã đọc";
+    }
+    if (message.MessageType === 1) {
+      messageElement.classList.add("sender-message");
+      messageElement.innerHTML = `
+        <div class="content-sender">
+          <p>${message.Content || ""}</p>
+          <span class="timestamp-sender">${new Date(
+            message.CreatedAt
+          ).toLocaleString()}</span>
+          <span class="status">${statusText}</span>
+        </div>
+      `;
+    } else {
+      messageElement.classList.add("receiver-message");
+      messageElement.innerHTML = `
+        <img src="../images/hero-image-feature-img.jpg" class="avatar" alt="Receiver Avatar">
+        <div class="content-receiver">
+          <p>${message.Content || ""}</p>
+          <span class="timestamp-receiver">${new Date(
+            message.CreatedAt
+          ).toLocaleString()}</span>
+          <span class="status">${statusText}</span>
+        </div>
+      `;
+    }
+
+    messagesContainer.appendChild(messageElement);
+  });
+}
+function displayErrorMessage() {
+  const messagesContainer = document.getElementById("messagesContainer");
+  const errorElement = document.createElement("p");
+  errorElement.textContent = "Đã xảy ra lỗi khi tải tin nhắn.";
+  messagesContainer.appendChild(errorElement);
+}
+function displayNoMessages() {
+  const messagesContainer = document.getElementById("messagesContainer");
+  const noMessagesElement = document.createElement("p");
+  noMessagesElement.textContent = "Chưa có tin nhắn nào.";
+  messagesContainer.appendChild(noMessagesElement);
+}
 
 function sendMessageToAPI(friendID, message) {
   const token = localStorage.getItem("token");
@@ -230,79 +311,74 @@ function sendMessageToAPI(friendID, message) {
   formData.append("Content", message);
   const fileInput = document.getElementById("fileInput");
   if (fileInput && fileInput.files.length > 0) {
-      formData.append("files", fileInput.files[0]);
+    formData.append("files", fileInput.files[0]);
   }
   fetch("http://10.2.44.52:8888/api/message/send-message", {
-      method: "POST",
-      headers: {
-          Authorization: `Bearer ${token}`,
-      },
-      body: formData,
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
   })
-  .then(response => response.json())
-  .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.status === 1) {
-          const messageElement = document.createElement("div");
-          messageElement.classList.add("message", "sender-message");
-          messageElement.innerHTML = `
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message", "sender-message");
+        messageElement.innerHTML = `
               <div class="content-sender">
                   <p>${message}</p>
                   <span class="timestamp-sender">${new Date().toLocaleString()}</span>
               </div>
           `;
-          document.getElementById("messagesContainer").appendChild(messageElement);
+        document
+          .getElementById("messagesContainer")
+          .appendChild(messageElement);
       } else {
-          alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+        alert("Đã xảy ra lỗi khi gửi tin nhắn.");
       }
-  })
-  .catch(error => {
+    })
+    .catch((error) => {
       console.error("Error:", error);
       alert("Đã xảy ra lỗi khi gửi tin nhắn.");
-  });
+    });
 }
-
-
-function displayMessages(messages) {
-  const messagesContainer = document.getElementById("messagesContainer");
-  messages.forEach(message => {
-      const messageElement = document.createElement("div");
-      messageElement.classList.add("message");
-      if (message.isSender) {
-          messageElement.classList.add("sender-message");
-          messageElement.innerHTML = `
-              <div class="content-sender">
-                  <p>${message.content}</p>
-                  <span class="timestamp-sender">${new Date(message.timestamp).toLocaleString()}</span>
-              </div>
-          `;
+function fetchMessages(friendID) {
+  const token = localStorage.getItem("token");
+  fetch(`http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 1 && data.data.length > 0) {
+        displayMessages(data.data);
       } else {
-          messageElement.classList.add("receiver-message");
-          messageElement.innerHTML = `
-              <img src="../images/hero-image-feature-img.jpg" class="avatar" alt="Receiver Avatar">
-              <div class="content-receiver">
-                  <p>${message.content}</p>
-                  <span class="timestamp-receiver">${new Date(message.timestamp).toLocaleString()}</span>
-              </div>
-          `;
+        displayNoMessages();
       }
-      messagesContainer.appendChild(messageElement);
-  });
+    })
+    .catch((error) => {
+      console.error("Error fetching messages:", error);
+      displayErrorMessage();
+    });
 }
-//Chức năng kiểm tra kiểm tra đã gửi tin nhắn chưa
-// document.addEventListener("DOMContentLoaded", function () {
-//   const sendMessageBtn = document.getElementById("sendMessageBtn");
-//   sendMessageBtn.addEventListener("click", function () {
-//     const messageInput = document.getElementById("messageInput");
-//     const message = messageInput.value.trim();
-//     if (message !== "") {
-//       sendMessageToAPI(message);
-//       messageInput.value = "";
-//     } else {
-//       alert("Vui lòng nhập tin nhắn trước khi gửi.");
-//     }
-//   });
-// });
-//Icon Picker
+// Chức năng kiểm tra kiểm tra đã gửi tin nhắn chưa
+document.addEventListener("DOMContentLoaded", function () {
+  const sendMessageBtn = document.getElementById("sendMessageBtn");
+  sendMessageBtn.addEventListener("click", function () {
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value.trim();
+    if (message !== "") {
+      sendMessageToAPI(message);
+      messageInput.value = "";
+    } else {
+      alert("Vui lòng nhập tin nhắn trước khi gửi.");
+    }
+  });
+});
+// Icon Picker
 document.addEventListener("DOMContentLoaded", function () {
   const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
   const emojiSelector = document.getElementById("emojiSelector");
