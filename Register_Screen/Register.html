@@ -1,126 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="Register.css" />
-    <title>Đăng ký</title>
-  </head>
 
-  <body>
-    <header class="header">
-      <img src="../images/logo.png" alt="Logo" />
-    </header>
-    <nav class="content">
-      <article class="container">
-        <div class="background-image sub-container">
-          <img src="../images/image2.png" alt="Background image signin" />
-        </div>
-        <div class="div-form sub-container">
-          <div class="header">
-            <div class="null"></div>
-            <div class="choose-language">
-              <select name="choose-language" id="choose-language">
-                <option value="vi">Tiếng Việt</option>
-                <option value="en">English</option>
-              </select>
-            </div>
-            <div class="choose-page">
-              <div class="btn-choose-page btn-signin">
-                <div class="content-btn">
-                  <a class="link-style" href="/Login_Screen/Login.html"
-                    >Đăng nhập</a
-                  >
-                </div>
-                <div class="line-bottom"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="Register.css" />
+  <title>Đăng ký</title>
+</head>
+
+<body>
+  <header class="header-logo">
+    <img src="../images/logo.png" alt="Logo" />
+  </header>
+  <nav class="content">
+    <article class="container">
+      <div style="margin-left: 200px;margin-top: 80px;margin-right: 100px;" class="background-start">
+        <img style="width: 502px;height: 456px;" src="../images/image2.png" />
+      </div>
+      <div class="div-form">
+        <div class="header">
+          <div class="choose-language">
+            <select name="choose-language" id="choose-language">
+              <option value="vi">Tiếng Việt</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="choose-page">
+            <div class="btn-choose-page ">
+              <div class="content-btn">
+                <a class="link-style " href="/Login_Screen/Login.html">Đăng nhập</a>
               </div>
-              <div class="btn-choose-page btn-signup">
-                <div class="content-btn">
-                  <a class="link-style" href="/Register_Screen/Register.html"
-                    >Đăng ký</a
-                  >
-                </div>
-                <div class="line-bottom"></div>
+            </div>
+            <div class="btn-choose-page current">
+              <div class="content-btn">
+                <a class="link-style current" href="/Register_Screen/Register.html">Đăng ký</a>
               </div>
             </div>
           </div>
-          <div class="form">
-            <div class="null"></div>
-            <div class="form-1">
-              <form method="post">
+        </div>
+        <p style="font-size: 40px;line-height: 77px;width: 400px;margin-top: 20px;margin-bottom: 20px;">Đăng ký</p>
+        <div class="form">
+          <div class="form-inputs">
+            <form class="form-input" method="post">
+              <div style="display: flex;align-items: center;">
                 <div class="form-control">
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="FullName"
-                    required
-                    placeholder="Nhập tên người dùng"
-                  />
+                  <input type="text" id="fullName" name="FullName" required placeholder="Nhập tên người dùng" />
                   <div class="option" id="deleteFullName">
                     <img src="../images/x.png" alt="Delete" />
                   </div>
                 </div>
+              </div>
+              <div style="display: flex;align-items: center;">
                 <div class="form-control">
-                  <input
-                    id="email"
-                    name="Username"
-                    required
-                    placeholder="Nhập tài khoản"
-                  />
+                  <input id="email" name="Username" required placeholder="Nhập tài khoản" />
                   <div class="option" id="deleteEmail">
                     <img src="../images/x.png" alt="Delete" />
                   </div>
                 </div>
+              </div>
+              <div style="display: flex;align-items: center;">
                 <div class="form-control">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="Password"
-                    required
-                    placeholder="Mật khẩu"
-                  />
+                  <input type="password" class="form-control" id="password" name="Password" required
+                    placeholder="Mật khẩu" />
                   <div class="option" id="togglePassword1">
                     <img src="../images/eye.png" alt="Show" />
                   </div>
                 </div>
+              </div>
+              <div style="display: flex;align-items: center;">
                 <div class="form-control">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    required
-                    placeholder="Nhập lại mật khẩu"
-                  />
+                  <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
+                    placeholder="Nhập lại mật khẩu" />
                   <div class="option" id="togglePassword2">
                     <img src="../images/eye.png" alt="Show" />
                   </div>
                 </div>
+              </div>
+              <div class="div-btn-submit">
+                <button type="submit">Đăng ký</button>
+              </div>
+              <div id="error-confirmPw" style="color: red; text-align: center; font-size: 20px"></div>
+              <div id="error-User" style="color: red; text-align: center; font-size: 20px"></div>
 
-                <div class="div-btn-submit">
-                  <button type="submit">Đăng ký</button>
-                </div>
-                <div
-                  id="error-confirmPw"
-                  style="color: red; text-align: center; font-size: 20px"
-                ></div>
-                <div
-                  id="error-User"
-                  style="color: red; text-align: center; font-size: 20px"
-                ></div>
-                <div class="textbtn">
-                  Đã có tài khoản, đăng nhập tại
-                  <a href="/Login_Screen/Login.html">đây</a>!
-                </div>
-              </form>
-            </div>
+            </form>
+
           </div>
         </div>
-      </article>
-    </nav>
-    <script src="Register.js"></script>
-  </body>
+        <div class="textbtn">
+          Đã có tài khoản, đăng nhập tại
+          <a href="/Login_Screen/Login.html">đây</a>!
+        </div>
+      </div>
+
+    </article>
+
+  </nav>
+  <script src="Register.js"></script>
+</body>
+
 </html>
