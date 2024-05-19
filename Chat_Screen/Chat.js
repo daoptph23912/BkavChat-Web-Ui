@@ -28,15 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-//Đăng xuất
-// document.addEventListener("DOMContentLoaded", function () {
-//   const logoutLink = document.querySelector("#logout");
-//   logoutLink.addEventListener("click", function (event) {
-//     event.preventDefault();
-//     localStorage.removeItem("token");
-//     window.location.href = "../Login_Screen/Login.html";
-//   });
-// });
+
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.querySelector("#logout");
   logoutLink.addEventListener("click", function (event) {
