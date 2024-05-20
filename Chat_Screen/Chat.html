@@ -52,40 +52,28 @@
           <!-- <h1 class="chat-left">Danh sách người dùng</h1> -->
           <div style="display: flex; align-items: center">
             <img />
-            <ul id="demo" class="user-chat"></ul>
+            <ul  class="user-chat"></ul>
           </div>
         </div>
       </div>
-      <div class="chat-window">
-        <div id="recipientInfo" style="display: flex; align-items: center,">
-          <img id="recipientAvatar">
-          <h1 id=" recipientName" style="margin-left: 10px;margin-top: 5px;" class="chat-right"></h1>
-        </div>
-        <div class="messages" id="messagesContainer">
+        <div class="chat-window">
+          <div style="display: flex; align-items: center,">
+            <img  onclick="window.location.href='../Info_Screen/info.html'"  id="recipientAvatar">
+            <h1 id="recipientName"></h1>
+            <span id="recipientStatus"></span>
+          </div>  
+          <div style=" height: 85vh; 
+          overflow-y: auto;" class="messages" id="messagesContainer">
           <div class="no-msg" id="initialMessage">
             <img class="img-no-msg" src="../images/no-msh.png">
-            <h3>Chưa có tin nhắn ....</h3>
+            <h3>Chưa có tin nhắn ....</h3>  
           </div>
-          <!-- <div>
-            <div class="message sender-message">
-              <div class="content-sender">
-                <span class="timestamp-sender"></span>
-              </div>
-            </div>
-            <div class="message receiver-message">
-              <img src="../images/hero-image-feature-img.jpg" class="avatar" alt="Receiver Avatar">
-              <div class="content-receiver">
-                <span class="timestamp-receiver"></span>
-              </div>
-            </div>
-          </div> -->
         </div>
-        <!-- them style , id -->
-        <div class="input-area" style="display: none" id="inputArea">
+        <!-- them style , id=inputArea -->
+        <div class="input-area" id="inputArea" style="display: none">
           <img style="margin-right: 5px; cursor: pointer" src="../images/file.png" id="fileInputTrigger" />
           <div class="input-container">
-            <textarea type="text" id="messageInput" placeholder="Nhập tin nhắn...">
-            </textarea>
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..."/>
             <div class="utility-group">
               <li class="emoji-selector" id="emojiSelector">
                 <div class="input-container-icon">
