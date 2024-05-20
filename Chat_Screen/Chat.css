@@ -43,7 +43,7 @@ body.dark-mode {
 
 .user-list {
   flex: 15%;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
   height: 92vh;
   overflow-y: auto;
@@ -57,7 +57,7 @@ body.dark-mode {
 }
 .chat-window {
   flex: 70%;
-  padding: 20px;
+  padding: 20px;  
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
@@ -249,19 +249,19 @@ body.dark-mode {
   padding-right: 30px;
   width: 98%;
 }
-.input-container textarea {
-  width: calc(70% - 40px); /* Đảm bảo textarea không tràn ra ngoài */
-  resize: none; /* Tắt resize nếu không muốn người dùng thay đổi kích thước */
-  height: auto; /* Đặt height theo nhu cầu của bạn */
-  box-sizing: border-box; /* Đảm bảo padding được tính trong width */
-  font-family: inherit; /* Đặt font-family giống như của input */
+/* .input-container textarea {
+  width: calc(70% - 40px); 
+  resize: none; 
+  height: auto; 
+  box-sizing: border-box;
+  font-family: inherit; 
   font-size: inherit;
   line-height: inherit;
   border-radius: 20px;
   align-content: center;
   padding-left: 10px;
   position: relative;
-}
+} */
 
 .icon {
   position: absolute;
@@ -279,7 +279,7 @@ body.dark-mode {
 
 .message {
   display: flex;
-  align-items: flex-start; /* Tin nhắn căn trái */
+  align-items: flex-start; 
   margin-bottom: 10px;
 }
 
@@ -288,7 +288,7 @@ body.dark-mode {
 }
 
 .receiver-message {
-  justify-content: flex-start; /* Tin nhắn của người nhận căn trái */
+  justify-content: flex-start; 
 }
 
 .avatar {
@@ -304,8 +304,8 @@ body.dark-mode {
     margin-left: auto;
 }
 .content-receiver {
-  background-color: #bebebe; /* Màu nền tin nhắn */
-  color: #333; /* Màu chữ tin nhắn */
+  background-color: #bebebe; 
+  color: #333; 
   padding: 10px;
   border-radius: 10px;
   font-size: 16px;
@@ -382,7 +382,7 @@ body.dark-mode {
   background-color: rgba(0, 0, 0, 0.1);
 }
 .input-container-icon {
-  /* padding: 1rem; */
+  /* padding: 1rem; */    
   background-color: white;
   position: sticky;
   top: 0;
@@ -408,4 +408,30 @@ body.dark-mode {
   width: 100px;
   height: 100px;
   margin-top: 250px;
+}
+/* .message {
+  position: relative;
+} */
+
+.menu-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none; /* Ẩn ban đầu */
+}
+
+.message:hover .menu-icon {
+  display: block; /* Hiển thị khi hover */
+}
+
+.sender-message .menu-icon {
+  left: -20px; 
+}
+
+.receiver-message .menu-icon {
+  right: -20px; 
+}
+
+h3 {
+  margin-top: 10px; 
 }

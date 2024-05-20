@@ -2,13 +2,56 @@ const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
 const INFOUSER = "http://10.2.44.52:8888/api/user/info";
 const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
 //lấy tên người dùng lưu ở localStorage
-document.addEventListener("DOMContentLoaded", function () {
-  const loggedInUserName = localStorage.getItem("loggedInUserName");
-  const chatTitle = document.querySelector(".chat-right");
-  if (loggedInUserName) {
-    chatTitle.textContent = loggedInUserName;
-  } else {
-    chatTitle.textContent = "Undefined";
+// document.addEventListener("DOMContentLoaded", function () {
+//   const loggedInUserName = localStorage.getItem("loggedInUserName");
+//   const chatTitle = document.querySelector(".chat-right");
+//   if (loggedInUserName) {
+//     chatTitle.textContent = loggedInUserName;
+//   } else {
+//     chatTitle.textContent = "Undefined";
+//   }
+// });
+document.addEventListener("DOMContentLoaded", async function () {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token chưa lưu vào localStorage");
+    }
+    const response = await fetch("http://10.2.44.52:8888/api/user/info", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
+    const result = await response.json();
+    if (result.status !== 1) {
+      throw new Error(result.message || "Failed to fetch user info");
+    }
+    const userData = result.data;
+    const avatarImg = document.querySelector(".avatar-img");
+    if (userData.Avatar) {
+      avatarImg.src = `http://10.2.44.52:8888/api/images/${friend.Avatar}`;
+    } else {
+      avatarImg.src = "../images/icon-user.png";
+    }
+    const chatTitle = document.querySelector(".chat-right");
+    chatTitle.textContent = userData.FullName || "Undefined";
+
+    if (avatarImg) {
+      avatarImg.style.width = "30px";
+      avatarImg.style.height = "30px";
+      avatarImg.style.borderRadius = "50%";
+      avatarImg.style.marginRight = "10px";
+    }
+    if (chatTitle) {
+      chatTitle.style.fontSize = "16px";
+      chatTitle.style.fontWeight = "bold";
+    }
+  } catch (error) {
+    console.error("Error fetching user info:", error);
   }
 });
 //chức năng tìm kiếm người dùng
@@ -56,7 +99,6 @@ function toggleTheme() {
 document.addEventListener("DOMContentLoaded", function () {
   var dropdownMenu = document.getElementById("dropdownMenu");
   var dropdownContent = document.getElementById("dropdownContent");
-
   dropdownMenu.addEventListener("click", function () {
     dropdownContent.style.display =
       dropdownContent.style.display === "block" ? "none" : "block";
@@ -143,6 +185,36 @@ document.addEventListener("DOMContentLoaded", async function () {
         textContainer.style.right = "5px";
         textContainer.style.gap = "20px";
 
+        const timestamp = new Date(friend.CreatedAt);
+        const currentTime = new Date();
+        let formattedTimestamp;
+        if (isSameDay(timestamp, currentTime)) {
+          formattedTimestamp = timestamp.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          });
+        } else {
+          formattedTimestamp = timestamp.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+        }
+        const timestampElement = document.createElement("span");
+        timestampElement.textContent = formattedTimestamp;
+        timestampElement.style.fontSize = "12px";
+        timestampElement.style.color = "#999";
+        timestampElement.style.marginLeft = "auto"; // Canh phải
+
+        function isSameDay(date1, date2) {
+          return (
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate()
+          );
+        }
+
         const statusDot = document.createElement("span");
         statusDot.style.width = "11px";
         statusDot.style.height = "11px";
@@ -151,13 +223,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         statusDot.style.top = "-3px";
         statusDot.style.right = "-3px";
         statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
+
         avatarWrapper.appendChild(avatar);
         avatarWrapper.appendChild(statusDot);
         textContainer.appendChild(link);
         textContainer.appendChild(messageContent);
         listItem.appendChild(avatarWrapper);
         listItem.appendChild(textContainer);
-
+        textContainer.appendChild(timestampElement);
         // listItem.appendChild(messageContent);
         userChatList.appendChild(listItem);
 
@@ -292,7 +365,7 @@ function fetchMessages(friendID) {
 //them
 function displayMessages(messages) {
   const messagesContainer = document.getElementById("messagesContainer");
-  messagesContainer.innerHTML = ""; // Clear previous messages
+  messagesContainer.innerHTML = "";
 
   messages.forEach((message) => {
     const messageElement = document.createElement("div");
@@ -309,12 +382,21 @@ function displayMessages(messages) {
     if (message.MessageType === 1) {
       messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
-        <div class="content-sender">
-          <p>${message.Content || ""}</p>
-          <span class="status">${statusIcon}</span>
-          <span class="timestamp-receiver">${formattedTimestamp}</span>
-        </div>
-      `;
+          <div class="content-sender">
+            <p>${message.Content || ""}</p>
+            <span class="status">${statusIcon}</span>
+            <span class="timestamp-receiver">${formattedTimestamp}</span>
+            <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+            <div class="dropdown-menu">
+            <img class="menu-icon" src="../images/menu-cham.png" alt="Menu Icon" onclick="toggleDropdownMenu(this)">
+            <div class="dropdown-content">
+              <a href="#" onclick="editMessage()">Chỉnh sửa</a>
+              <a href="#" onclick="pinMessage()">Ghim tin nhắn</a>
+              <a href="#" onclick="deleteMessage()">Xóa tin nhắn</a>
+            </div>
+          </div>
+          </div>
+        `;
     } else {
       const avatarUrl = message.Avatar
         ? `http://10.2.44.52:8888/api/images/${message.Avatar}`
@@ -322,16 +404,38 @@ function displayMessages(messages) {
       console.log("Avatar URL:", avatarUrl);
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
-        <img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
-        <div class="content-receiver">
-          <p>${message.Content || ""}</p>
-          <span class="timestamp-receiver">${formattedTimestamp}</span>
-        </div>
-      `;
+          <img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
+          <div class="content-receiver">
+            <p>${message.Content || ""}</p>
+            <span class="timestamp-receiver">${formattedTimestamp}</span>
+            <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+            <img class="menu-icon" src="../images/menu-cham.png" alt="Menu Icon">
+          </div>
+        `;
     }
 
     messagesContainer.appendChild(messageElement);
   });
+}
+function toggleDropdownMenu(menuIcon) {
+  const dropdownMenu =
+    menuIcon.parentElement.querySelector(".dropdown-content");
+  dropdownMenu.classList.toggle("show");
+}
+function editMessage() {}
+function pinMessage() {}
+function deleteMessage(index) {
+  // Xóa tin nhắn khỏi DOM
+  const messageElement = document.querySelector(
+    `.message:nth-child(${index + 1})`
+  );
+  if (messageElement) {
+    messageElement.remove();
+  } else {
+    console.error("Message element not found.");
+    return;
+  }
+  //xóa yêu cầu máy chủ
 }
 function formatTimestamp(timestamp) {
   const options = {
@@ -349,9 +453,16 @@ function displayErrorMessage() {
 }
 function displayNoMessages() {
   const messagesContainer = document.getElementById("messagesContainer");
-  const noMessagesElement = document.createElement("p");
-  noMessagesElement.textContent = "Chưa có tin nhắn nào.";
-  messagesContainer.appendChild(noMessagesElement);
+  const noMessagesDiv = document.createElement("div");
+  noMessagesDiv.classList.add("no-msg");
+  const imgNoMessages = document.createElement("img");
+  imgNoMessages.classList.add("img-no-msg");
+  imgNoMessages.src = "../images/no-msh.png";
+  noMessagesDiv.appendChild(imgNoMessages);
+  const h3NoMessages = document.createElement("h3");
+  h3NoMessages.textContent = "Chưa có tin nhắn ....";
+  noMessagesDiv.appendChild(h3NoMessages);
+  messagesContainer.appendChild(noMessagesDiv);
 }
 
 function sendMessageToAPI(friendID, message) {
@@ -360,7 +471,7 @@ function sendMessageToAPI(friendID, message) {
   formData.append("FriendID", friendID);
   formData.append("Content", message);
   const fileInput = document.getElementById("fileInput");
-  
+
   if (fileInput && fileInput.files.length > 0) {
     formData.append("files", fileInput.files[0]);
   }
@@ -374,7 +485,8 @@ function sendMessageToAPI(friendID, message) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1) {
-        const formattedTimestamp = new Date().toLocaleTimeString([], { hour: 'numeric', minute: 'numeric', hour12: true });
+        const timestamp = new Date(data.data.CreatedAt);
+        const formattedTimestamp = formatTimestamp(timestamp);
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", "sender-message");
         messageElement.innerHTML = `
@@ -395,7 +507,6 @@ function sendMessageToAPI(friendID, message) {
       alert("Đã xảy ra lỗi khi gửi tin nhắn.");
     });
 }
-
 // Icon Picker
 document.addEventListener("DOMContentLoaded", function () {
   const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");

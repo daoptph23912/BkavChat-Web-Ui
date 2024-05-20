@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #f6f6f6;
+  width: 200vh;
 }
 .header-logo > img {
   padding: 15px 0 15px 35px;

@@ -18,16 +18,17 @@
           <div class="dropdown" id="dropdownMenu">
             <img class="dropbtn" src="../images/menu.png" />
             <div style="margin-top: 20px;" class="dropdown-content" id="dropdownContent">
-              <div style="display: flex; align-items: center; padding: 10px">
+              <div style="display: flex; align-items: center; gap: 10px;">
                 <button style="outline: none !important; border: none !important;background-color: white;"
                   onclick="window.location.href='../Info_Screen/info.html'">
-                  <img style="width: 40px; height: 40px; border-radius: 20px" src="../images/icon-user.png" />
+                  <img id="avatar-img" />
                 </button>
                 <h1 style="margin-top: 10px; margin-left: 15px" class="chat-right"></h1>
               </div>
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/acong.png" />
                 <a href="#">Nhắc đến bạn </a>
+                <img style="width: 20px; height: 20px; display: flex;" src="../images/1.png" />
               </div>
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/group.png" />
@@ -36,6 +37,7 @@
               <div class="theme-toggle" onclick="toggleTheme()" style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/night.png" />
                 <a href="#" id="theme-icon">Giao diện tối </a>
+                <img style="width: 20px; height: 20px; display: flex;" src="../images/active_noactive.png" />
               </div>
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/profile.png" />
@@ -52,28 +54,28 @@
           <!-- <h1 class="chat-left">Danh sách người dùng</h1> -->
           <div style="display: flex; align-items: center">
             <img />
-            <ul  class="user-chat"></ul>
+            <ul class="user-chat"></ul>
           </div>
         </div>
       </div>
-        <div class="chat-window">
-          <div style="display: flex; align-items: center,">
-            <img  onclick="window.location.href='../Info_Screen/info.html'"  id="recipientAvatar">
-            <h1 id="recipientName"></h1>
-            <span id="recipientStatus"></span>
-          </div>  
-          <div style=" height: 85vh; 
+      <div class="chat-window">
+        <div style="display: flex; align-items: center,">
+          <img onclick="window.location.href='../Info_Screen/info.html'" id="recipientAvatar">
+          <h1 id="recipientName"></h1>
+          <span id="recipientStatus"></span>
+        </div>
+        <div style=" height: 85vh; 
           overflow-y: auto;" class="messages" id="messagesContainer">
           <div class="no-msg" id="initialMessage">
             <img class="img-no-msg" src="../images/no-msh.png">
-            <h3>Chưa có tin nhắn ....</h3>  
+            <h3>Chưa có tin nhắn ....</h3>
           </div>
         </div>
         <!-- them style , id=inputArea -->
         <div class="input-area" id="inputArea" style="display: none">
           <img style="margin-right: 5px; cursor: pointer" src="../images/file.png" id="fileInputTrigger" />
           <div class="input-container">
-            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..."/>
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." />
             <div class="utility-group">
               <li class="emoji-selector" id="emojiSelector">
                 <div class="input-container-icon">
