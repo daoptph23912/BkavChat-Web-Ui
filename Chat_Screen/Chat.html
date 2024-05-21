@@ -18,12 +18,12 @@
           <div class="dropdown" id="dropdownMenu">
             <img class="dropbtn" src="../images/menu.png" />
             <div style="margin-top: 20px;" class="dropdown-content" id="dropdownContent">
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; ">
                 <button style="outline: none !important; border: none !important;background-color: white;"
                   onclick="window.location.href='../Info_Screen/info.html'">
-                  <img id="avatar-img" />
+                  <img class="avatar-img" />
                 </button>
-                <h1 style="margin-top: 10px; margin-left: 15px" class="chat-right"></h1>
+                <h1 style="margin-top: 10px; margin-left: 0px" class="chat-right"></h1>
               </div>
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/acong.png" />
@@ -75,7 +75,7 @@
         <div class="input-area" id="inputArea" style="display: none">
           <img style="margin-right: 5px; cursor: pointer" src="../images/file.png" id="fileInputTrigger" />
           <div class="input-container">
-            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." />
+            <textarea class="textarea" type="text" id="messageInput" placeholder="Nhập tin nhắn..." ></textarea>
             <div class="utility-group">
               <li class="emoji-selector" id="emojiSelector">
                 <div class="input-container-icon">
