@@ -1,3 +1,5 @@
+const REGISTER = "http://localhost:8888/api/auth/register";
+// const REGISTER = "http://10.2.44.52:8888/api/auth/register";
 //Chức năng icon xóa - ẩn hiện password
 const deleteFullName = document.getElementById("deleteFullName");
 const fullNameInput = document.getElementById("fullName");
@@ -51,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       Password: Password,
     };
     try {
-      const response = await fetch("http://10.2.44.52:8888/api/auth/register", {
+      const response = await fetch(REGISTER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

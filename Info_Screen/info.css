@@ -12,9 +12,7 @@ body.dark-mode {
     background-color: #211b1b; 
     color: #c8b1b1; 
 }
-.theme-toggle {
-    cursor: pointer;
-}
+
 .theme-toggle img {
     width: 20px;
     height: 20px;

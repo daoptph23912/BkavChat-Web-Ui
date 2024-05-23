@@ -12,11 +12,6 @@ body {
   --text-color: #000000;
 }
 
-.theme-toggle img {
-  width: 20px;
-  height: 20px;
-  padding: 10px;
-}
 body.light-mode {
   background-color: #ffffff;
   color: #000000;
@@ -27,9 +22,7 @@ body.dark-mode {
   color: #ffffff;
 }
 
-.theme-toggle {
-  cursor: pointer;
-}
+
 
 .container {
   display: flex;
@@ -43,10 +36,10 @@ body.dark-mode {
 
 .left-menu {
   flex: 360px;
-  padding: 10px;
+  padding-top: 10px;
 }
 .chat-window {
-  flex: 70%;
+  flex: 78%;
   padding: 10px;
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -90,8 +83,7 @@ body.dark-mode {
 .input-area {
   position: fixed;
   bottom: 0;
-  width: 72%;
-  padding: 10px;
+  width: 75.5%;
   display: flex;
   align-items: center;
   justify-content: end;
@@ -142,6 +134,8 @@ body.dark-mode {
 }
 .search-placehohoder {
   position: relative;
+  
+  /* width: 280px; */
 }
 
 #searchUser {
@@ -304,7 +298,7 @@ body.dark-mode {
   background-color: rgba(0, 0, 0, 0.1);
 }
 .input-container-icon {
-  /* padding: 1rem; */
+  /* padding: 1rem; */  
   background-color: white;
   position: sticky;
   top: 0;
@@ -331,9 +325,7 @@ body.dark-mode {
   height: 100px;
   margin-top: 250px;
 }
-/* .message {
-  position: relative;
-} */
+
 .chat-area {
   display: flex;
   flex-direction: column;
@@ -346,32 +338,36 @@ body.dark-mode {
 .sender-message {
   justify-content: flex-end;
   display: flex;
-
 }
-
 .receiver-message {
   justify-content: flex-start;
 }
 .content-msg-sender {
-  background-color: #4990dd;
+  background-color: #E0F0FF;
   width: 100%;
-  padding: 10px;
+  max-width: 700px;
+  padding-top: 10px;  
+  padding-bottom: 10px;  
+  padding-right: 2px;  
+  padding-left: 10px;  
   border-radius: 20px;
   flex-grow: 1;
 }
 .content-msg-receiver {
-  background-color: #cac5c5;
+  background-color: #E9EAED;
   width: 100%;
-  padding: 10px;
+  padding-top: 10px;  
+  padding-bottom: 10px;  
+  padding-right: 2px;  
+  padding-left: 10px;  
   border-radius: 20px;
 }
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  align-items: center;
   background-color: rgb(195, 212, 223);
-  margin-top: 26px;
+  margin-top: 15px;
 }
 .aaa{
   width: 12px;
@@ -379,47 +375,46 @@ body.dark-mode {
   justify-content: flex-end;
 }
 .content-receiver {
-  color: #333;
-  padding: 10px;
+  color: #080707;
+  padding-left: 5px;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
   position: relative;
   align-items: center;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  max-width: 700px;
 }
 .content-sender {
+  max-width: 700px;
   color: #000000;
-  padding: 10px;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
   position: relative;
   align-items: center;
   margin-right: 20px;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
 }
 .status-time{
   display: flex;
   align-items: center;
   position: absolute;
-  bottom: 5px; 
+  bottom: -5px; 
   right: -5px;
   white-space: nowrap;
 }
 .timestamp-senderer{
   display: flex;
-  align-items: center;
-  position: absolute;
-  bottom: 5px; 
-  right: -5px;
-  white-space: nowrap;
   font-size: 12px;
-  color: #000000;
+  color: #747881;
 }
 .timestamp-receiver {
   font-size: 12px;
-  color: #000000;
+  color: #747881;
   display: flex;
-  /* position: absolute;  */
   margin-top: -15px;
   
 }
@@ -433,8 +428,8 @@ body.dark-mode {
   align-items: center;
   gap: 5px;
   position: absolute;
-  left: -40px; 
-  bottom: 30px;
+  left: -45px; 
+  bottom: 20px;
 }
 .icon-container-receiver {
   display: none; 
@@ -442,7 +437,7 @@ body.dark-mode {
   gap: 5px;
   position: absolute;
   right: -60px; 
-  bottom: 30px;
+  bottom: 26px;
 }
 
 .content-sender:hover .icon-container {

@@ -10,15 +10,15 @@
 </head>
 
 <body class="light-mode">
-    <div class="theme-toggle" onclick="toggleTheme()">
-        <img src="../images/mode-light-icon-2048x2048" id="theme-icon">
-        <h1>Sáng , tối </h1>
+    <div style="cursor: pointer;" onclick="toggleTheme()">
+        <img style=" width: 50px;height: 50px;margin-top: 20px;" src="../images/lighttt.png" id="theme-icon" />
     </div>
     <div class="user-info">
         <h2>Thông tin người dùng </h2>
         <div id="fullname"></div>
         <div id="username"></div>
         <div id="avatar"></div>
+
     </div>
     <button type="button" class="btn btn-primary" onclick="openEditModal()">Sửa </button>
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -28,12 +28,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="" id="editForm">
+
+                    <form id="editForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="fullnameInput" class="form-label">FullName</label>
                             <input type="text" class="form-control" id="fullnameInput" name="fullnameInput" required>
                         </div>
-
                         <div class="container">
                             <label for="avatarInput" class="form-label">Avatar:</label>
                             <input type="file" id="avatarInput" accept="image/*" name="avatarInput" hidden>
@@ -44,12 +44,6 @@
                             </div>
                             <div class="select-image">Select Image</div>
                         </div>
-
-                        <!-- <div class="mb-3">
-                            <label for="avatarInput" class="form-label">Avatar:</label>
-                            <input type="file" class="form-control" id="avatarInput" name="avatarInput"
-                                accept="image/*">
-                        </div> -->
                     </form>
 
                 </div>

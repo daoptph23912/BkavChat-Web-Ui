@@ -1,13 +1,19 @@
-const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
-const INFOUSER = "http://10.2.44.52:8888/api/user/info";
-const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
+// const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
+// const INFOUSER = "http://10.2.44.52:8888/api/user/info";
+// const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
+const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
+const INFOUSER = "http://localhost:8888/api/user/info";
+const LISTUSER = "http://localhost:8888/api/message/list-friend";
+const GETAVATAR = "http://localhost:8888/api/images/${friend.Avatar}";
+
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
       throw new Error("Token chưa lưu vào localStorage");
     }
-    const response = await fetch("http://10.2.44.52:8888/api/user/info", {
+    //INFOUSER
+    const response = await fetch(INFOUSER, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -23,7 +29,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userData = result.data;
     const avatarImg = document.querySelector(".avatar-img");
     if (userData.Avatar) {
-      avatarImg.src = `http://10.2.44.52:8888/api/images/${friend.Avatar}`;
+      //GETAVATAR
+      avatarImg.src = GETAVATAR;
     } else {
       avatarImg.src = "../images/icon-user.png";
     }
@@ -99,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
 //Hiển thị danh sách người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -114,14 +122,15 @@ document.addEventListener("DOMContentLoaded", async function () {
       redirect: "follow",
     };
     const response = await fetch(
-      "http://10.2.44.52:8888/api/message/list-friend",
+      //LISTUSER
+      LISTUSER,
       requestOptions
     );
     if (!response.ok) {
       throw new Error("Lỗi server không phản hồi");
     }
     const data = await response.json();
-    console.log(data.data);
+    // console.log(data.data);
     const userChatList = document.querySelector(".user-chat");
     if (data.data && data.data.length > 0) {
       const friendsWithFullName = data.data.filter((friend) => friend.FullName);
@@ -130,7 +139,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
       friendsWithFullName.sort((a, b) => a.FullName.localeCompare(b.FullName));
       const sortedFriends = [...friendsWithFullName, ...friendsWithoutFullName];
-
       for (const friend of sortedFriends) {
         const listItem = await createFriendListItem(friend, token);
         userChatList.appendChild(listItem);
@@ -138,7 +146,8 @@ document.addEventListener("DOMContentLoaded", async function () {
           event.preventDefault();
           try {
             const userInfoResponse = await fetch(
-              "http://10.2.44.52:8888/api/user/info",
+              //INFOUSER
+              INFOUSER,
               {
                 method: "GET",
                 headers: myHeaders,
@@ -149,11 +158,9 @@ document.addEventListener("DOMContentLoaded", async function () {
               throw new Error("Lỗi khi lấy thông tin người dùng");
             }
             const userInfo = await userInfoResponse.json();
-            console.log(userInfo);
             const inputArea = document.getElementById("inputArea");
             inputArea.style.display = "flex";
             openChatWindow(friend);
-            console.log(friend);
           } catch (error) {
             console.error("Lỗi khi tải dữ liệu:", error);
           }
@@ -180,7 +187,8 @@ async function createFriendListItem(friend, token) {
 
   const avatar = document.createElement("img");
   if (friend.Avatar) {
-    avatar.src = `http://10.2.44.52:8888/api/images/${friend.Avatar}`;
+    //GETAVATAR
+    avatar.src = GETAVATAR;
   } else {
     avatar.src = `../images/icon-user.png`;
   }
@@ -257,12 +265,10 @@ async function createFriendListItem(friend, token) {
 function formatTime(timestamp) {
   const date = new Date(timestamp);
   const now = new Date();
-
   const isToday =
     date.getDate() === now.getDate() &&
     date.getMonth() === now.getMonth() &&
     date.getFullYear() === now.getFullYear();
-
   if (isToday) {
     return date.toLocaleTimeString("vi-VN", {
       hour: "2-digit",
@@ -282,7 +288,8 @@ function formatTime(timestamp) {
 }
 async function fetchLastMessage(friendID, token) {
   const response = await fetch(
-    `http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`,
+    //GETMESSAGE
+    `http://localhost:8888/api/message/get-message?FriendID=${friendID}`,
     {
       method: "GET",
       headers: {
@@ -302,34 +309,44 @@ async function openChatWindow(friend) {
   const recipientAvatar = document.getElementById("recipientAvatar");
   const statusDot = document.getElementById("recipientStatus");
   const messagesContainer = document.getElementById("messagesContainer");
-  const initialMessage = document.getElementById("initialMessage");
   const inputArea = document.getElementById("inputArea");
-  if (
-    !recipientName ||
-    !recipientAvatar ||
-    !messagesContainer ||
-    !initialMessage ||
-    !statusDot ||
-    !inputArea
-  ) {
+  const statusInfo = document.getElementById("statusInfo");
+  const sendMessageBtn = document.getElementById("sendMessageBtn");
+  const messageInput = document.getElementById("messageInput");
+  const requiredElements = [
+    { element: recipientName, name: "recipientName" },
+    { element: recipientAvatar, name: "recipientAvatar" },
+    { element: statusDot, name: "recipientStatus" },
+    { element: messagesContainer, name: "messagesContainer" },
+    { element: statusInfo, name: "statusInfo" },
+    { element: messageInput, name: "messageInput" },
+    { element: sendMessageBtn, name: "sendMessageBtn" },
+    { element: inputArea, name: "inputArea" },
+  ];
+  for (const { element, name } of requiredElements) {
+    if (!element) {
+      console.error(`Element '${name}' không tồn tại trong DOM.`);
+    }
+  }
+  if (requiredElements.some(({ element }) => !element)) {
     console.error("Một hoặc nhiều phần tử không tồn tại trong DOM.");
     return;
   }
   if (friend.Avatar) {
-    recipientAvatar.src = `http://10.2.44.52:8888/api/images/${friend.Avatar}`;
+    //GETAVATAR
+    recipientAvatar.src = GETAVATAR;
   } else {
     recipientAvatar.src = `../images/icon-user.png`;
   }
-  recipientAvatar.style.width = "45px";
-  recipientAvatar.style.height = "45px";
-  recipientAvatar.style.borderRadius = "30px";
+  recipientAvatar.style.width = "40px";
+  recipientAvatar.style.height = "40px";
+  recipientAvatar.style.borderRadius = "25px";
   recipientAvatar.style.marginRight = "10px";
   recipientAvatar.style.backgroundColor = "#C3D4DF";
   recipientAvatar.style.objectFit = "cover";
 
   recipientName.textContent = `${friend.FullName}`;
-  recipientName.style.fontSize = "18px";
-  initialMessage.style.display = "flex";
+  recipientName.style.fontSize = "16px";
   messagesContainer.innerHTML = "";
 
   statusDot.style.width = "10px";
@@ -337,27 +354,102 @@ async function openChatWindow(friend) {
   statusDot.style.borderRadius = "50%";
   statusDot.style.position = "absolute";
   statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
-  fetchMessages(friend.FriendID);
 
+  statusInfo.innerHTML = friend.isOnline ? "Online" : "Offline";
+  statusInfo.style.fontSize = "14px";
+  statusInfo.style.color = friend.isOnline ? "green" : "red";
+  statusInfo.style.marginTop = "-10px";
+
+  fetchMessages(friend.FriendID);
+  // console.log(friend.FriendID);
+  attachSendMessageEvents(friend.FriendID);
+}
+function attachSendMessageEvents(friendID) {
   const sendMessageBtn = document.getElementById("sendMessageBtn");
-  sendMessageBtn.addEventListener("click", function () {
-    const messageInput = document.getElementById("messageInput");
-    sendMessageToAPI(friend.FriendID, messageInput.value);
-    console.log(sendMessageToAPI);
-    messageInput.value("");
-  });
-  messageInput.addEventListener("keypress", function (event) {
+  const messageInput = document.getElementById("messageInput");
+
+  const sendMessage = (event) => {
+    sendMessageToAPI(friendID, messageInput.value);
+    messageInput.value = "";
+    event.preventDefault();
+  };
+
+  function handleKeyPress(event) {
     if (event.key === "Enter") {
-      sendMessageToAPI(friend.FriendID, messageInput.value);
-      console.log(sendMessageToAPI);
-      messageInput.value = "";
-      event.preventDefault();
+      sendMessage(event);
     }
-  });
+  }
+
+  sendMessageBtn.removeEventListener("click", sendMessage);
+  sendMessageBtn.addEventListener("click", sendMessage);
+
+  messageInput.removeEventListener("keypress", handleKeyPress);
+  messageInput.addEventListener("keypress", handleKeyPress);
+}
+
+function sendMessageToAPI(friendID, message) {
+  if (!message.trim()) {
+    return;
+  }
+  const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("FriendID", friendID);
+  formData.append("Content", message);
+  const fileInput = document.getElementById("fileInput");
+  if (message.isSend === 0) {
+    statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
+  } else if (message.isSend === 1) {
+    statusIcon = `<img src="../images/sent.png" class="aaa" alt="Read Icon">`;
+  }
+  if (fileInput && fileInput.files.length > 0) {
+    formData.append("files", fileInput.files[0]);
+  }
+  //SENDMESSAGE
+  fetch(`http://localhost:8888/api/message/send-message?FriendID=${friendID}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 1) {
+        const timestamp = new Date(data.data.CreatedAt);
+        const formattedTimestamp = formatTimestamp(timestamp);
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message", "sender-message");
+        messageElement.innerHTML = `
+              <div class="content-sender">
+                  <p class="content-msg-sender">${message}</p>
+                  <div class="status-time"> ${statusIcon}
+                  <span class="timestamp-senderer">${formattedTimestamp}</span>
+              </div>
+              <div class="icon-container">
+              <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+              <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
+            </div>
+              </div>
+          `;
+        document
+          .getElementById("messagesContainer")
+          .appendChild(messageElement);
+        const messagesContainer = document.getElementById("messagesContainer");
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      } else {
+        alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+    });
 }
 function fetchMessages(friendID) {
   const token = localStorage.getItem("token");
-  fetch(`http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`, {
+  //GETMESSAGE
+  fetch(`http://localhost:8888/api/message/get-message?FriendID=${friendID}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -406,8 +498,8 @@ function displayMessages(messages) {
           </div>
         `;
     } else {
-      const avatarUrl = message.Avatar
-        ? `http://10.2.44.52:8888/api/images/${message.Avatar}`
+      const avatarUrl = message.Avatar //GETAVARTAR
+        ? `http://localhost:8888/api/images/${message.Avatar}`
         : `../images/icon-user.png`;
       console.log("Avatar URL:", avatarUrl);
       messageElement.classList.add("receiver-message");
@@ -419,15 +511,15 @@ function displayMessages(messages) {
             <div class="icon-container-receiver">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
-
           </div>
           </div>
         `;
     }
-
     messagesContainer.appendChild(messageElement);
   });
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
+
 function toggleDropdownMenu(menuIcon) {
   const dropdownMenu =
     menuIcon.parentElement.querySelector(".dropdown-content");
@@ -474,89 +566,47 @@ function displayNoMessages() {
   messagesContainer.appendChild(noMessagesDiv);
 }
 
-function sendMessageToAPI(friendID, message) {
-  const token = localStorage.getItem("token");
-  const formData = new FormData();
-  formData.append("FriendID", friendID);
-  formData.append("Content", message);
-  const fileInput = document.getElementById("fileInput");
-
-  if (fileInput && fileInput.files.length > 0) {
-    formData.append("files", fileInput.files[0]);
-  }
-  fetch("http://10.2.44.52:8888/api/message/send-message", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === 1) {
-        const timestamp = new Date(data.data.CreatedAt);
-        const formattedTimestamp = formatTimestamp(timestamp);
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("message", "sender-message");
-        messageElement.innerHTML = `
-              <div class="content-sender">
-                  <p class="content-msg-sender">${message}</p>
-                  <span class="timestamp-senderer">${formattedTimestamp}</span>
-              </div>
-          `;
-        document
-          .getElementById("messagesContainer")
-          .appendChild(messageElement);
-      } else {
-        alert("Đã xảy ra lỗi khi gửi tin nhắn.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("Đã xảy ra lỗi khi gửi tin nhắn.");
-    });
-}
 // Icon Picker
-  document.addEventListener("DOMContentLoaded", function () {
-    const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
-    const emojiSelector = document.getElementById("emojiSelector");
-    const emojiList = document.getElementById("emojiList");
-    const emojiSearch = document.getElementById("emojiSearch");
-    const messageInput = document.getElementById("messageInput");
-    const fileInputTrigger = document.getElementById("fileInputTrigger");
-    emojiSelectorIcon.addEventListener("click", () => {
-      emojiSelector.classList.toggle("active");
-    });
+document.addEventListener("DOMContentLoaded", function () {
+  const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
+  const emojiSelector = document.getElementById("emojiSelector");
+  const emojiList = document.getElementById("emojiList");
+  const emojiSearch = document.getElementById("emojiSearch");
+  const messageInput = document.getElementById("messageInput");
+  const fileInputTrigger = document.getElementById("fileInputTrigger");
+  emojiSelectorIcon.addEventListener("click", () => {
+    emojiSelector.classList.toggle("active");
+  });
 
-    fetch(
-      "https://emoji-api.com/emojis?access_key=0ab3b516c667a2f2156ee4b4000f34b7a9e1c8c6"
-    )
-      .then((res) => res.json())
-      .then((data) => loadEmoji(data));
+  fetch(
+    "https://emoji-api.com/emojis?access_key=0ab3b516c667a2f2156ee4b4000f34b7a9e1c8c6"
+  )
+    .then((res) => res.json())
+    .then((data) => loadEmoji(data));
 
-    function loadEmoji(data) {
-      data.forEach((emoji) => {
-        let li = document.createElement("h2");
-        li.setAttribute("emoji-name", emoji.slug);
-        li.textContent = emoji.character;
-        li.addEventListener("click", () => {
-          messageInput.value += emoji.character; // Thêm icon vào nội dung tin nhắn
-        });
-        emojiList.appendChild(li);
+  function loadEmoji(data) {
+    data.forEach((emoji) => {
+      let li = document.createElement("h2");
+      li.setAttribute("emoji-name", emoji.slug);
+      li.textContent = emoji.character;
+      li.addEventListener("click", () => {
+        messageInput.value += emoji.character; // Thêm icon vào nội dung tin nhắn
       });
-    }
-
-    emojiSearch.addEventListener("keyup", (e) => {
-      let value = e.target.value;
-      let emojis = document.querySelectorAll("#emojiList h2");
-      emojis.forEach((emoji) => {
-        if (emoji.getAttribute("emoji-name").toLowerCase().includes(value)) {
-          emoji.style.display = "flex";
-        } else {
-          emoji.style.display = "none";
-        }
-      });
+      emojiList.appendChild(li);
     });
+  }
+
+  emojiSearch.addEventListener("keyup", (e) => {
+    let value = e.target.value;
+    let emojis = document.querySelectorAll("#emojiList h2");
+    emojis.forEach((emoji) => {
+      if (emoji.getAttribute("emoji-name").toLowerCase().includes(value)) {
+        emoji.style.display = "flex";
+      } else {
+        emoji.style.display = "none";
+      }
+    });
+  });
   //Chức năng chèn ảnh vào tin nhắn
   fileInputTrigger.addEventListener("click", () => {
     fileInput.click();

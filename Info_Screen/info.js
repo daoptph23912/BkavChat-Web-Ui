@@ -1,3 +1,8 @@
+const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
+const INFOUSER = "http://localhost:8888/api/user/info";
+const LISTUSER = "http://localhost:8888/api/message/list-friend";
+const GETAVATAR = "http://localhost:8888/api/images/${friend.Avatar}";
+const UPDATEUSER = "http://localhost:8888/api/user/update";
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -12,10 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       headers: myHeaders,
       redirect: "follow",
     };
-    const response = await fetch(
-      "http://10.2.44.52:8888/api/user/info",
-      requestOptions
-    );
+    const response = await fetch(INFOUSER, requestOptions);
     if (!response.ok) {
       throw new Error("Máy chủ không phản hồi");
     }
@@ -26,10 +28,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       "<strong>FullName</strong> " + userInfo.FullName;
     document.getElementById("username").innerHTML = //Hiển thị thông tin
       "<strong>Username</strong> " + userInfo.Username;
-    document.getElementById("avatar").innerHTML =
-      "<img src='" +
-      userInfo.Avatar +
-      "' alt='Avatar' style='width: 100px; height: 100px; border-radius: 50%;'>";
+    const avatarUrl = userInfo.Avatar
+      ? `http://localhost:8888/api/images/${userInfo.Avatar}`
+      : "../images/icon-user.png";
+    document.getElementById(
+      "avatar"
+    ).innerHTML = `<img src='${avatarUrl}' alt='Avatar' style='width: 100px; height: 100px; border-radius: 50%; object-fit: cover;'>`;
+    const avatarContainer = document.getElementById("avatar");
+    avatarContainer.style.display = "flex";
+    avatarContainer.style.justifyContent = "center";
+    avatarContainer.style.alignItems = "center";
   } catch (error) {
     console.error("Fetch error:", error);
     const userChatList = document.querySelector(".user-info");
@@ -54,9 +62,8 @@ function closeEditModal() {
   modal.setAttribute("aria-modal", "false");
 }
 
-//Chức năng lưu thay đổi thông tin người dùng
+//Sửa người dùng
 document.addEventListener("DOMContentLoaded", function () {
-  // Gắn sự kiện "submit" cho form khi toàn bộ DOM đã được tải
   document
     .getElementById("editForm")
     .addEventListener("submit", async function (event) {
@@ -66,25 +73,31 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!token) {
           throw new Error("Token chưa lưu vào localStorage");
         }
+
         const myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
+
         const formData = new FormData();
         formData.append(
           "FullName",
           document.getElementById("fullnameInput").value
         );
-        formData.append(
-          "Avatar",
-          document.getElementById("avatarInput").files[0]
-        );
+
+        const avatarURL = document.getElementById("avatarInput").value;
+        if (avatarURL) {
+          // Thêm URL hình ảnh vào FormData
+          formData.append("Avatar", avatarURL);
+        }
+
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
           body: formData,
           redirect: "follow",
         };
+
         const response = await fetch(
-          "http://10.2.44.52:8888/api/user/update",
+          "http://localhost:8888/api/user/update",
           requestOptions
         );
         if (!response.ok) {
@@ -92,13 +105,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         const data = await response.json();
         alert(data.message); // Hiển thị thông báo từ server
-        closeEditModal(); //Đóng khi lưu thành công
+        closeEditModal(); // Đóng modal khi lưu thành công
       } catch (error) {
         console.error("Fetch error:", error);
         alert("Đã xảy ra lỗi khi sửa thông tin người dùng.");
       }
     });
-  //pick image
+
+  // Image selection and preview
   const selectImage = document.querySelector(".select-image");
   const inputFile = document.querySelector("#avatarInput");
   const imgArea = document.querySelector(".img-area");
@@ -109,11 +123,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   inputFile.addEventListener("change", function () {
     const image = this.files[0];
-    if (image.size < 2000000) {
+    if (image && image.size < 2000000) {
       const reader = new FileReader();
       reader.onload = () => {
-        const allImg = imgArea.querySelectorAll("img");
-        allImg.forEach((item) => item.remove());
+        imgArea.innerHTML = ""; // Clear previous content
         const imgUrl = reader.result;
         const img = document.createElement("img");
         img.src = imgUrl;
@@ -123,17 +136,18 @@ document.addEventListener("DOMContentLoaded", function () {
       };
       reader.readAsDataURL(image);
     } else {
-      alert("Image size more than 2MB");
+      alert("Image size must be less than 2MB");
     }
   });
 });
+
 function toggleTheme() {
   const body = document.body;
   const themeIcon = document.getElementById("theme-icon");
   const isDarkMode = body.classList.contains("dark-mode");
   if (isDarkMode) {
     body.classList.remove("dark-mode");
-    themeIcon.src = "../images/mode-light-icon-2048x2048-no286vfd.png";
+    themeIcon.src = "../images/lighttt.png";
   } else {
     body.classList.add("dark-mode");
     themeIcon.src = "../images/black.png";

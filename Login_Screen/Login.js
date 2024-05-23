@@ -1,4 +1,5 @@
-const LOGIN = "http://10.2.44.52:8888/api/auth/login";
+// const LOGIN = "http://10.2.44.52:8888/api/auth/login";
+const LOGIN = "http://localhost:8888/api/auth/login";
 //Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");
 deleteIcon.addEventListener("click", function () {
