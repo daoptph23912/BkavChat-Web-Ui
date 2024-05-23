@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userData = result.data;
     const avatarImg = document.querySelector(".avatar-img");
     if (userData.Avatar) {
-      //GETAVATAR
-      avatarImg.src = GETAVATAR;
+      // GETAVATAR
+      avatarImg.src = `http://localhost:8888/api/images${userData.Avatar}`;
     } else {
       avatarImg.src = "../images/icon-user.png";
     }
@@ -38,13 +38,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     chatTitle.textContent = userData.FullName || "Undefined";
 
     if (avatarImg) {
-      avatarImg.style.width = "30px";
-      avatarImg.style.height = "30px";
+      avatarImg.style.width = "36px";
+      avatarImg.style.height = "36px";
       avatarImg.style.borderRadius = "50%";
       avatarImg.style.marginRight = "10px";
     }
     if (chatTitle) {
-      chatTitle.style.fontSize = "17px";
+      chatTitle.style.fontSize = "20px";
       chatTitle.style.fontWeight = "bold";
     }
   } catch (error) {
@@ -188,7 +188,7 @@ async function createFriendListItem(friend, token) {
   const avatar = document.createElement("img");
   if (friend.Avatar) {
     //GETAVATAR
-    avatar.src = GETAVATAR;
+    avatar.src = `http://localhost:8888/api/images${friend.Avatar}`;
   } else {
     avatar.src = `../images/icon-user.png`;
   }
@@ -210,7 +210,7 @@ async function createFriendListItem(friend, token) {
   link.textContent = friend.FullName || "Undefined";
   link.setAttribute("href", "#");
   link.style.flexGrow = "1";
-  link.style.fontSize = "17px";
+  link.style.fontSize = "16px";
   link.style.textDecoration = "none";
   link.style.color = "inherit";
   link.style.right = "5px";
@@ -334,7 +334,7 @@ async function openChatWindow(friend) {
   }
   if (friend.Avatar) {
     //GETAVATAR
-    recipientAvatar.src = GETAVATAR;
+    recipientAvatar.src = `http://localhost:8888/api/images${friend.Avatar}`;
   } else {
     recipientAvatar.src = `../images/icon-user.png`;
   }
@@ -386,7 +386,25 @@ function attachSendMessageEvents(friendID) {
   messageInput.removeEventListener("keypress", handleKeyPress);
   messageInput.addEventListener("keypress", handleKeyPress);
 }
-
+// Chức năng chèn ảnh vào tin nhắn
+fileInputTrigger.addEventListener("click", () => {
+  fileInput.click();
+});
+fileInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const image = document.createElement("img");
+      image.src = event.target.result;
+      messageInput.insertAdjacentHTML(
+        "beforebegin",
+        `<img src="${event.target.result}" style="width: auto; height: auto;">`
+      );
+    };
+    reader.readAsDataURL(file);
+  }
+});
 function sendMessageToAPI(friendID, message) {
   if (!message.trim()) {
     return;
@@ -395,6 +413,7 @@ function sendMessageToAPI(friendID, message) {
   const formData = new FormData();
   formData.append("FriendID", friendID);
   formData.append("Content", message);
+  let statusIcon = "";
   const fileInput = document.getElementById("fileInput");
   if (message.isSend === 0) {
     statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
@@ -422,6 +441,12 @@ function sendMessageToAPI(friendID, message) {
         messageElement.innerHTML = `
               <div class="content-sender">
                   <p class="content-msg-sender">${message}</p>
+                  ${Array.from(fileInput.files)
+                    .map(
+                      (file) =>
+                        `<p class="file-attachment">Đã gửi: ${file.name}</p>`
+                    )
+                    .join("")}
                   <div class="status-time"> ${statusIcon}
                   <span class="timestamp-senderer">${formattedTimestamp}</span>
               </div>
@@ -471,24 +496,34 @@ function fetchMessages(friendID) {
 function displayMessages(messages) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
-
   messages.forEach((message) => {
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
     const timestamp = new Date(message.CreatedAt);
     const formattedTimestamp = formatTimestamp(timestamp);
-    // let statusIcon = "aaa";
+    // let statusIcon = "";
     if (message.isSend === 0) {
       statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
     } else if (message.isSend === 1) {
       statusIcon = `<img src="../images/sent.png" class="aaa" alt="Read Icon">`;
     }
-
+    let contentHtml = "";
+    if (message.Images && message.Images.length > 0) {
+      message.Images.forEach((img) => {
+        contentHtml += `<img src="http://localhost:8888/api${img.urlImage}" alt="${img.FileName}" style="max-width: 100%; height: auto;">`;
+      });
+    }
+    if (message.Files && message.Files.length > 0) {
+      message.Files.forEach((file) => {
+        contentHtml += `<a href="http://localhost:8888/api${file.urlFile}" download="${file.FileName}" style="display: block;">${file.FileName}</a>`;
+      });
+    }
     if (message.MessageType === 1) {
       messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
           <div class="content-sender">
             <p class="content-msg-sender" >${message.Content || ""}</p>
+           
               <div class="status-time"> ${statusIcon}
               <span class="timestamp-sender">${formattedTimestamp}</span></div>
             <div class="icon-container">
@@ -496,6 +531,7 @@ function displayMessages(messages) {
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
           </div>
+          ${contentHtml}
         `;
     } else {
       const avatarUrl = message.Avatar //GETAVARTAR
@@ -507,12 +543,14 @@ function displayMessages(messages) {
           <img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
           <div class="content-receiver">
             <p class="content-msg-receiver">${message.Content || ""}</p>
+           
             <span class="timestamp-receiver">${formattedTimestamp}</span>
             <div class="icon-container-receiver">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
           </div>
           </div>
+          ${contentHtml}  
         `;
     }
     messagesContainer.appendChild(messageElement);
@@ -606,25 +644,5 @@ document.addEventListener("DOMContentLoaded", function () {
         emoji.style.display = "none";
       }
     });
-  });
-  //Chức năng chèn ảnh vào tin nhắn
-  fileInputTrigger.addEventListener("click", () => {
-    fileInput.click();
-  });
-
-  fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const image = document.createElement("img");
-        image.src = event.target.result;
-        messageInput.insertAdjacentHTML(
-          "beforebegin",
-          `<img src="${event.target.result}" style="width: auto; height: auto;">`
-        );
-      };
-      reader.readAsDataURL(file);
-    }
   });
 });

@@ -27,7 +27,8 @@
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/acong.png" />
                 <a href="#">Nhắc đến bạn </a>
-                <img style="width: 20px; height: 20px; display: flex;" src="../images/1.png" />
+                <img style="width: 20px; height: 20px; display: flex;position: absolute;right: 10px;"
+                  src="../images/1.png" />
               </div>
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/group.png" />
@@ -36,7 +37,8 @@
               <div class="theme-toggle" onclick="toggleTheme()" style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/night.png" />
                 <a href="#" id="theme-icon">Giao diện tối </a>
-                <img style="width: 20px; height: 20px; display: flex;" src="../images/active_noactive.png" />
+                <img style="width: 20px; height: 20px; display: flex;position: absolute;right: 10px;"
+                  src="../images/active_noactive.png" />
               </div>
               <div style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/profile.png" />
@@ -50,7 +52,6 @@
           </div>
         </div>
         <div class="user-list">
-          <!-- <h1 class="chat-left">Danh sách người dùng</h1> -->
           <div style="display: flex; align-items: center">
             <img />
             <ul class="user-chat"></ul>
@@ -73,9 +74,9 @@
             <h3>Chưa có tin nhắn ....</h3>
           </div>
         </div>
-        <!-- them style , id=inputArea -->
         <div class="input-area" id="inputArea" style="display: none">
           <img style="margin-right: 6px; cursor: pointer" src="../images/file.png" id="fileInputTrigger" />
+          <input type="file" id="fileInput" style="display: none" multiple />
           <div class="input-container">
             <textarea class="textarea" type="text" id="messageInput" placeholder="Nhập tin nhắn..."></textarea>
             <div class="utility-group">
@@ -91,7 +92,6 @@
           <button id="sendMessageBtn">
             <img class="img-send" src="../images/send.png" />
           </button>
-          <input type="file" id="fileInput" style="display: none" />
         </div>
       </div>
 </body>

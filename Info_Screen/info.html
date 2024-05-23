@@ -11,14 +11,12 @@
 
 <body class="light-mode">
     <div style="cursor: pointer;" onclick="toggleTheme()">
-        <img style=" width: 50px;height: 50px;margin-top: 20px;" src="../images/lighttt.png" id="theme-icon" />
+        <img style=" width: 50px;height: 50px;" src="../images/lighttt.png" id="theme-icon" />
     </div>
     <div class="user-info">
-        <h2>Thông tin người dùng </h2>
-        <div id="fullname"></div>
-        <div id="username"></div>
-        <div id="avatar"></div>
-
+        <h1 id="fullname"></h1>
+        <h1 style="margin-top: 20px;" id="username"></h1>
+        <div style="margin-top: 20px;" id="avatar"></div>
     </div>
     <button type="button" class="btn btn-primary" onclick="openEditModal()">Sửa </button>
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -35,17 +33,18 @@
                             <input type="text" class="form-control" id="fullnameInput" name="fullnameInput" required>
                         </div>
                         <div class="container">
-                            <label for="avatarInput" class="form-label">Avatar:</label>
-                            <input type="file" id="avatarInput" accept="image/*" name="avatarInput" hidden>
-                            <div class="img-area" data-img="">
-                                <i class='bx bxs-cloud-upload icon'></i>
-                                <h3>Upload Image</h3>
-                                <p>Image size must be less than <span>2MB</span></p>
+                            <div class="mb-3">
+                                <label for="avatarInput" class="form-label">Avatar:</label>
+                                <input type="file" id="avatarInput" accept="image/*" name="avatarInput" hidden>
+                                <div class="img-area" data-img="">
+                                    <i class='bx bxs-cloud-upload icon'></i>
+                                    <h3>Upload Image</h3>
+                                    <p>Image size must be less than <span>2MB</span></p>
+                                </div>
+                                <div class="select-image">Select Image</div>
                             </div>
-                            <div class="select-image">Select Image</div>
                         </div>
                     </form>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

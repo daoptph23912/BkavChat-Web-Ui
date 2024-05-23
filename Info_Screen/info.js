@@ -25,15 +25,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userInfo = data.data;
 
     document.getElementById("fullname").innerHTML =
-      "<strong>FullName</strong> " + userInfo.FullName;
-    document.getElementById("username").innerHTML = //Hiển thị thông tin
-      "<strong>Username</strong> " + userInfo.Username;
+      "<strong>FullName:</strong> " + userInfo.FullName;
+    document.getElementById("username").innerHTML =
+      "<strong>Username:</strong> " + userInfo.Username;
     const avatarUrl = userInfo.Avatar
       ? `http://localhost:8888/api/images/${userInfo.Avatar}`
       : "../images/icon-user.png";
     document.getElementById(
       "avatar"
-    ).innerHTML = `<img src='${avatarUrl}' alt='Avatar' style='width: 100px; height: 100px; border-radius: 50%; object-fit: cover;'>`;
+    ).innerHTML = `<img src='${avatarUrl}' alt='Avatar' style='width: 300px; height: 200px; border-radius: 10%; object-fit: cover;'>`;
     const avatarContainer = document.getElementById("avatar");
     avatarContainer.style.display = "flex";
     avatarContainer.style.justifyContent = "center";
@@ -46,22 +46,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     userChatList.appendChild(errorMessage);
   }
 });
-//Sửa thông tin người dùng
 function openEditModal() {
-  // Mở modal
   const modal = document.getElementById("editModal");
   modal.classList.add("show");
   modal.style.display = "block";
   modal.setAttribute("aria-modal", "true");
 }
 function closeEditModal() {
-  //Đóng modal
   const modal = document.getElementById("editModal");
   modal.classList.remove("show");
   modal.style.display = "none";
   modal.setAttribute("aria-modal", "false");
 }
-
 //Sửa người dùng
 document.addEventListener("DOMContentLoaded", function () {
   document
@@ -73,29 +69,25 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!token) {
           throw new Error("Token chưa lưu vào localStorage");
         }
-
         const myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
-
         const formData = new FormData();
         formData.append(
           "FullName",
           document.getElementById("fullnameInput").value
         );
-
-        const avatarURL = document.getElementById("avatarInput").value;
-        if (avatarURL) {
-          // Thêm URL hình ảnh vào FormData
-          formData.append("Avatar", avatarURL);
+        const avatarInput = document.getElementById("avatarInput");
+        if (avatarInput.files.length > 0) {
+          formData.append("avatar", avatarInput.files[0]);
+        } else {
+          console.log("loiii");
         }
-
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
           body: formData,
           redirect: "follow",
         };
-
         const response = await fetch(
           "http://localhost:8888/api/user/update",
           requestOptions
@@ -104,15 +96,13 @@ document.addEventListener("DOMContentLoaded", function () {
           throw new Error("Máy chủ không phản hồi");
         }
         const data = await response.json();
-        alert(data.message); // Hiển thị thông báo từ server
-        closeEditModal(); // Đóng modal khi lưu thành công
+        alert(data.message);
+        closeEditModal();
       } catch (error) {
         console.error("Fetch error:", error);
         alert("Đã xảy ra lỗi khi sửa thông tin người dùng.");
       }
     });
-
-  // Image selection and preview
   const selectImage = document.querySelector(".select-image");
   const inputFile = document.querySelector("#avatarInput");
   const imgArea = document.querySelector(".img-area");

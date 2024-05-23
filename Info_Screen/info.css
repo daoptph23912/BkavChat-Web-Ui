@@ -48,7 +48,7 @@ body.dark-mode {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 60%;
+    width: 40%;
     border-radius: 10px;
 }
 
@@ -151,11 +151,12 @@ body.dark-mode {
 }
 
 .container {
-	max-width: 400px;
+    max-width: 600px;
 	width: 100%;
 	background: #fff;
 	padding: 30px;
 	border-radius: 30px;
+    justify-content: center;
 }
 .img-area {
 	position: relative;
