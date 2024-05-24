@@ -1,5 +1,6 @@
 const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
-const INFOUSER = "http://localhost:8888/api/user/info";
+// const INFOUSER = "http://localhost:8888/api/user/info";
+const INFOUSER = "http://10.2.44.52:8888/api/user/info";
 const LISTUSER = "http://localhost:8888/api/message/list-friend";
 const GETAVATAR = "http://localhost:8888/api/images/${friend.Avatar}";
 const UPDATEUSER = "http://localhost:8888/api/user/update";
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("username").innerHTML =
       "<strong>Username:</strong> " + userInfo.Username;
     const avatarUrl = userInfo.Avatar
-      ? `http://localhost:8888/api/images/${userInfo.Avatar}`
+      ? `http://10.2.44.52:8888/api/images/${userInfo.Avatar}`
       : "../images/icon-user.png";
     document.getElementById(
       "avatar"
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
           redirect: "follow",
         };
         const response = await fetch(
-          "http://localhost:8888/api/user/update",
+          "http://10.2.44.52:8888/api/user/update",
           requestOptions
         );
         if (!response.ok) {

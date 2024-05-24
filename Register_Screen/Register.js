@@ -1,5 +1,5 @@
-const REGISTER = "http://localhost:8888/api/auth/register";
-// const REGISTER = "http://10.2.44.52:8888/api/auth/register";
+// const REGISTER = "http://localhost:8888/api/auth/register";
+const REGISTER = "http://10.2.44.52:8888/api/auth/register";
 //Chức năng icon xóa - ẩn hiện password
 const deleteFullName = document.getElementById("deleteFullName");
 const fullNameInput = document.getElementById("fullName");

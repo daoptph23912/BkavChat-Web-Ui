@@ -1,11 +1,9 @@
-// const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
-// const INFOUSER = "http://10.2.44.52:8888/api/user/info";
-// const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
-const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
-const INFOUSER = "http://localhost:8888/api/user/info";
-const LISTUSER = "http://localhost:8888/api/message/list-friend";
-const GETAVATAR = "http://localhost:8888/api/images/${friend.Avatar}";
-
+const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
+const INFOUSER = "http://10.2.44.52:8888/api/user/info";
+const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
+// const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
+// const INFOUSER = "http://localhost:8888/api/user/info";
+// const LISTUSER = "http://localhost:8888/api/message/list-friend";
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const token = localStorage.getItem("token");
@@ -30,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const avatarImg = document.querySelector(".avatar-img");
     if (userData.Avatar) {
       // GETAVATAR
-      avatarImg.src = `http://localhost:8888/api/images${userData.Avatar}`;
+      avatarImg.src = `http://10.2.44.52:8888/api/images${userData.Avatar}`;
     } else {
       avatarImg.src = "../images/icon-user.png";
     }
@@ -188,7 +186,7 @@ async function createFriendListItem(friend, token) {
   const avatar = document.createElement("img");
   if (friend.Avatar) {
     //GETAVATAR
-    avatar.src = `http://localhost:8888/api/images${friend.Avatar}`;
+    avatar.src = `http://10.2.44.52:8888/api/images${friend.Avatar}`;
   } else {
     avatar.src = `../images/icon-user.png`;
   }
@@ -289,7 +287,7 @@ function formatTime(timestamp) {
 async function fetchLastMessage(friendID, token) {
   const response = await fetch(
     //GETMESSAGE
-    `http://localhost:8888/api/message/get-message?FriendID=${friendID}`,
+    `http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`,
     {
       method: "GET",
       headers: {
@@ -334,7 +332,7 @@ async function openChatWindow(friend) {
   }
   if (friend.Avatar) {
     //GETAVATAR
-    recipientAvatar.src = `http://localhost:8888/api/images${friend.Avatar}`;
+    recipientAvatar.src = `http://10.2.44.52:8888/api/images${friend.Avatar}`;
   } else {
     recipientAvatar.src = `../images/icon-user.png`;
   }
@@ -363,58 +361,75 @@ async function openChatWindow(friend) {
   fetchMessages(friend.FriendID);
   // console.log(friend.FriendID);
   attachSendMessageEvents(friend.FriendID);
+  console.log(friend.FriendID);
 }
 function attachSendMessageEvents(friendID) {
   const sendMessageBtn = document.getElementById("sendMessageBtn");
   const messageInput = document.getElementById("messageInput");
+  const fileInputTrigger = document.getElementById("fileInputTrigger");
+  const fileInput = document.getElementById("fileInput");
 
   const sendMessage = (event) => {
     sendMessageToAPI(friendID, messageInput.value);
     messageInput.value = "";
+    fileInput.value = "";
+    document
+      .querySelectorAll(".file-preview")
+      .forEach((preview) => preview.remove());
     event.preventDefault();
   };
-
   function handleKeyPress(event) {
     if (event.key === "Enter") {
       sendMessage(event);
     }
   }
-
   sendMessageBtn.removeEventListener("click", sendMessage);
   sendMessageBtn.addEventListener("click", sendMessage);
-
   messageInput.removeEventListener("keypress", handleKeyPress);
   messageInput.addEventListener("keypress", handleKeyPress);
 }
-// Chức năng chèn ảnh vào tin nhắn
 fileInputTrigger.addEventListener("click", () => {
   fileInput.click();
 });
+const fileInput = document.getElementById("fileInput");
+const filePreviewContainer = document.getElementById("filePreviewContainer");
 fileInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
+  const files = e.target.files;
+  filePreviewContainer.innerHTML = "";
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
     const reader = new FileReader();
     reader.onload = function (event) {
-      const image = document.createElement("img");
-      image.src = event.target.result;
-      messageInput.insertAdjacentHTML(
-        "beforebegin",
-        `<img src="${event.target.result}" style="width: auto; height: auto;">`
-      );
+      const previewElement = document.createElement("div");
+      previewElement.classList.add("file-preview");
+      if (file.type.startsWith("image/")) {
+        const image = document.createElement("img");
+        image.src = event.target.result;
+        image.style.maxWidth = "200px";
+        image.style.maxHeight = "auto";
+        previewElement.appendChild(image);
+      } else {
+        const fileName = document.createElement("p");
+        fileName.textContent = file.name;
+        previewElement.appendChild(fileName);
+      }
+      filePreviewContainer.appendChild(previewElement);
+      adjustTextareaHeight();
     };
     reader.readAsDataURL(file);
   }
 });
+
 function sendMessageToAPI(friendID, message) {
-  if (!message.trim()) {
-    return;
-  }
   const token = localStorage.getItem("token");
   const formData = new FormData();
+  const fileInput = document.getElementById("fileInput");
+  if (!message.trim() && fileInput.files.length === 0) {
+    return;
+  }
   formData.append("FriendID", friendID);
   formData.append("Content", message);
-  let statusIcon = "";
-  const fileInput = document.getElementById("fileInput");
+  let statusIcon = '';
   if (message.isSend === 0) {
     statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
   } else if (message.isSend === 1) {
@@ -423,14 +438,16 @@ function sendMessageToAPI(friendID, message) {
   if (fileInput && fileInput.files.length > 0) {
     formData.append("files", fileInput.files[0]);
   }
-  //SENDMESSAGE
-  fetch(`http://localhost:8888/api/message/send-message?FriendID=${friendID}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  })
+  fetch(
+    `http://10.2.44.52:8888/api/message/send-message?FriendID=${friendID}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1) {
@@ -438,15 +455,21 @@ function sendMessageToAPI(friendID, message) {
         const formattedTimestamp = formatTimestamp(timestamp);
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", "sender-message");
+        let contentHtml = "";
+        if (data.data.Images && data.data.Images.length > 0) {
+          data.data.Images.forEach(img => {
+            contentHtml += `<img src="http://10.2.44.52:8888/api${img.urlImage}" alt="${img.FileName}" style="max-width: 100%; height: auto;">`;
+          });
+        }
+        if (data.data.Files && data.data.Files.length > 0) {
+          data.data.Files.forEach(file => {
+            contentHtml += `<a href="http://10.2.44.52:8888/api${file.urlFile}" download="${file.FileName}" style="display: block;">${file.FileName}</a>`;
+          });
+        }
         messageElement.innerHTML = `
               <div class="content-sender">
                   <p class="content-msg-sender">${message}</p>
-                  ${Array.from(fileInput.files)
-                    .map(
-                      (file) =>
-                        `<p class="file-attachment">Đã gửi: ${file.name}</p>`
-                    )
-                    .join("")}
+                  ${contentHtml}
                   <div class="status-time"> ${statusIcon}
                   <span class="timestamp-senderer">${formattedTimestamp}</span>
               </div>
@@ -462,6 +485,7 @@ function sendMessageToAPI(friendID, message) {
         const messagesContainer = document.getElementById("messagesContainer");
         messagesContainer.appendChild(messageElement);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        adjustTextareaHeight();
       } else {
         alert("Đã xảy ra lỗi khi gửi tin nhắn.");
       }
@@ -471,10 +495,15 @@ function sendMessageToAPI(friendID, message) {
       alert("Đã xảy ra lỗi khi gửi tin nhắn.");
     });
 }
+function adjustTextareaHeight() {
+  messageInput.style.height = "auto";
+  messageInput.style.height = `${Math.min(messageInput.scrollHeight, 700)}px`;
+}
+messageInput.addEventListener("input", adjustTextareaHeight);
 function fetchMessages(friendID) {
   const token = localStorage.getItem("token");
   //GETMESSAGE
-  fetch(`http://localhost:8888/api/message/get-message?FriendID=${friendID}`, {
+  fetch(`http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -501,7 +530,7 @@ function displayMessages(messages) {
     messageElement.classList.add("message");
     const timestamp = new Date(message.CreatedAt);
     const formattedTimestamp = formatTimestamp(timestamp);
-    // let statusIcon = "";
+    let statusIcon = "";
     if (message.isSend === 0) {
       statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
     } else if (message.isSend === 1) {
@@ -510,20 +539,21 @@ function displayMessages(messages) {
     let contentHtml = "";
     if (message.Images && message.Images.length > 0) {
       message.Images.forEach((img) => {
-        contentHtml += `<img src="http://localhost:8888/api${img.urlImage}" alt="${img.FileName}" style="max-width: 100%; height: auto;">`;
+        contentHtml += `<img src="http://10.2.44.52:8888/api${img.urlImage}" alt="${img.FileName}" class="image-sender" >`;
       });
     }
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
-        contentHtml += `<a href="http://localhost:8888/api${file.urlFile}" download="${file.FileName}" style="display: block;">${file.FileName}</a>`;
+        contentHtml += `<a href="http://10.2.44.52:8888/api${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
       });
     }
     if (message.MessageType === 1) {
-      messageElement.classList.add("sender-message");
+      messageElement.classList.add("sender-message"); 
       messageElement.innerHTML = `
+      ${contentHtml}
           <div class="content-sender">
+         
             <p class="content-msg-sender" >${message.Content || ""}</p>
-           
               <div class="status-time"> ${statusIcon}
               <span class="timestamp-sender">${formattedTimestamp}</span></div>
             <div class="icon-container">
@@ -531,26 +561,25 @@ function displayMessages(messages) {
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
           </div>
-          ${contentHtml}
+          
         `;
     } else {
       const avatarUrl = message.Avatar //GETAVARTAR
-        ? `http://localhost:8888/api/images/${message.Avatar}`
+        ? `http://10.2.44.52:8888/api/images/${message.Avatar}`
         : `../images/icon-user.png`;
       console.log("Avatar URL:", avatarUrl);
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
           <img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
           <div class="content-receiver">
+          <div>${contentHtml}</div>
             <p class="content-msg-receiver">${message.Content || ""}</p>
-           
             <span class="timestamp-receiver">${formattedTimestamp}</span>
             <div class="icon-container-receiver">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
           </div>
           </div>
-          ${contentHtml}  
         `;
     }
     messagesContainer.appendChild(messageElement);
