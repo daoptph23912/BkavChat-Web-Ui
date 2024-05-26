@@ -1,9 +1,8 @@
-const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
-// const INFOUSER = "http://localhost:8888/api/user/info";
-const INFOUSER = "http://10.2.44.52:8888/api/user/info";
-const LISTUSER = "http://localhost:8888/api/message/list-friend";
-const GETAVATAR = "http://localhost:8888/api/images/${friend.Avatar}";
-const UPDATEUSER = "http://localhost:8888/api/user/update";
+const baseUrl = "http://localhost:8888/api";
+const SENDMESSAGE = `${baseUrl}/message/send-message`;
+const INFOUSER = `${baseUrl}/user/info`;
+const LISTUSER = `${baseUrl}/message/list-friend`;
+const UPDATEUSER = `${baseUrl}/api/user/update`;
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -30,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("username").innerHTML =
       "<strong>Username:</strong> " + userInfo.Username;
     const avatarUrl = userInfo.Avatar
-      ? `http://10.2.44.52:8888/api/images/${userInfo.Avatar}`
+      ? `${baseUrl}/images/${userInfo.Avatar}`
       : "../images/icon-user.png";
     document.getElementById(
       "avatar"
@@ -89,10 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
           body: formData,
           redirect: "follow",
         };
-        const response = await fetch(
-          "http://10.2.44.52:8888/api/user/update",
-          requestOptions
-        );
+        const response = await fetch(`${baseUrl}/user/update`, requestOptions);
         if (!response.ok) {
           throw new Error("Máy chủ không phản hồi");
         }

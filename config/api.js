@@ -1,0 +1,11 @@
+const baseUrl = "http://localhost:8888/api";
+export const LOGIN = `${baseUrl}/api/auth/login`;
+export const REGISTER = `${baseUrl}/api/auth/register`;
+export const INFOUSER = `${baseUrl}/api/user/info`;
+export const EDITPROFILEUSER = `${baseUrl}/api/user/update`;
+export const LISTUSER = `${baseUrl}/api/message/list-friend`;
+export const SENDMESSAGE = `${baseUrl}/api/message/send-message`;
+export const GETMESSAGE = `${baseUrl}/api/message/get-message?FriendID=6614f58603ea7381fe1f42a8&LastTime=2024-04-10T07:02:38.856Z`;
+export const GETIMAGE = `${baseUrl}/api/images/bb0df978-356d-409c-994c-6d375f150cae.jpg`;
+export const GETFILE = `${baseUrl}/api/files/1bbe0964-56a4-46a6-a1a8-6f7e1ec4e6b3.zip`;
+export const GETAVATAR = `${baseUrl}/api/images/avatar/4344930c-0c01-436c-8784-4917f5147660.jpg`;

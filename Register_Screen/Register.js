@@ -1,5 +1,6 @@
-// const REGISTER = "http://localhost:8888/api/auth/register";
-const REGISTER = "http://10.2.44.52:8888/api/auth/register";
+const baseUrl = "http://localhost:8888/api";
+const REGISTER = `${baseUrl}/auth/register`;
+// const REGISTER = "http://10.2.44.52:8888/api/auth/register";
 //Chức năng icon xóa - ẩn hiện password
 const deleteFullName = document.getElementById("deleteFullName");
 const fullNameInput = document.getElementById("fullName");
@@ -65,8 +66,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       const data = await response.json();
       if (data.status === 1) {
-        alert("Đăng ký thành công!");
-        window.location.href = "/Login_Screen/Login.html";
+        const registerSuccessMessage = document.getElementById(
+          "register-success-message"
+        );
+        registerSuccessMessage.style.display = "block";
+        setTimeout(function () {
+          registerSuccessMessage.style.display = "none";
+          window.location.href = "/Login_Screen/Login.html";
+        }, 1000);
       } else {
         alert("Đăng ký không thành công: " + data.message);
       }

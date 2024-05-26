@@ -27,7 +27,7 @@ body.dark-mode {
 }
 
 .user-list {
-  height: 94vh;
+  height: 92vh;
   overflow-y: auto;
 }
 
@@ -334,7 +334,6 @@ body.dark-mode {
 
 .sender-message {
   justify-content: flex-end;
-  display: flex;
 }
 .receiver-message {
   justify-content: flex-start;
@@ -348,32 +347,35 @@ body.dark-mode {
   padding-right: 2px;
   padding-left: 10px;
   border-radius: 20px;
-  flex-grow: 1;
+  /* flex-grow: 1; */
 }
 .content-msg-receiver {
-  background-color: #e9eaed;
-  width: 100%;
+  background-color:  #e9eaed;
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-right: 2px;
   padding-left: 10px;
+  padding-right: 10px;
   border-radius: 20px;
 }
+.sender-image{
+  margin-right: 40px;
+  display: flex;
+}
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: rgb(195, 212, 223);
   margin-top: 15px;
 }
-.aaa {
+.icon-status {
   width: 12px;
   height: 12px;
   justify-content: flex-end;
 }
 .content-receiver {
   color: #080707;
-  padding-left: 5px;
+  left: 0px;
   border-radius: 10px;
   font-size: 14px;
   line-height: 20px;
@@ -394,12 +396,14 @@ body.dark-mode {
   margin-right: 20px;
   word-wrap: break-word;
   overflow-wrap: break-word;
+   position: relative;
+
 }
 .status-time {
   display: flex;
   align-items: center;
   position: absolute;
-  bottom: -5px;
+  bottom: -20px;
   right: -5px;
   white-space: nowrap;
 }
@@ -425,7 +429,7 @@ body.dark-mode {
   gap: 5px;
   position: absolute;
   left: -45px;
-  bottom: 20px;
+  bottom: 5px;
 }
 .icon-container-receiver {
   display: none;
@@ -460,6 +464,7 @@ body.dark-mode {
   right: -20px;
   position: relative;
 }
+
 .image-file {
   display: block;
 }
@@ -472,5 +477,37 @@ body.dark-mode {
   margin-top: 60px;
   margin-bottom: 30px;
   right: -20px;
+  position: relative;
+}
+.file-receiver{
+  background: #c4d4e6;
+  padding: 10px;  
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  margin-top: 60px;
+  margin-bottom: 30px;
+  right: 20px;
+  position: relative;
+}
+.image-receiver {
+  max-width: 500px;
+  height: auto;
+  margin-top: 60px;
+  margin-bottom: 30px;
+  right: 20px;
+  position: relative;
+}
+.style-receiver{
+  display: flex;
+  position: relative;
+  gap: 10px;
+}
+.style-img-content{
+  display: block;
+  position: relative;
+}
+.style-image{
+  margin-left: 70px;
   position: relative;
 }

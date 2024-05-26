@@ -1,5 +1,5 @@
-const LOGIN = "http://10.2.44.52:8888/api/auth/login";
-// const LOGIN = "http://localhost:8888/api/auth/login";
+const baseUrl = "http://localhost:8888/api";
+const LOGIN = `${baseUrl}/auth/login`;
 //Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");
 deleteIcon.addEventListener("click", function () {
@@ -9,17 +9,6 @@ deleteIcon.addEventListener("click", function () {
 const togglePassword = document.getElementById("togglePassword");
 const passwordInput = document.getElementById("password");
 const eyeIcon = togglePassword.querySelector("img");
-
-// togglePassword.addEventListener("click", function () {
-//   if (passwordInput.type === "password") {
-//     passwordInput.type = "text";
-//     eyeIcon.src =
-//       "../images/png-transparent-eye-eyes-password-security-show-password-essential-icon.png";
-//   } else {
-//     passwordInput.type = "password";
-//     eyeIcon.src = "../images/eye.png";
-//   }
-// });
 togglePassword.addEventListener("click", function () {
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
@@ -27,6 +16,11 @@ togglePassword.addEventListener("click", function () {
     passwordInput.type = "password";
   }
 });
+function clearErrorMessages() {
+  errorEmail.textContent = "";
+  errorPassword.textContent = "";
+}
+
 //Chức năng đăng nhập
 const errorEmail = document.getElementById("error-email");
 const errorPassword = document.getElementById("error-password");
@@ -34,12 +28,14 @@ document.addEventListener("DOMContentLoaded", async function () {
   const form = document.querySelector("form");
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
+    clearErrorMessages();
     const Username = document.getElementById("email").value;
     const Password = document.getElementById("password").value;
     const userData = {
       Username: Username,
       Password: Password,
     };
+    clearErrorMessages();
     try {
       const response = await fetch(LOGIN, {
         method: "POST",
@@ -53,10 +49,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       const data = await response.json();
       if (data.status === 1) {
-        alert("Đăng nhập thành công!");
-        localStorage.setItem("loggedInUserName", data.data.FullName); //lưu FullName vào localStorage
+        localStorage.setItem("loggedInUserName", data.data.FullName);
         localStorage.setItem("token", data.data.token);
-        window.location.href = "/Chat_Screen/Chat.html";
+        const loginSuccessMessage = document.getElementById(
+          "login-success-message"
+        );
+        loginSuccessMessage.style.display = "block";
+        setTimeout(function () {
+          loginSuccessMessage.style.display = "none";
+          window.location.href = "/Chat_Screen/Chat.html";
+        }, 500);
       } else {
         alert("Đăng nhập không thành công: " + data.message);
       }

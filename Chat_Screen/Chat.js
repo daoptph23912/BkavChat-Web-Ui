@@ -1,16 +1,15 @@
-const SENDMESSAGE = "http://10.2.44.52:8888/api/message/send-message";
-const INFOUSER = "http://10.2.44.52:8888/api/user/info";
-const LISTUSER = "http://10.2.44.52:8888/api/message/list-friend";
-// const SENDMESSAGE = "http://localhost:8888/api/message/send-message";
-// const INFOUSER = "http://localhost:8888/api/user/info";
-// const LISTUSER = "http://localhost:8888/api/message/list-friend";
+// const baseUrl = "http://10.2.44.52:8888/api";
+const baseUrl = "http://localhost:8888/api";
+const SENDMESSAGE = `${baseUrl}/message/send-message`;
+const INFOUSER = `${baseUrl}/user/info`;
+const LISTUSER = `${baseUrl}/message/list-friend`;
+//Menu-drop-USERINFO
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
       throw new Error("Token chưa lưu vào localStorage");
     }
-    //INFOUSER
     const response = await fetch(INFOUSER, {
       method: "GET",
       headers: {
@@ -18,23 +17,22 @@ document.addEventListener("DOMContentLoaded", async function () {
       },
     });
     if (!response.ok) {
-      throw new Error("Failed to fetch user info");
+      throw new Error("không tìm được thông tin người dùng");
     }
     const result = await response.json();
     if (result.status !== 1) {
-      throw new Error(result.message || "Failed to fetch user info");
+      throw new Error(result.message || "không lấy được thông tin người dùng");
     }
     const userData = result.data;
     const avatarImg = document.querySelector(".avatar-img");
     if (userData.Avatar) {
       // GETAVATAR
-      avatarImg.src = `http://10.2.44.52:8888/api/images${userData.Avatar}`;
+      avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
     } else {
       avatarImg.src = "../images/icon-user.png";
     }
     const chatTitle = document.querySelector(".chat-right");
     chatTitle.textContent = userData.FullName || "Undefined";
-
     if (avatarImg) {
       avatarImg.style.width = "36px";
       avatarImg.style.height = "36px";
@@ -48,6 +46,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
+});
+//Chức năng menu
+document.addEventListener("DOMContentLoaded", function () {
+  var dropdownMenu = document.getElementById("dropdownMenu");
+  var dropdownContent = document.getElementById("dropdownContent");
+  dropdownMenu.addEventListener("click", function () {
+    dropdownContent.style.display =
+      dropdownContent.style.display === "block" ? "none" : "block";
+  });
+  document.addEventListener("click", function (event) {
+    if (!dropdownMenu.contains(event.target)) {
+      dropdownContent.style.display = "none";
+    }
+  });
 });
 //chức năng tìm kiếm người dùng
 document.addEventListener("DOMContentLoaded", function () {
@@ -66,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
+//Đăng xuất
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.querySelector("#logout");
   logoutLink.addEventListener("click", function (event) {
@@ -76,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.replace("../Login_Screen/Login.html");
   });
 });
-
 //Giao diện sáng tối
 function toggleTheme() {
   const body = document.body;
@@ -90,21 +101,6 @@ function toggleTheme() {
     themeIcon.src = "moon.png";
   }
 }
-//Chức năng menu
-document.addEventListener("DOMContentLoaded", function () {
-  var dropdownMenu = document.getElementById("dropdownMenu");
-  var dropdownContent = document.getElementById("dropdownContent");
-  dropdownMenu.addEventListener("click", function () {
-    dropdownContent.style.display =
-      dropdownContent.style.display === "block" ? "none" : "block";
-  });
-  document.addEventListener("click", function (event) {
-    if (!dropdownMenu.contains(event.target)) {
-      dropdownContent.style.display = "none";
-    }
-  });
-});
-
 //Hiển thị danh sách người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -119,16 +115,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       headers: myHeaders,
       redirect: "follow",
     };
-    const response = await fetch(
-      //LISTUSER
-      LISTUSER,
-      requestOptions
-    );
+    const response = await fetch(LISTUSER, requestOptions);
     if (!response.ok) {
       throw new Error("Lỗi server không phản hồi");
     }
     const data = await response.json();
-    // console.log(data.data);
     const userChatList = document.querySelector(".user-chat");
     if (data.data && data.data.length > 0) {
       const friendsWithFullName = data.data.filter((friend) => friend.FullName);
@@ -143,15 +134,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         listItem.addEventListener("click", async function (event) {
           event.preventDefault();
           try {
-            const userInfoResponse = await fetch(
-              //INFOUSER
-              INFOUSER,
-              {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow",
-              }
-            );
+            const userInfoResponse = await fetch(INFOUSER, {
+              method: "GET",
+              headers: myHeaders,
+              redirect: "follow",
+            });
             if (!userInfoResponse.ok) {
               throw new Error("Lỗi khi lấy thông tin người dùng");
             }
@@ -182,11 +169,10 @@ async function createFriendListItem(friend, token) {
   listItem.style.display = "flex";
   listItem.style.flexDirection = "flexGrow";
   listItem.style.gap = "10px";
-
   const avatar = document.createElement("img");
   if (friend.Avatar) {
     //GETAVATAR
-    avatar.src = `http://10.2.44.52:8888/api/images${friend.Avatar}`;
+    avatar.src = `${baseUrl}/images${friend.Avatar}`;
   } else {
     avatar.src = `../images/icon-user.png`;
   }
@@ -205,7 +191,7 @@ async function createFriendListItem(friend, token) {
   avatarWrapper.style.height = "40px";
 
   const link = document.createElement("a");
-  link.textContent = friend.FullName || "Undefined";
+  link.textContent = friend.FullName || "";
   link.setAttribute("href", "#");
   link.style.flexGrow = "1";
   link.style.fontSize = "16px";
@@ -214,10 +200,11 @@ async function createFriendListItem(friend, token) {
   link.style.right = "5px";
 
   const messageContent = document.createElement("span");
-  messageContent.textContent = friend.Content || "Không có tin nhắn";
+  messageContent.textContent = friend.Content || "";
   messageContent.style.fontSize = "14px";
   messageContent.style.color = "#666";
   messageContent.style.display = "flex";
+  messageContent.style.marginTop = "2px";
 
   const textContainer = document.createElement("div");
   textContainer.style.display = "column";
@@ -238,7 +225,7 @@ async function createFriendListItem(friend, token) {
   }
   messageTime.style.fontSize = "12px";
   messageTime.style.color = "#999";
-  messageTime.style.marginTop = "22px";
+  messageTime.style.marginTop = "20px";
   messageTime.style.marginLeft = "auto";
 
   const statusDot = document.createElement("span");
@@ -287,7 +274,7 @@ function formatTime(timestamp) {
 async function fetchLastMessage(friendID, token) {
   const response = await fetch(
     //GETMESSAGE
-    `http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`,
+    `${baseUrl}/message/get-message?FriendID=${friendID}`,
     {
       method: "GET",
       headers: {
@@ -332,7 +319,7 @@ async function openChatWindow(friend) {
   }
   if (friend.Avatar) {
     //GETAVATAR
-    recipientAvatar.src = `http://10.2.44.52:8888/api/images${friend.Avatar}`;
+    recipientAvatar.src = `${baseUrl}/images${friend.Avatar}`;
   } else {
     recipientAvatar.src = `../images/icon-user.png`;
   }
@@ -358,18 +345,27 @@ async function openChatWindow(friend) {
   statusInfo.style.color = friend.isOnline ? "green" : "red";
   statusInfo.style.marginTop = "-10px";
 
-  fetchMessages(friend.FriendID);
-  // console.log(friend.FriendID);
+  fetchMessages(friend.FriendID, friend);
+  messageInput.value = "";
+  messagesContainer.innerHTML = "";
   attachSendMessageEvents(friend.FriendID);
-  console.log(friend.FriendID);
+  console.log("Đang click vào id này :" + friend.FriendID);
 }
+let currentFriendID = null;
+let sendMessageHandler = null;
+let keyPressHandler = null;
 function attachSendMessageEvents(friendID) {
   const sendMessageBtn = document.getElementById("sendMessageBtn");
   const messageInput = document.getElementById("messageInput");
-  const fileInputTrigger = document.getElementById("fileInputTrigger");
   const fileInput = document.getElementById("fileInput");
 
-  const sendMessage = (event) => {
+  if (sendMessageHandler) {
+    sendMessageBtn.removeEventListener("click", sendMessageHandler);
+  }
+  if (keyPressHandler) {
+    messageInput.removeEventListener("keypress", keyPressHandler);
+  }
+  sendMessageHandler = (event) => {
     sendMessageToAPI(friendID, messageInput.value);
     messageInput.value = "";
     fileInput.value = "";
@@ -378,48 +374,16 @@ function attachSendMessageEvents(friendID) {
       .forEach((preview) => preview.remove());
     event.preventDefault();
   };
-  function handleKeyPress(event) {
-    if (event.key === "Enter") {
-      sendMessage(event);
-    }
-  }
-  sendMessageBtn.removeEventListener("click", sendMessage);
-  sendMessageBtn.addEventListener("click", sendMessage);
-  messageInput.removeEventListener("keypress", handleKeyPress);
-  messageInput.addEventListener("keypress", handleKeyPress);
-}
-fileInputTrigger.addEventListener("click", () => {
-  fileInput.click();
-});
-const fileInput = document.getElementById("fileInput");
-const filePreviewContainer = document.getElementById("filePreviewContainer");
-fileInput.addEventListener("change", (e) => {
-  const files = e.target.files;
-  filePreviewContainer.innerHTML = "";
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const previewElement = document.createElement("div");
-      previewElement.classList.add("file-preview");
-      if (file.type.startsWith("image/")) {
-        const image = document.createElement("img");
-        image.src = event.target.result;
-        image.style.maxWidth = "200px";
-        image.style.maxHeight = "auto";
-        previewElement.appendChild(image);
-      } else {
-        const fileName = document.createElement("p");
-        fileName.textContent = file.name;
-        previewElement.appendChild(fileName);
-      }
-      filePreviewContainer.appendChild(previewElement);
-      adjustTextareaHeight();
-    };
-    reader.readAsDataURL(file);
-  }
-});
 
+  keyPressHandler = (event) => {
+    if (event.key === "Enter") {
+      sendMessageHandler(event);
+    }
+  };
+  sendMessageBtn.addEventListener("click", sendMessageHandler);
+  messageInput.addEventListener("keypress", keyPressHandler);
+  currentFriendID = friendID;
+}
 function sendMessageToAPI(friendID, message) {
   const token = localStorage.getItem("token");
   const formData = new FormData();
@@ -429,47 +393,46 @@ function sendMessageToAPI(friendID, message) {
   }
   formData.append("FriendID", friendID);
   formData.append("Content", message);
-  let statusIcon = '';
+  console.log("Gửi cho id này : " + friendID);
   if (message.isSend === 0) {
-    statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
+    statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
   } else if (message.isSend === 1) {
-    statusIcon = `<img src="../images/sent.png" class="aaa" alt="Read Icon">`;
+    statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
   }
   if (fileInput && fileInput.files.length > 0) {
     formData.append("files", fileInput.files[0]);
   }
-  fetch(
-    `http://10.2.44.52:8888/api/message/send-message?FriendID=${friendID}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    }
-  )
+  fetch(`${baseUrl}/message/send-message?FriendID=${friendID}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1) {
         const timestamp = new Date(data.data.CreatedAt);
         const formattedTimestamp = formatTimestamp(timestamp);
         const messageElement = document.createElement("div");
-        messageElement.classList.add("message", "sender-message");
+        messageElement.classList.add("message");
+        let statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
         let contentHtml = "";
         if (data.data.Images && data.data.Images.length > 0) {
-          data.data.Images.forEach(img => {
-            contentHtml += `<img src="http://10.2.44.52:8888/api${img.urlImage}" alt="${img.FileName}" style="max-width: 100%; height: auto;">`;
+          data.data.Images.forEach((img) => {
+            contentHtml += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}"  class="image-sender"  >`;
           });
         }
         if (data.data.Files && data.data.Files.length > 0) {
-          data.data.Files.forEach(file => {
-            contentHtml += `<a href="http://10.2.44.52:8888/api${file.urlFile}" download="${file.FileName}" style="display: block;">${file.FileName}</a>`;
+          data.data.Files.forEach((file) => {
+            contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
           });
         }
+        messageElement.classList.add("sender-message");
         messageElement.innerHTML = `
+        ${contentHtml}
               <div class="content-sender">
                   <p class="content-msg-sender">${message}</p>
-                  ${contentHtml}
                   <div class="status-time"> ${statusIcon}
                   <span class="timestamp-senderer">${formattedTimestamp}</span>
               </div>
@@ -486,6 +449,10 @@ function sendMessageToAPI(friendID, message) {
         messagesContainer.appendChild(messageElement);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         adjustTextareaHeight();
+        const sendNoMsg = document.getElementById("send-no-messsage");
+        if (sendNoMsg) {
+          sendNoMsg.style.display = "none";
+        }
       } else {
         alert("Đã xảy ra lỗi khi gửi tin nhắn.");
       }
@@ -500,10 +467,10 @@ function adjustTextareaHeight() {
   messageInput.style.height = `${Math.min(messageInput.scrollHeight, 700)}px`;
 }
 messageInput.addEventListener("input", adjustTextareaHeight);
-function fetchMessages(friendID) {
+function fetchMessages(friendID, friendInfo) {
   const token = localStorage.getItem("token");
   //GETMESSAGE
-  fetch(`http://10.2.44.52:8888/api/message/get-message?FriendID=${friendID}`, {
+  fetch(`${baseUrl}/message/get-message?FriendID=${friendID}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -512,7 +479,8 @@ function fetchMessages(friendID) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1 && data.data.length > 0) {
-        displayMessages(data.data);
+        displayMessages(data.data, friendInfo);
+        console.log(data);
       } else {
         displayNoMessages();
       }
@@ -522,7 +490,7 @@ function fetchMessages(friendID) {
       displayErrorMessage();
     });
 }
-function displayMessages(messages) {
+function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
   messages.forEach((message) => {
@@ -532,53 +500,67 @@ function displayMessages(messages) {
     const formattedTimestamp = formatTimestamp(timestamp);
     let statusIcon = "";
     if (message.isSend === 0) {
-      statusIcon = `<img src="../images/sent.png" class="aaa" alt="Sent Icon">`;
+      statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
     } else if (message.isSend === 1) {
-      statusIcon = `<img src="../images/sent.png" class="aaa" alt="Read Icon">`;
+      statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
     }
     let contentHtml = "";
     if (message.Images && message.Images.length > 0) {
       message.Images.forEach((img) => {
-        contentHtml += `<img src="http://10.2.44.52:8888/api${img.urlImage}" alt="${img.FileName}" class="image-sender" >`;
+        contentHtml += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-sender" >`;
       });
     }
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
-        contentHtml += `<a href="http://10.2.44.52:8888/api${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
+        contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
+      });
+    }
+    let contentHtmlReceive = "";
+    if (message.Images && message.Images.length > 0) {
+      message.Images.forEach((img) => {
+        contentHtmlReceive += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-receiver" >`;
+      });
+    }
+    if (message.Files && message.Files.length > 0) {
+      message.Files.forEach((file) => {
+        contentHtmlReceive += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-receiver" >${file.FileName}</a>`;
       });
     }
     if (message.MessageType === 1) {
-      messageElement.classList.add("sender-message"); 
+      messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
-      ${contentHtml}
-          <div class="content-sender">
-         
-            <p class="content-msg-sender" >${message.Content || ""}</p>
-              <div class="status-time"> ${statusIcon}
-              <span class="timestamp-sender">${formattedTimestamp}</span></div>
-            <div class="icon-container">
-            <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
-            <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
+      <div style="display:block; position: relative;">
+      <div class="sender-image">${contentHtml}</div>
+      <div class="content-sender">
+        <p class="content-msg-sender" >${message.Content || ""}</p>
+          <div class="status-time"> ${statusIcon}
+          <span class="timestamp-sender">${formattedTimestamp}</span>
           </div>
-          </div>
-          
+        <div class="icon-container">
+        <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+        <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
+      </div>
+      </div>
+      </div>
         `;
     } else {
-      const avatarUrl = message.Avatar //GETAVARTAR
-        ? `http://10.2.44.52:8888/api/images/${message.Avatar}`
+      const avatarUrl = friendInfo.Avatar
+        ? `${baseUrl}/images${friendInfo.Avatar}`
         : `../images/icon-user.png`;
-      console.log("Avatar URL:", avatarUrl);
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
-          <img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
-          <div class="content-receiver">
-          <div>${contentHtml}</div>
+       <div class="style-img-content" >
+       <div class="style-image" > ${contentHtmlReceive}</div>
+           <div class="style-receiver"><img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
+            <div class="content-receiver">
             <p class="content-msg-receiver">${message.Content || ""}</p>
             <span class="timestamp-receiver">${formattedTimestamp}</span>
             <div class="icon-container-receiver">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
           </div>
+          </div>
+          </div>  
           </div>
         `;
     }
@@ -674,4 +656,35 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+});
+fileInputTrigger.addEventListener("click", () => {
+  fileInput.click();
+});
+const fileInput = document.getElementById("fileInput");
+const filePreviewContainer = document.getElementById("filePreviewContainer");
+fileInput.addEventListener("change", (e) => {
+  const files = e.target.files;
+  filePreviewContainer.innerHTML = "";
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const previewElement = document.createElement("div");
+      previewElement.classList.add("file-preview");
+      if (file.type.startsWith("image/")) {
+        const image = document.createElement("img");
+        image.src = event.target.result;
+        image.style.maxWidth = "200px";
+        image.style.maxHeight = "auto";
+        previewElement.appendChild(image);
+      } else {
+        const fileName = document.createElement("p");
+        fileName.textContent = file.name;
+        previewElement.appendChild(fileName);
+      }
+      filePreviewContainer.appendChild(previewElement);
+      adjustTextareaHeight();
+    };
+    reader.readAsDataURL(file);
+  }
 });

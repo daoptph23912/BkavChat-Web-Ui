@@ -69,13 +69,14 @@
         </div>
         <div style=" height: 85vh; 
           overflow-y: auto;" class="messages" id="messagesContainer">
-          <div class="no-msg">
+          <div style="display: block;" id="send-no-messsage" class="no-msg">
             <img class="img-no-msg" src="../images/no-msh.png">
             <h3>Chưa có tin nhắn ....</h3>
           </div>
         </div>
-        <div style="display: block;position: absolute;justify-content: space-between;bottom: 45px;" id="filePreviewContainer"></div>
-        
+        <div style="display: block;position: absolute;justify-content: space-between;bottom: 45px;"
+          id="filePreviewContainer"></div>
+
         <div class="input-area" id="inputArea" style="display: none">
           <img style="margin-right: 6px; cursor: pointer" src="../images/file.png" id="fileInputTrigger" />
           <input type="file" id="fileInput" style="display: none" multiple />
