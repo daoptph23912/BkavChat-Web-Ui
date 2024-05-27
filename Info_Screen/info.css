@@ -48,7 +48,7 @@ body.dark-mode {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 35%;
     border-radius: 10px;
 }
 
@@ -161,6 +161,7 @@ body.dark-mode {
 .img-area {
 	position: relative;
 	width: 100%;
+    max-width: 700px;
 	height: 240px;
 	background: var(--grey);
 	margin-bottom: 30px;
@@ -170,6 +171,7 @@ body.dark-mode {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+    margin-top: 15px;
 }
 .img-area .icon {
 	font-size: 100px;
@@ -220,6 +222,8 @@ body.dark-mode {
 .select-image {
 	display: block;
 	width: 100%;
+    position: relative;
+    align-items: center;
 	padding: 16px 0;
 	border-radius: 15px;
 	background: var(--blue);

@@ -1,4 +1,5 @@
 const baseUrl = "http://localhost:8888/api";
+// const baseUrl = "http://10.2.44.52:8888/api";
 const REGISTER = `${baseUrl}/auth/register`;
 // const REGISTER = "http://10.2.44.52:8888/api/auth/register";
 //Chức năng icon xóa - ẩn hiện password

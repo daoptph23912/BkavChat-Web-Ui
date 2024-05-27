@@ -1,4 +1,5 @@
 const baseUrl = "http://localhost:8888/api";
+// const baseUrl = "http://10.2.44.52:8888/api";
 const LOGIN = `${baseUrl}/auth/login`;
 //Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");

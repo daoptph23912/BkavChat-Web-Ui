@@ -8,7 +8,7 @@ body {
 }
 
 :root {
-  --background-color: #040404;
+  --background-color: #040404;  
   --text-color: #000000;
 }
 
@@ -79,10 +79,11 @@ body.dark-mode {
 .input-area {
   position: fixed;
   bottom: 0;
-  width: 75.5%;
+  width: 77%;
   display: flex;
   align-items: center;
   justify-content: end;
+  right: 10px;
 }
 
 .input-area input[type="text"] {
@@ -130,12 +131,11 @@ body.dark-mode {
 }
 .search-placehohoder {
   position: relative;
-
-  /* width: 280px; */
 }
 
 #searchUser {
-  width: calc(120% - 20px);
+  /* width: calc(120% - 20px); */
+  width: 280px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -186,6 +186,8 @@ body.dark-mode {
   height: 15px;
   display: flex;
   padding-right: 10px;
+  position: relative;
+  margin-top: -5px;
 }
 
 .menu-search {
@@ -350,14 +352,14 @@ body.dark-mode {
   /* flex-grow: 1; */
 }
 .content-msg-receiver {
-  background-color:  #e9eaed;
+  background-color: #e9eaed;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 20px;
 }
-.sender-image{
+.sender-image {
   margin-right: 40px;
   display: flex;
 }
@@ -396,8 +398,7 @@ body.dark-mode {
   margin-right: 20px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-   position: relative;
-
+  position: relative;
 }
 .status-time {
   display: flex;
@@ -436,8 +437,8 @@ body.dark-mode {
   align-items: center;
   gap: 5px;
   position: absolute;
-  right: -60px;
-  bottom: 26px;
+  right: -45px;
+  bottom: 24px;
 }
 
 .content-sender:hover .icon-container {
@@ -468,9 +469,9 @@ body.dark-mode {
 .image-file {
   display: block;
 }
-.file-sender{
+.file-sender {
   background: #c4d4e6;
-  padding: 10px;  
+  padding: 10px;
   border-radius: 20px;
   position: relative;
   display: flex;
@@ -479,9 +480,9 @@ body.dark-mode {
   right: -20px;
   position: relative;
 }
-.file-receiver{
+.file-receiver {
   background: #c4d4e6;
-  padding: 10px;  
+  padding: 10px;
   border-radius: 20px;
   position: relative;
   display: flex;
@@ -498,16 +499,66 @@ body.dark-mode {
   right: 20px;
   position: relative;
 }
-.style-receiver{
+.style-receiver {
   display: flex;
   position: relative;
   gap: 10px;
 }
-.style-img-content{
+.style-img-content {
   display: block;
   position: relative;
 }
-.style-image{
+.style-image {
   margin-left: 70px;
   position: relative;
+}
+/* Popup styles */
+.popup-menu {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.popup-menu button {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.popup-menu button:hover {
+  background-color: #f0f0f0;
+}
+
+.popup-menu .icon-row {
+  display: flex;
+  justify-content: space-around;
+}
+.popup-menu .icon-row img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.popup-menu .icon-row img:hover {
+  transform: scale(1.1);
+}
+.style-popup-send{
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  /* gap: 5px; */ 
+  padding: 5px;
+}
+.style-popup-send img{
+  width: 18px;
+  height: 18px;
 }

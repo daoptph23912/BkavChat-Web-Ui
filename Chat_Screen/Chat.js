@@ -191,7 +191,7 @@ async function createFriendListItem(friend, token) {
   avatarWrapper.style.height = "40px";
 
   const link = document.createElement("a");
-  link.textContent = friend.FullName || "";
+  link.textContent = friend.FullName || "No Name";
   link.setAttribute("href", "#");
   link.style.flexGrow = "1";
   link.style.fontSize = "16px";
@@ -200,7 +200,7 @@ async function createFriendListItem(friend, token) {
   link.style.right = "5px";
 
   const messageContent = document.createElement("span");
-  messageContent.textContent = friend.Content || "";
+  messageContent.textContent = friend.Content || "No Content";
   messageContent.style.fontSize = "14px";
   messageContent.style.color = "#666";
   messageContent.style.display = "flex";
@@ -480,7 +480,6 @@ function fetchMessages(friendID, friendInfo) {
     .then((data) => {
       if (data.status === 1 && data.data.length > 0) {
         displayMessages(data.data, friendInfo);
-        console.log(data);
       } else {
         displayNoMessages();
       }
@@ -493,6 +492,44 @@ function fetchMessages(friendID, friendInfo) {
 function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
+  if (!document.getElementById("iconPopupMenu")) {
+    const iconPopupHTML = `
+      <div id="iconPopupMenu" class="popup-menu">
+        <div class="icon-row">
+          <img src="../images/icon-love.png" alt="Love">
+          <img src="../images/icon-like.png" alt="Like">
+          <img src="../images/icon-dislike.png" alt="Dislike">
+          <img src="../images/icon-funny.png" alt="Funny">
+          <img src="../images/iconwow.png" alt="Wow">
+          <img src="../images/sad.png" alt="Sad">
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", iconPopupHTML);
+  }
+  if (!document.getElementById("actionPopupMenu")) {
+    const actionPopupHTML = `
+      <div id="actionPopupMenu" class="popup-menu">
+      <div class="style-popup-send">  
+      <img src="../images/icon-popup-send.png" alt="Love"> 
+      <button id="editMessage">Chỉnh sửa</button>
+      </div>
+      <div class="style-popup-send">  
+      <img src="../images/icon-popup-send2.png" alt="Love"> 
+      <button id="replyMessage">Trả lời</button>
+      </div>
+      <div class="style-popup-send">  
+      <img src="../images/icon-popup-send3.png" alt="Love"> 
+      <button id="deleteMessage">Ghim</button>
+      </div>
+      <div class="style-popup-send">  
+      <img src="../images/icon-popup-send4.png" alt="Love"> 
+      <button id="deleteMessage">Xóa tin nhắn</button>
+      </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", actionPopupHTML);
+  }
   messages.forEach((message) => {
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
@@ -530,17 +567,17 @@ function displayMessages(messages, friendInfo) {
       messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
       <div style="display:block; position: relative;">
-      <div class="sender-image">${contentHtml}</div>
-      <div class="content-sender">
+       <div class="sender-image">${contentHtml}</div>
+       <div class="content-sender">
         <p class="content-msg-sender" >${message.Content || ""}</p>
           <div class="status-time"> ${statusIcon}
           <span class="timestamp-sender">${formattedTimestamp}</span>
           </div>
-        <div class="icon-container">
-        <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
-        <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
-      </div>
-      </div>
+          <div class="icon-container">
+          <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+         <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
+        </div>
+       </div>
       </div>
         `;
     } else {
@@ -550,7 +587,7 @@ function displayMessages(messages, friendInfo) {
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
        <div class="style-img-content" >
-       <div class="style-image" > ${contentHtmlReceive}</div>
+          <div class="style-image" > ${contentHtmlReceive}</div>
            <div class="style-receiver"><img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
             <div class="content-receiver">
             <p class="content-msg-receiver">${message.Content || ""}</p>
@@ -558,24 +595,100 @@ function displayMessages(messages, friendInfo) {
             <div class="icon-container-receiver">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+           </div>
           </div>
-          </div>
-          </div>  
-          </div>
+        </div>  
+      </div>
         `;
     }
     messagesContainer.appendChild(messageElement);
+    messagesContainer.appendChild(messageElement);
+    const contentSender = messageElement.querySelector('.content-sender');
+    const contentReceiver = messageElement.querySelector('.content-receiver');
+    if (contentSender) {
+      addHoverEffect(contentSender, '.icon-container');
+    }
+    if (contentReceiver) {
+      addHoverEffect(contentReceiver, '.icon-container-receiver');
+    }
   });
+
+  const menuIcons = document.querySelectorAll(".menu-icon");
+  menuIcons.forEach(icon => {
+    icon.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const index = event.target.getAttribute("data-index");
+      toggleIconPopupMenu(event.target, index);
+    });
+  });
+
+  const menuChams = document.querySelectorAll(".menu-cham");
+  menuChams.forEach(icon => {
+    icon.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const index = event.target.getAttribute("data-index");
+      toggleActionPopupMenu(event.target, index);
+    });
+  });
+
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-
-function toggleDropdownMenu(menuIcon) {
-  const dropdownMenu =
-    menuIcon.parentElement.querySelector(".dropdown-content");
-  dropdownMenu.classList.toggle("show");
+function addHoverEffect(element, iconSelector) {
+  let hoverTimeout;
+  element.addEventListener('mouseenter', () => {
+    const iconContainer = element.querySelector(iconSelector);
+    if (iconContainer) {
+      iconContainer.style.display = 'flex';
+      clearTimeout(hoverTimeout);
+    }
+  });
+  element.addEventListener('mouseleave', () => {
+    const iconContainer = element.querySelector(iconSelector);
+    if (iconContainer) {
+      hoverTimeout = setTimeout(() => {
+        iconContainer.style.display = 'none';
+      }, 100);
+    }
+  });
 }
-function editMessage() {}
-function pinMessage() {}
+let currentVisiblePopup = null;
+function toggleIconPopupMenu(target, index) {
+  const popupMenu = document.getElementById("iconPopupMenu");
+  if (!popupMenu) {
+    console.error("Icon popup menu element not found.");
+    return;
+  }
+  const rect = target.getBoundingClientRect();
+  if (currentVisiblePopup === popupMenu) {
+    popupMenu.style.display = "none";
+    currentVisiblePopup = null;
+  } else {
+    popupMenu.style.left = `${rect.left + window.scrollX}px`;
+    popupMenu.style.top = `${rect.bottom + window.scrollY}px`;
+    popupMenu.style.display = "block";
+    popupMenu.dataset.messageIndex = index;
+    currentVisiblePopup = popupMenu;
+  }
+}
+
+function toggleActionPopupMenu(target, index) {
+  const popupMenu = document.getElementById("actionPopupMenu");
+  if (!popupMenu) {
+    console.error("Action popup menu element not found.");
+    return;
+  }
+  const rect = target.getBoundingClientRect();
+  if (currentVisiblePopup === popupMenu) {
+    popupMenu.style.display = "none";
+    currentVisiblePopup = null;
+  } else {
+    popupMenu.style.left = `${rect.left + window.scrollX}px`;
+    popupMenu.style.top = `${rect.bottom + window.scrollY}px`;
+    popupMenu.style.display = "block";
+    popupMenu.dataset.messageIndex = index;
+    currentVisiblePopup = popupMenu;
+  }
+}
 function deleteMessage(index) {
   const messageElement = document.querySelector(
     `.message:nth-child(${index + 1})`
@@ -587,6 +700,27 @@ function deleteMessage(index) {
     return;
   }
 }
+document.addEventListener("click", (event) => {
+  if (
+    !event.target.closest(".menu-icon") &&
+    !event.target.closest(".popup-menu")
+  ) {
+    const iconPopupMenu = document.getElementById("iconPopupMenu");
+    if (iconPopupMenu) {
+      iconPopupMenu.style.display = "none";
+    }
+  }
+  if (
+    !event.target.closest(".menu-cham") &&
+    !event.target.closest(".popup-menu")
+  ) {
+    const actionPopupMenu = document.getElementById("actionPopupMenu");
+    if (actionPopupMenu) {
+      actionPopupMenu.style.display = "none";
+    }
+  }
+});
+//Time
 function formatTimestamp(timestamp) {
   const options = {
     hour12: true,
@@ -615,7 +749,7 @@ function displayNoMessages() {
   messagesContainer.appendChild(noMessagesDiv);
 }
 
-// Icon Picker
+// Emoji Picker
 document.addEventListener("DOMContentLoaded", function () {
   const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
   const emojiSelector = document.getElementById("emojiSelector");
@@ -639,7 +773,7 @@ document.addEventListener("DOMContentLoaded", function () {
       li.setAttribute("emoji-name", emoji.slug);
       li.textContent = emoji.character;
       li.addEventListener("click", () => {
-        messageInput.value += emoji.character; // Thêm icon vào nội dung tin nhắn
+        messageInput.value += emoji.character;
       });
       emojiList.appendChild(li);
     });
