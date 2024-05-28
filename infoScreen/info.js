@@ -1,4 +1,4 @@
-import {INFOUSER} from '../config/api.mjs';
+import { INFOUSER, baseUrl } from "../config/api.mjs";
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
