@@ -501,7 +501,7 @@ function displayMessages(messages, friendInfo) {
           <img src="../images/icon-dislike.png" alt="Dislike">
           <img src="../images/icon-funny.png" alt="Funny">
           <img src="../images/iconwow.png" alt="Wow">
-          <img src="../images/sad.png" alt="Sad">
+          <img style="width:20px;height:20px;position:relative;alignItems:center;justify-content:center;margin-top:4px" src="../images/sad.png" alt="Sad">
         </div>
       </div>
     `;
@@ -603,18 +603,18 @@ function displayMessages(messages, friendInfo) {
     }
     messagesContainer.appendChild(messageElement);
     messagesContainer.appendChild(messageElement);
-    const contentSender = messageElement.querySelector('.content-sender');
-    const contentReceiver = messageElement.querySelector('.content-receiver');
+    const contentSender = messageElement.querySelector(".content-sender");
+    const contentReceiver = messageElement.querySelector(".content-receiver");
     if (contentSender) {
-      addHoverEffect(contentSender, '.icon-container');
+      addHoverEffect(contentSender, ".icon-container");
     }
     if (contentReceiver) {
-      addHoverEffect(contentReceiver, '.icon-container-receiver');
+      addHoverEffect(contentReceiver, ".icon-container-receiver");
     }
   });
 
   const menuIcons = document.querySelectorAll(".menu-icon");
-  menuIcons.forEach(icon => {
+  menuIcons.forEach((icon) => {
     icon.addEventListener("click", (event) => {
       event.stopPropagation();
       const index = event.target.getAttribute("data-index");
@@ -623,7 +623,7 @@ function displayMessages(messages, friendInfo) {
   });
 
   const menuChams = document.querySelectorAll(".menu-cham");
-  menuChams.forEach(icon => {
+  menuChams.forEach((icon) => {
     icon.addEventListener("click", (event) => {
       event.stopPropagation();
       const index = event.target.getAttribute("data-index");
@@ -635,18 +635,18 @@ function displayMessages(messages, friendInfo) {
 }
 function addHoverEffect(element, iconSelector) {
   let hoverTimeout;
-  element.addEventListener('mouseenter', () => {
+  element.addEventListener("mouseenter", () => {
     const iconContainer = element.querySelector(iconSelector);
     if (iconContainer) {
-      iconContainer.style.display = 'flex';
+      iconContainer.style.display = "flex";
       clearTimeout(hoverTimeout);
     }
   });
-  element.addEventListener('mouseleave', () => {
+  element.addEventListener("mouseleave", () => {
     const iconContainer = element.querySelector(iconSelector);
     if (iconContainer) {
       hoverTimeout = setTimeout(() => {
-        iconContainer.style.display = 'none';
+        iconContainer.style.display = "none";
       }, 100);
     }
   });
