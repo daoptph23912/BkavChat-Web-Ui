@@ -19,7 +19,7 @@
             <div style="margin-top: 20px;" class="dropdown-content" id="dropdownContent">
               <div style="display: flex; align-items: center; ">
                 <button style="outline: none !important; border: none !important;background-color: white;"
-                  onclick="window.location.href='../Info_Screen/info.html'">
+                  onclick="window.location.href='../infoScreen/info.html'">
                   <img class="avatar-img" />
                 </button>
                 <h1 style="margin-top: 10px; margin-left: 0px" class="chat-right"></h1>
@@ -37,7 +37,7 @@
               <div class="theme-toggle" onclick="toggleTheme()" style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/night.png" />
                 <a href="#" id="theme-icon">Giao diện tối </a>
-                <img style="width: 20px; height: 20px; display: flex;position: absolute;right: 10px;"
+                <img style="width: 40px; height: 20px; display: flex;position: absolute;right: 10px;"
                   src="../images/active_noactive.png" />
               </div>
               <div style="display: flex; align-items: center">
@@ -49,6 +49,7 @@
           <div class="search-container">
             <input class="search-placehohoder" type="text" id="searchUser" placeholder="Tìm kiếm" />
             <!-- <img src="../images/search.png" class="search-icon" alt="Search Icon" /> -->
+            <!--  -->
           </div>
         </div>
         <div class="user-list">
@@ -57,14 +58,16 @@
             <ul class="user-chat"></ul>
           </div>
         </div>
-      </div>
+      </div>  
       <div class="chat-window">
-        <div style="display: flex; align-items: center,">
+        <div id="infoReceiver" style="display: flex;">
+        <div id="avatarWrapperr">
           <img  id="recipientAvatar">
           <span id="recipientStatus"></span>
-          <div style="display: block;">
-            <h1 style="margin-top: 4px;" id="recipientName"></h1>
-            <p id="statusInfo"></p>
+        </div>
+          <div style="margin-left: 10px;position: relative;">
+            <h1 style="margin-top: 3px;"  id="recipientName"></h1>
+            <p style="display: flex;margin-top: -10px;" id="statusInfo"></p>
           </div>
         </div>
         <div style=" height: 85vh; 
@@ -100,4 +103,5 @@
 </body>
 
 </html>
-<script src="Chat.js"></script>
+<script type="module" src="Chat.js"></script>
+

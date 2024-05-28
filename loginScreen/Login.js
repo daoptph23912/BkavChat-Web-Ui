@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:8888/api";
 // const baseUrl = "http://10.2.44.52:8888/api";
 const LOGIN = `${baseUrl}/auth/login`;
+// import {LOGIN} from '../config/api.mjs';
+
 //Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");
 deleteIcon.addEventListener("click", function () {
@@ -58,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         loginSuccessMessage.style.display = "block";
         setTimeout(function () {
           loginSuccessMessage.style.display = "none";
-          window.location.href = "/Chat_Screen/Chat.html";
+          window.location.href = "/chatScreen/Chat.html";
         }, 500);
       } else {
         alert("Đăng nhập không thành công: " + data.message);

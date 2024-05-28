@@ -1,9 +1,4 @@
-const baseUrl = "http://localhost:8888/api";
-// const baseUrl = "http://10.2.44.52:8888/api";
-const SENDMESSAGE = `${baseUrl}/message/send-message`;
-const INFOUSER = `${baseUrl}/user/info`;
-const LISTUSER = `${baseUrl}/message/list-friend`;
-const UPDATEUSER = `${baseUrl}/api/user/update`;
+import {INFOUSER} from '../config/api.mjs';
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
