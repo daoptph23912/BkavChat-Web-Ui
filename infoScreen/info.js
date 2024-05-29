@@ -1,4 +1,7 @@
-import { INFOUSER, baseUrl } from "../config/api.mjs";
+// import { INFOUSER, baseUrl } from "../config/api.mjs";
+const baseUrl = "http://localhost:8888/api";
+const INFOUSER = `${baseUrl}/user/info`;
+export const UPDATEUSER = `${baseUrl}/api/user/update`;
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -42,18 +45,26 @@ document.addEventListener("DOMContentLoaded", async function () {
     userChatList.appendChild(errorMessage);
   }
 });
-function openEditModal() {
-  const modal = document.getElementById("editModal");
-  modal.classList.add("show");
-  modal.style.display = "block";
-  modal.setAttribute("aria-modal", "true");
-}
-function closeEditModal() {
-  const modal = document.getElementById("editModal");
-  modal.classList.remove("show");
-  modal.style.display = "none";
-  modal.setAttribute("aria-modal", "false");
-}
+document.addEventListener("DOMContentLoaded", function () {
+  const editInfoUser = document.getElementById("editInfo");
+  editInfoUser.addEventListener("click", openEditModal);
+  function openEditModal() {
+    const modal = document.getElementById("editModal");
+    modal.classList.add("show");
+    modal.style.display = "block";
+    modal.setAttribute("aria-modal", "true");
+  }
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const closeModal = document.getElementById("closeModal");
+  closeModal.addEventListener("click", closeEditModal);
+  function closeEditModal() {
+    const modal = document.getElementById("editModal");
+    modal.classList.remove("show");
+    modal.style.display = "none";
+    modal.setAttribute("aria-modal", "false");
+  }
+});
 //Sửa người dùng
 document.addEventListener("DOMContentLoaded", function () {
   document
@@ -84,12 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
           body: formData,
           redirect: "follow",
         };
-        const response = await fetch(`${baseUrl}/user/update`, requestOptions);
+        const response = await fetch(UPDATEUSER, requestOptions);
         if (!response.ok) {
           throw new Error("Máy chủ không phản hồi");
         }
         const data = await response.json();
-        alert(data.message);
+        // alert(data.message);
         closeEditModal();
       } catch (error) {
         console.error("Fetch error:", error);
@@ -123,16 +134,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-
-function toggleTheme() {
-  const body = document.body;
-  const themeIcon = document.getElementById("theme-icon");
-  const isDarkMode = body.classList.contains("dark-mode");
-  if (isDarkMode) {
-    body.classList.remove("dark-mode");
-    themeIcon.src = "../images/lighttt.png";
-  } else {
-    body.classList.add("dark-mode");
-    themeIcon.src = "../images/black.png";
+document.addEventListener("DOMContentLoaded", function () {
+  const themeToggle = document.querySelector(".toggle-light");
+  themeToggle.addEventListener("click", toggleTheme);
+  function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById("theme-icon");
+    const isDarkMode = body.classList.contains("dark-mode");
+    if (isDarkMode) {
+      body.classList.remove("dark-mode");
+      themeIcon.src = "../images/lighttt.png";
+    } else {
+      body.classList.add("dark-mode");
+      themeIcon.src = "../images/black.png";
+    }
   }
-}
+});

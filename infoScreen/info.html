@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="info.css" />
     <title>InfoUser</title>
-    <script type="module" src="info.js"></script>
+    <script src="info.js"></script>
 </head>
 
 <body class="light-mode">
-    <div style="cursor: pointer;" onclick="toggleTheme()">
+    <div class="toggle-light" style="cursor: pointer;">
         <img style=" width: 50px;height: 50px;" src="../images/lighttt.png" id="theme-icon" />
     </div>
     <div class="user-info">
@@ -18,7 +18,7 @@
         <h1 style="margin-top: 20px;" id="username"></h1>
         <div style="margin-top: 20px;" id="avatar"></div>
     </div>
-    <button type="button" class="btn btn-primary" onclick="openEditModal()">Sửa </button>
+    <button type="button" class="btn btn-primary" id="editInfo">Sửa </button>
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        onclick="closeEditModal()">Đóng</button>
+                        id="closeModal">Đóng</button>
                     <button type="submit" form="editForm" class="btn btn-primary">Lưu</button>
                 </div>
             </div>

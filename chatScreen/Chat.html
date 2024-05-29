@@ -34,7 +34,7 @@
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/group.png" />
                 <a href="#">Tạo nhóm </a>
               </div>
-              <div class="theme-toggle" onclick="toggleTheme()" style="display: flex; align-items: center">
+              <div class="theme-toggle" style="display: flex; align-items: center">
                 <img style="width: 20px; height: 20px; padding: 10px" src="../images/night.png" />
                 <a href="#" id="theme-icon">Giao diện tối </a>
                 <img style="width: 40px; height: 20px; display: flex;position: absolute;right: 10px;"
@@ -58,15 +58,15 @@
             <ul class="user-chat"></ul>
           </div>
         </div>
-      </div>  
+      </div>
       <div class="chat-window">
         <div id="infoReceiver" style="display: flex;">
-        <div id="avatarWrapperr">
-          <img  id="recipientAvatar">
-          <span id="recipientStatus"></span>
-        </div>
+          <div id="avatarWrapperr">
+            <img id="recipientAvatar">
+            <span id="recipientStatus"></span>
+          </div>
           <div style="margin-left: 10px;position: relative;">
-            <h1 style="margin-top: 3px;"  id="recipientName"></h1>
+            <h1 style="margin-top: 3px;" id="recipientName"></h1>
             <p style="display: flex;margin-top: -10px;" id="statusInfo"></p>
           </div>
         </div>
@@ -100,8 +100,8 @@
           </button>
         </div>
       </div>
+      <script type="module" src="Chat.js"></script>
+      <script type="module" src="User.js"></script>
 </body>
 
 </html>
-<script type="module" src="Chat.js"></script>
-

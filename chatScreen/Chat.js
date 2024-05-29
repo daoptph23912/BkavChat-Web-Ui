@@ -84,19 +84,23 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.replace("../loginScreen/Login.html");
   });
 });
-//Giao diện sáng tối
-function toggleTheme() {
-  const body = document.body;
-  const themeIcon = document.getElementById("theme-icon");
-  const isDarkMode = body.classList.contains("dark-mode");
-  if (isDarkMode) {
-    body.classList.remove("dark-mode");
-    themeIcon.src = "sun.png";
-  } else {
-    body.classList.add("dark-mode");
-    themeIcon.src = "moon.png";
+document.addEventListener("DOMContentLoaded", function () {
+  const themeToggle = document.querySelector(".theme-toggle");
+  themeToggle.addEventListener("click", toggleTheme);
+
+  function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById("theme-icon");
+    const isDarkMode = body.classList.contains("dark-mode");
+    if (isDarkMode) {
+      body.classList.remove("dark-mode");
+      themeIcon.src = "sun.png";
+    } else {
+      body.classList.add("dark-mode");
+      themeIcon.src = "moon.png";
+    }
   }
-}
+});
 //Lấy danh sách người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
