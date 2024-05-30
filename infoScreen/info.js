@@ -1,7 +1,7 @@
-// import { INFOUSER, baseUrl } from "../config/api.mjs";
-const baseUrl = "http://localhost:8888/api";
-const INFOUSER = `${baseUrl}/user/info`;
-export const UPDATEUSER = `${baseUrl}/api/user/update`;
+import { INFOUSER, baseUrl, UPDATEUSER } from "../config/api.mjs";
+// const baseUrl = "http://localhost:8888/api";
+// const INFOUSER = `${baseUrl}/user/info`;
+// const UPDATEUSER = `${baseUrl}/user/update`;
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     const data = await response.json();
     const userInfo = data.data;
-
     document.getElementById("fullname").innerHTML =
       "<strong>FullName:</strong> " + userInfo.FullName;
     document.getElementById("username").innerHTML =
@@ -45,27 +44,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     userChatList.appendChild(errorMessage);
   }
 });
-document.addEventListener("DOMContentLoaded", function () {
-  const editInfoUser = document.getElementById("editInfo");
-  editInfoUser.addEventListener("click", openEditModal);
-  function openEditModal() {
-    const modal = document.getElementById("editModal");
-    modal.classList.add("show");
-    modal.style.display = "block";
-    modal.setAttribute("aria-modal", "true");
-  }
-});
-document.addEventListener("DOMContentLoaded", function () {
-  const closeModal = document.getElementById("closeModal");
-  closeModal.addEventListener("click", closeEditModal);
-  function closeEditModal() {
-    const modal = document.getElementById("editModal");
-    modal.classList.remove("show");
-    modal.style.display = "none";
-    modal.setAttribute("aria-modal", "false");
-  }
-});
-//Sửa người dùng
+
+//Sửa tên và image
 document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("editForm")
@@ -100,17 +80,17 @@ document.addEventListener("DOMContentLoaded", function () {
           throw new Error("Máy chủ không phản hồi");
         }
         const data = await response.json();
-        // alert(data.message);
+        alert(data.message);
         closeEditModal();
       } catch (error) {
         console.error("Fetch error:", error);
         alert("Đã xảy ra lỗi khi sửa thông tin người dùng.");
       }
     });
+  //Click image
   const selectImage = document.querySelector(".select-image");
   const inputFile = document.querySelector("#avatarInput");
   const imgArea = document.querySelector(".img-area");
-
   selectImage.addEventListener("click", function () {
     inputFile.click();
   });
@@ -135,6 +115,27 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 document.addEventListener("DOMContentLoaded", function () {
+  const editInfoUser = document.getElementById("editInfo");
+  editInfoUser.addEventListener("click", openEditModal);
+  function openEditModal() {
+    const modal = document.getElementById("editModal");
+    modal.classList.add("show");
+    modal.style.display = "block";
+    modal.setAttribute("aria-modal", "true");
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const closeModal = document.getElementById("closeModal");
+  closeModal.addEventListener("click", closeEditModal);
+  function closeEditModal() {
+    const modal = document.getElementById("editModal");
+    modal.classList.remove("show");
+    modal.style.display = "none";
+    modal.setAttribute("aria-modal", "false");
+  }
+});
+document.addEventListener("DOMContentLoaded", function () {
   const themeToggle = document.querySelector(".toggle-light");
   themeToggle.addEventListener("click", toggleTheme);
   function toggleTheme() {
@@ -150,3 +151,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+// function openEditModal() {
+//   const modal = document.getElementById("editModal");
+//   modal.classList.add("show");
+//   modal.style.display = "block";
+//   modal.setAttribute("aria-modal", "true");
+// }
+// function closeEditModal() {
+//   const modal = document.getElementById("editModal");
+//   modal.classList.remove("show");
+//   modal.style.display = "none";
+//   modal.setAttribute("aria-modal", "false");
+// }
+// function toggleTheme() {
+//   const body = document.body;
+//   const themeIcon = document.getElementById("theme-icon");
+//   const isDarkMode = body.classList.contains("dark-mode");
+//   if (isDarkMode) {
+//     body.classList.remove("dark-mode");
+//     themeIcon.src = "sun.png";
+//   } else {
+//     body.classList.add("dark-mode");
+//     themeIcon.src = "moon.png";
+//   }
+// }
