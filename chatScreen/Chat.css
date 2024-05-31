@@ -333,35 +333,6 @@ body.dark-mode {
   display: flex;
 }
 
-.sender-message {
-  justify-content: flex-end;
-}
-.receiver-message {
-  justify-content: flex-start;
-}
-.content-msg-sender {
-  background-color: #e0f0ff;
-  width: 100%;
-  max-width: 700px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 2px;
-  padding-left: 10px;
-  border-radius: 20px;
-  /* flex-grow: 1; */
-}
-.content-msg-receiver {
-  background-color: #e9eaed;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 20px;
-}
-.sender-image {
-  margin-right: 40px;
-  display: flex;
-}
 .avatar {
   width: 36px;
   height: 36px;
@@ -369,148 +340,27 @@ body.dark-mode {
   background-color: rgb(195, 212, 223);
   margin-top: 15px;
 }
-.icon-status {
-  width: 12px;
-  height: 12px;
-  justify-content: flex-end;
-}
-.content-receiver {
-  color: #080707;
-  left: 0px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 20px;
-  position: relative;
-  align-items: center;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 700px;
-}
-.content-sender {
-  max-width: 700px;
-  color: #000000;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 20px;
-  position: relative;
-  align-items: center;
-  margin-right: 20px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  position: relative;
-}
-.status-time {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  bottom: -20px;
-  right: -5px;
-  white-space: nowrap;
-}
+
 .timestamp-senderer {
   display: flex;
   font-size: 12px;
   color: #747881;
 }
-.timestamp-receiver {
-  font-size: 12px;
-  color: #747881;
-  display: flex;
-  margin-top: -15px;
-}
+
 .timestamp-sender {
   font-size: 12px;
   color: #000000;
   display: flex;
 }
-.icon-container {
-  display: none;
-  align-items: center;
-  gap: 5px;
-  position: absolute;
-  left: -45px;
-  bottom: 5px;
-}
-.icon-container-receiver {
-  display: none;
-  align-items: center;
-  gap: 5px;
-  position: absolute;
-  right: -45px;
-  bottom: 24px;
-}
 
 .content-sender:hover .icon-container {
   display: flex;
-}
-.content-receiver:hover .icon-container-receiver {
-  display: flex;
-}
-
-.menu-icon {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-.menu-cham {
-  height: 20px;
-  cursor: pointer;
-}
-.image-sender {
-  max-width: 500px;
-  height: auto;
-  margin-top: 60px;
-  margin-bottom: 30px;
-  right: -20px;
-  position: relative;
 }
 
 .image-file {
   display: block;
 }
-.file-sender {
-  background: #c4d4e6;
-  padding: 10px;
-  border-radius: 20px;
-  position: relative;
-  display: flex;
-  margin-top: 60px;
-  margin-bottom: 30px;
-  right: -20px;
-  position: relative;
-}
-.file-receiver {
-  background: #c4d4e6;
-  padding: 10px;
-  border-radius: 20px;
-  position: relative;
-  display: flex;
-  margin-top: 60px;
-  margin-bottom: 30px;
-  right: 20px;
-  position: relative;
-}
-.image-receiver {
-  max-width: 500px;
-  height: auto;
-  margin-top: 60px;
-  margin-bottom: 30px;
-  right: 20px;
-  position: relative;
-}
-.style-receiver {
-  display: flex;
-  position: relative;
-  gap: 10px;
-}
-.style-img-content {
-  display: block;
-  position: relative;
-}
-.style-image {
-  margin-left: 70px;
-  position: relative;
-}
+
 /* Popup styles */
 .popup-menu {
   display: none;
@@ -609,4 +459,155 @@ body.dark-mode {
 }
 .input-nickname {
   width: 60%;
+}
+/* gửi tin nhắn */
+.sender-image {
+  margin-right: 40px;
+  display: flex;
+}
+.image-sender {
+  max-width: 400px;
+  height: auto;
+  margin-bottom: -20px;
+  /* position: relative; */
+}
+.file-sender {
+  margin-top: 10px;
+  margin-bottom: -20px;
+  position: relative;
+  display: flex;
+  position: relative;
+  padding: 10px;
+}
+
+.icon-status {
+  width: 12px;
+  height: 12px;
+  justify-content: flex-end;
+}
+.sender-message {
+  justify-content: flex-end;
+}
+.content-sender {
+  max-width: 700px;
+  color: #000000;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+  align-items: center;
+  margin-right: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  position: relative;
+}
+.content-msg-sender {
+  max-width: 700px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
+  border-radius: 20px;
+}
+.status-time {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: -20px;
+  right: -5px;
+  white-space: nowrap;
+}
+.timestamp-senderer {
+  display: flex;
+  font-size: 12px;
+  color: #747881;
+}
+.icon-container {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  left: -45px;
+  bottom: 5px;
+}
+.menu-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.menu-cham {
+  height: 20px;
+  cursor: pointer;
+}
+.sender-img-cont {
+  background-color: #91bdff;
+  border-radius: 20px;
+  margin-bottom: 22px;
+  margin-top: 10px;
+}
+.sender-img-cont-rc {
+  background-color: #dd994b;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+
+/* nhận tin nhắn  */
+.image-receiver {
+  max-width: 500px;
+  height: auto;
+  margin-bottom: -20px;
+  position: relative;
+}
+.file-receiver {
+  padding: 10px;
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  margin-bottom: -20px;
+  position: relative;
+}
+.receiver-message {
+  justify-content: flex-start;
+}
+.style-receiver {
+  display: flex;
+  position: relative;
+  gap: 10px;
+}
+.content-receiver {
+  color: #080707;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+  align-items: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 700px;
+}
+.content-msg-receiver {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 20px;
+}
+.timestamp-receiver {
+  font-size: 12px;
+  color: #747881;
+  display: flex;
+  margin-top: -30px;
+}
+.icon-container-receiver {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  right: -45px;
+  bottom: 25px;
+}
+.content-receiver:hover .icon-container-receiver {
+  display: flex;
 }

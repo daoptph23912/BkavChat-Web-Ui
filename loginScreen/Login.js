@@ -1,4 +1,4 @@
-import { LOGIN, baseUrl } from "../config/api.mjs";
+import { LOGIN} from "../config/api.mjs";
 //Chức năng icon xóa - hiện ẩn pass
 const deleteIcon = document.getElementById("deleteIcon");
 deleteIcon.addEventListener("click", function () {
@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       const data = await response.json();
       if (data.status === 1) {
-        localStorage.setItem("loggedInUserName", data.data.FullName);
         localStorage.setItem("token", data.data.token);
         const loginSuccessMessage = document.getElementById(
           "login-success-message"

@@ -1,4 +1,4 @@
-import { REGISTER, baseUrl } from "../config/api.mjs";
+import { REGISTER } from "../config/api.mjs";
 //Chức năng icon xóa - ẩn hiện password
 const deleteFullName = document.getElementById("deleteFullName");
 const fullNameInput = document.getElementById("fullName");

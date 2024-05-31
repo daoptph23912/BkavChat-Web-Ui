@@ -1,7 +1,8 @@
-import { INFOUSER, baseUrl, UPDATEUSER } from "../config/api.mjs";
-// const baseUrl = "http://localhost:8888/api";
-// const INFOUSER = `${baseUrl}/user/info`;
-// const UPDATEUSER = `${baseUrl}/user/update`;
+// import { INFOUSER, baseUrl, UPDATEUSER } from "../config/api.mjs";
+const baseUrl = "http://localhost:8888/api";
+// const baseUrl = "http://10.2.44.52:8888/api";
+const INFOUSER = `${baseUrl}/user/info`;
+const UPDATEUSER = `${baseUrl}/user/update`;
 //Hiển thị thông tin người dùng
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -114,64 +115,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-document.addEventListener("DOMContentLoaded", function () {
-  const editInfoUser = document.getElementById("editInfo");
-  editInfoUser.addEventListener("click", openEditModal);
-  function openEditModal() {
-    const modal = document.getElementById("editModal");
-    modal.classList.add("show");
-    modal.style.display = "block";
-    modal.setAttribute("aria-modal", "true");
+function openEditModal() {
+  const modal = document.getElementById("editModal");
+  modal.classList.add("show");
+  modal.style.display = "block";
+  modal.setAttribute("aria-modal", "true");
+}
+function closeEditModal() {
+  const modal = document.getElementById("editModal");
+  modal.classList.remove("show");
+  modal.style.display = "none";
+  modal.setAttribute("aria-modal", "false");
+}
+function toggleTheme() {
+  const body = document.body;
+  const themeIcon = document.getElementById("theme-icon");
+  const isDarkMode = body.classList.contains("dark-mode");
+  if (isDarkMode) {
+    body.classList.remove("dark-mode");
+    themeIcon.src = "sun.png";
+  } else {
+    body.classList.add("dark-mode");
+    themeIcon.src = "moon.png";
   }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const closeModal = document.getElementById("closeModal");
-  closeModal.addEventListener("click", closeEditModal);
-  function closeEditModal() {
-    const modal = document.getElementById("editModal");
-    modal.classList.remove("show");
-    modal.style.display = "none";
-    modal.setAttribute("aria-modal", "false");
-  }
-});
-document.addEventListener("DOMContentLoaded", function () {
-  const themeToggle = document.querySelector(".toggle-light");
-  themeToggle.addEventListener("click", toggleTheme);
-  function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.getElementById("theme-icon");
-    const isDarkMode = body.classList.contains("dark-mode");
-    if (isDarkMode) {
-      body.classList.remove("dark-mode");
-      themeIcon.src = "../images/lighttt.png";
-    } else {
-      body.classList.add("dark-mode");
-      themeIcon.src = "../images/black.png";
-    }
-  }
-});
-// function openEditModal() {
-//   const modal = document.getElementById("editModal");
-//   modal.classList.add("show");
-//   modal.style.display = "block";
-//   modal.setAttribute("aria-modal", "true");
-// }
-// function closeEditModal() {
-//   const modal = document.getElementById("editModal");
-//   modal.classList.remove("show");
-//   modal.style.display = "none";
-//   modal.setAttribute("aria-modal", "false");
-// }
-// function toggleTheme() {
-//   const body = document.body;
-//   const themeIcon = document.getElementById("theme-icon");
-//   const isDarkMode = body.classList.contains("dark-mode");
-//   if (isDarkMode) {
-//     body.classList.remove("dark-mode");
-//     themeIcon.src = "sun.png";
-//   } else {
-//     body.classList.add("dark-mode");
-//     themeIcon.src = "moon.png";
-//   }
-// }
+}

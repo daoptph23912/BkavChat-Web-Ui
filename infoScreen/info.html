@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="info.css" />
     <title>InfoUser</title>
-    <script type="module" src="info.js"></script>
+    <script src="info.js"></script>
 </head>
 
 <body class="light-mode">
@@ -18,8 +18,7 @@
         <h1 style="margin-top: 20px;" id="username"></h1>
         <div style="margin-top: 20px;" id="avatar"></div>
     </div>
-    <!-- onclick="openEditModal()" -->
-    <button type="button" class="btn btn-primary" id="editInfo">Sửa </button>
+    <button type="button" onclick="openEditModal()"  class="btn btn-primary" id="editInfo">Sửa </button>
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -48,9 +47,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <!-- onclick="closeEditModal()" -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        id="closeModal">Đóng</button>
+                    onclick="closeEditModal()" id="closeModal">Đóng</button>
                     <button type="submit" form="editForm" class="btn btn-primary">Lưu</button>
                 </div>
             </div>

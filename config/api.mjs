@@ -1,4 +1,4 @@
-// const baseUrl = "http://10.2.44.52:8888/api";
+// export const baseUrl = "http://10.2.44.52:8888/api";
 export const baseUrl = "http://localhost:8888/api";
 export const SENDMESSAGE = `${baseUrl}/message/send-message`;
 export const INFOUSER = `${baseUrl}/user/info`;
