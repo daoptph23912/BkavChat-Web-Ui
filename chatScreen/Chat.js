@@ -1,11 +1,29 @@
 import emojis from "../emoji/emoji.mjs";
 import { SENDMESSAGE, baseUrl, INFOUSER, LISTUSER } from "../config/api.mjs";
+// Hàm reloadMessages sẽ tự động gọi fetch và hiển thị tin nhắn mới sau mỗi khoảng thời gian
+
 //Menu-drop-USERINFO
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const token = localStorage.getItem("token");
+    const FullName = localStorage.getItem("Logger");
+    const chatTitle = document.querySelector(".chat-right");
+    const avatarImg = document.querySelector(".avatar-img");
+    if (FullName) {
+      chatTitle.textContent = FullName;
+    } else {
+      chatTitle.textContent = "Undefined";
+    }
+    avatarImg.src = "../images/icon-user.png";
+    avatarImg.style.width = "36px";
+    avatarImg.style.height = "36px";
+    avatarImg.style.borderRadius = "50%";
+    avatarImg.style.marginRight = "10px";
+
+    chatTitle.style.fontSize = "20px";
+    chatTitle.style.fontWeight = "bold";
     if (!token) {
-      throw new Error("Token chưa lưu vào localStorage");
+      throw new Error("Invalid token");
     }
     const response = await fetch(INFOUSER, {
       method: "GET",
@@ -14,33 +32,22 @@ document.addEventListener("DOMContentLoaded", async function () {
       },
     });
     if (!response.ok) {
-      throw new Error("không tìm được thông tin người dùng");
+      throw new Error("Invaild");
     }
-    const result = await response.json();
-    if (result.status !== 1) {
-      throw new Error(result.message || "không lấy được thông tin người dùng");
+    const resul = await response.json();
+    if (resul.status !== 1) {
+      throw new Error("cjc ko lay duoc ket qua ");
     }
-    const userData = result.data;
-    const avatarImg = document.querySelector(".avatar-img");
+    const userData = resul.data;
     if (userData.Avatar) {
       avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
-    } else {
-      avatarImg.src = "../images/icon-user.png";
     }
-    const chatTitle = document.querySelector(".chat-right");
-    chatTitle.textContent = userData.FullName || "Undefined";
-    if (avatarImg) {
-      avatarImg.style.width = "36px";
-      avatarImg.style.height = "36px";
-      avatarImg.style.borderRadius = "50%";
-      avatarImg.style.marginRight = "10px";
+    if (userData.FullName) {
+      chatTitle.textContent = userData.FullName;
+      localStorage.setItem("Logger", userData.FullName);
     }
-    if (chatTitle) {
-      chatTitle.style.fontSize = "20px";
-      chatTitle.style.fontWeight = "bold";
-    }
-  } catch (error) {
-    console.error("Error fetching user info:", error);
+  } catch (err) {
+    console.log(err);
   }
 });
 //Chức năng menu
@@ -276,7 +283,9 @@ async function createFriendListItem(friend, token) {
   statusDot.style.top = "-3px";
   statusDot.style.right = "5px";
   statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
-
+  avatar.onerror = function () {
+    avatar.src = "../images/icon-user.png";
+  };
   avatarWrapper.appendChild(avatar);
   avatarWrapper.appendChild(statusDot);
   textContainer.appendChild(link);
@@ -450,16 +459,32 @@ async function openChatWindow(friend) {
 
   messageInput.value = "";
   messagesContainer.innerHTML = "";
-
+  function handleCachedMessages(friend) {
+    try {
+      const cachedMessages = localStorage.getItem(
+        `messages_${friend.FriendID}`
+      );
+      const parsedMessages = JSON.parse(cachedMessages);
+      if (parsedMessages && Array.isArray(parsedMessages)) {
+        displayMessages(parsedMessages, friend);
+      } else {
+        // Xử lý trường hợp không có tin nhắn hoặc không phải mảng
+      }
+      attachSendMessageEvents(friend.FriendID);
+      console.log("Đang click vào id này :" + friend.FriendID);
+    } catch (error) {
+      console.error("Lỗi khi xử lý tin nhắn từ cache:", error);
+    }
+  }
+  // Gọi hàm fetchMessages ngay lập tức
   fetchMessages(friend.FriendID, friend);
-  const cachedMessages = localStorage.getItem(`messages_${friend.FriendID}`);
-  const parsedMessages = JSON.parse(cachedMessages);
-  displayMessages(parsedMessages, friend);
-
-  attachSendMessageEvents(friend.FriendID);
-  // console.log("Đang click vào id này :" + friend.FriendID);
+  // Gọi hàm handleCachedMessages ban đầu
+  handleCachedMessages(friend);
+  // Đặt khoảng thời gian 5 giây để gọi lại hàm fetchMessages
+  setInterval(() => {
+    fetchMessages(friend.FriendID, friend);
+  }, 1000);
 }
-
 //Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
 function fetchMessages(friendID, friendInfo) {
   const token = localStorage.getItem("token");
@@ -472,9 +497,18 @@ function fetchMessages(friendID, friendInfo) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 1 && data.data.length > 0) {
-        localStorage.setItem(`messages_${friendID}`, JSON.stringify(data.data));
-        // console.log("Messages saved to localStorage:", data.data);
-        displayMessages(data.data, friendInfo);
+        const currentMessages = localStorage.getItem(`messages_${friendID}`);
+        const parsedCurrentMessages = JSON.parse(currentMessages);
+        //Cập nhật giao diện khi có tin nhắn mới
+        if (
+          JSON.stringify(parsedCurrentMessages) !== JSON.stringify(data.data)
+        ) {
+          localStorage.setItem(
+            `messages_${friendID}`,
+            JSON.stringify(data.data)
+          );
+          displayMessages(data.data, friendInfo);
+        }
       } else {
         displayNoMessages();
       }
@@ -488,6 +522,11 @@ function fetchMessages(friendID, friendInfo) {
 function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
+  if (!messages || !Array.isArray(messages)) {
+    console.error("Invalid messages data: ", messages);
+    return;
+  }
+
   if (!document.getElementById("iconPopupMenu")) {
     const iconPopupHTML = `
         <div id="iconPopupMenu" class="popup-menu">
@@ -534,9 +573,9 @@ function displayMessages(messages, friendInfo) {
     const formattedTimestamp = formatTimestamp(timestamp);
     let statusIcon = "";
     if (message.isSend === 0) {
-      statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
+      statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
     } else if (message.isSend === 1) {
-      statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Read Icon">`;
+      statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
     }
     let contentHtml = "";
     if (message.Images && message.Images.length > 0) {
@@ -627,6 +666,9 @@ function displayMessages(messages, friendInfo) {
       toggleActionPopupMenu(event.target, index);
     });
   });
+  // setInterval(() => {
+  //   displayMessages(messages);
+  // }, 1000);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 //Chức năng lấy đúng id hiện tại click cuối cùng để gửi cho người hiện tại
@@ -671,11 +713,11 @@ function sendMessageToAPI(friendID, message) {
   }
   formData.append("FriendID", friendID);
   formData.append("Content", message);
-  // console.log("Gửi cho id này : " + friendID);
+  console.log("Gửi cho id này : " + friendID);
   if (message.isSend === 0) {
-    statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
+    statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
   } else if (message.isSend === 1) {
-    statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Read Icon">`;
+    statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
   }
   if (fileInput && fileInput.files.length > 0) {
     formData.append("files", fileInput.files[0]);
@@ -694,7 +736,7 @@ function sendMessageToAPI(friendID, message) {
         const formattedTimestamp = formatTimestamp(timestamp);
         const messageElement = document.createElement("div");
         messageElement.classList.add("message");
-        let statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
+        let statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
         let contentHtml = "";
         if (data.data.Images && data.data.Images.length > 0) {
           data.data.Images.forEach((img) => {

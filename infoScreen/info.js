@@ -80,9 +80,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!response.ok) {
           throw new Error("Máy chủ không phản hồi");
         }
-        const data = await response.json();
-        alert(data.message);
         closeEditModal();
+        setTimeout(function () {
+          window.location.href = "/chatScreen/Chat.html";
+        }, 500);
       } catch (error) {
         console.error("Fetch error:", error);
         alert("Đã xảy ra lỗi khi sửa thông tin người dùng.");

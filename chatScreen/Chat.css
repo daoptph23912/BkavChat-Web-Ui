@@ -467,7 +467,7 @@ body.dark-mode {
   max-width: 300px;
   height: auto;
   margin-bottom: -20px;
-  border-radius: 10px;
+  border-radius: 20px 20px 0 0 ;
 }
 .file-sender {
   margin-top: 10px;
@@ -555,7 +555,7 @@ body.dark-mode {
   height: auto;
   margin-bottom: -20px;
   position: relative;
-  border-radius: 10px;
+  border-radius: 20px 20px 0 0;
 }
 .file-receiver {
   padding: 10px;
