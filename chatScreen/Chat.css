@@ -6,12 +6,10 @@ body {
   padding: 0;
   background-color: #ffffff;
 }
-
 :root {
   --background-color: #040404;
   --text-color: #000000;
 }
-
 body.light-mode {
   background-color: #ffffff;
   color: #000000;
@@ -97,7 +95,7 @@ body.dark-mode {
 }
 
 .input-area button {
-  margin-left: 10px;
+  margin-left: 5px;
   background-color: #b0b1b3;
   color: #ffffff;
   border: none;
@@ -466,10 +464,10 @@ body.dark-mode {
   display: flex;
 }
 .image-sender {
-  max-width: 400px;
+  max-width: 300px;
   height: auto;
   margin-bottom: -20px;
-  /* position: relative; */
+  border-radius: 10px;
 }
 .file-sender {
   margin-top: 10px;
@@ -479,7 +477,6 @@ body.dark-mode {
   position: relative;
   padding: 10px;
 }
-
 .icon-status {
   width: 12px;
   height: 12px;
@@ -503,18 +500,19 @@ body.dark-mode {
 }
 .content-msg-sender {
   max-width: 700px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 8px;
+  padding-left: 8px;
   border-radius: 20px;
+  text-align: right;
 }
 .status-time {
   display: flex;
   align-items: center;
   position: absolute;
   bottom: -20px;
-  right: -5px;
+  right: 5px;
   white-space: nowrap;
 }
 .timestamp-senderer {
@@ -528,7 +526,7 @@ body.dark-mode {
   gap: 5px;
   position: absolute;
   left: -45px;
-  bottom: 5px;
+  bottom: 3px;
 }
 .menu-icon {
   width: 30px;
@@ -546,19 +544,18 @@ body.dark-mode {
   margin-top: 10px;
 }
 .sender-img-cont-rc {
-  background-color: #dd994b;
+  background-color: #f4cc9f;
   border-radius: 20px;
   margin-bottom: 30px;
   margin-top: 10px;
 }
-
-
 /* nhận tin nhắn  */
 .image-receiver {
-  max-width: 500px;
+  max-width: 300px;
   height: auto;
   margin-bottom: -20px;
   position: relative;
+  border-radius: 10px;
 }
 .file-receiver {
   padding: 10px;
@@ -574,7 +571,7 @@ body.dark-mode {
 .style-receiver {
   display: flex;
   position: relative;
-  gap: 10px;
+  gap: 5px;
 }
 .content-receiver {
   color: #080707;
@@ -588,11 +585,10 @@ body.dark-mode {
   max-width: 700px;
 }
 .content-msg-receiver {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 .timestamp-receiver {
   font-size: 12px;
@@ -606,7 +602,7 @@ body.dark-mode {
   gap: 5px;
   position: absolute;
   right: -45px;
-  bottom: 25px;
+  bottom: 23px;
 }
 .content-receiver:hover .icon-container-receiver {
   display: flex;

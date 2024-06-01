@@ -105,10 +105,9 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", async function () {
   await fetchAndDisplayUsers();
 });
-
 async function fetchAndDisplayUsers() {
   const userChatList = document.querySelector(".user-chat");
-  userChatList.innerHTML = ""; // Xóa danh sách hiện tại
+  // userChatList.innerHTML = "";
 
   try {
     const token = localStorage.getItem("token");
@@ -130,10 +129,8 @@ async function fetchAndDisplayUsers() {
     if (!response.ok) {
       throw new Error("Lỗi server không phản hồi");
     }
-
     const data = await response.json();
-    saveUsers(data.data); // Lưu danh sách người dùng vào localStorage
-
+    saveUsers(data.data);
     if (data.data && data.data.length > 0) {
       const friendsWithLastMessage = await Promise.all(
         data.data.map(async (friend) => {
@@ -144,13 +141,11 @@ async function fetchAndDisplayUsers() {
           return { ...friend, lastMessageData };
         })
       );
-
       friendsWithLastMessage.sort((a, b) => {
         const aTime = a.lastMessageData ? a.lastMessageData.lastMessageTime : 0;
         const bTime = b.lastMessageData ? b.lastMessageData.lastMessageTime : 0;
         return bTime - aTime;
       });
-
       for (const friend of friendsWithLastMessage) {
         const listItem = await createFriendListItem(friend, token);
         userChatList.appendChild(listItem);
@@ -459,21 +454,20 @@ async function openChatWindow(friend) {
 
   messageInput.value = "";
   messagesContainer.innerHTML = "";
-  // fetchMessages(friend.FriendID, friend);
-  if (navigator.onLine) {
-    fetchMessages(friend.FriendID, friend);
-  } else {
-    const cachedMessages = localStorage.getItem(`messages_${friend.FriendID}`);
-    if (cachedMessages) {
-      const parsedMessages = JSON.parse(cachedMessages);
-      console.log("Messages retrieved from localStorage:", parsedMessages); // Log để kiểm tra lấy dữ liệu
-      displayMessages(parsedMessages, friend);
-    } else {
-      displayNoMessages();
-    }
-  }
-  attachSendMessageEvents(friend.FriendID);
-  console.log("Đang click vào id này :" + friend.FriendID);
+
+  fetchMessages(friend.FriendID, friend);
+  // if (navigator.onLine) {
+  //   fetchMessages(friend.FriendID, friend);
+  // } else {
+  //   const cachedMessages = localStorage.getItem(`messages_${friend.FriendID}`);
+  //   if (cachedMessages) {
+  //     const parsedMessages = JSON.parse(cachedMessages);
+  //     console.log("Messages retrieved from localStorage:", parsedMessages); // Log để kiểm tra lấy dữ liệu
+  //     displayMessages(parsedMessages, friend);
+  //   } else {
+  //     displayNoMessages(); // Hiển thị tin nhắn rỗng hoặc thông báo khác khi không có dữ liệu
+  //   }
+  // }
 }
 
 //Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
@@ -489,7 +483,7 @@ function fetchMessages(friendID, friendInfo) {
     .then((data) => {
       if (data.status === 1 && data.data.length > 0) {
         localStorage.setItem(`messages_${friendID}`, JSON.stringify(data.data));
-        console.log("Messages saved to localStorage:", data.data); 
+        // console.log("Messages saved to localStorage:", data.data);
         displayMessages(data.data, friendInfo);
       } else {
         displayNoMessages();
@@ -500,47 +494,46 @@ function fetchMessages(friendID, friendInfo) {
       displayErrorMessage();
     });
 }
-
 //Hiển thị tin nhắn ra khung chat
 function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
   if (!document.getElementById("iconPopupMenu")) {
     const iconPopupHTML = `
-      <div id="iconPopupMenu" class="popup-menu">
-        <div class="icon-row">
-          <img src="../images/icon-love.png" alt="Love">
-          <img src="../images/icon-like.png" alt="Like">
-          <img src="../images/icon-dislike.png" alt="Dislike">
-          <img src="../images/icon-funny.png" alt="Funny">
-          <img src="../images/iconwow.png" alt="Wow">
-          <img style="width:20px;height:20px;position:relative;alignItems:center;justify-content:center;margin-top:4px" src="../images/sad.png" alt="Sad">
+        <div id="iconPopupMenu" class="popup-menu">
+          <div class="icon-row">
+            <img src="../images/icon-love.png" alt="Love">
+            <img src="../images/icon-like.png" alt="Like">
+            <img src="../images/icon-dislike.png" alt="Dislike">
+            <img src="../images/icon-funny.png" alt="Funny">
+            <img src="../images/iconwow.png" alt="Wow">
+            <img style="width:20px;height:20px;position:relative;alignItems:center;justify-content:center;margin-top:4px" src="../images/sad.png" alt="Sad">
+          </div>
         </div>
-      </div>
-    `;
+      `;
     document.body.insertAdjacentHTML("beforeend", iconPopupHTML);
   }
   if (!document.getElementById("actionPopupMenu")) {
     const actionPopupHTML = `
-      <div id="actionPopupMenu" class="popup-menu">
-      <div class="style-popup-send">  
-      <img src="../images/icon-popup-send.png" alt="Love"> 
-      <button id="editMessage">Chỉnh sửa</button>
-      </div>
-      <div class="style-popup-send">  
-      <img src="../images/icon-popup-send2.png" alt="Love"> 
-      <button id="replyMessage">Trả lời</button>
-      </div>
-      <div class="style-popup-send">  
-      <img src="../images/icon-popup-send3.png" alt="Love"> 
-      <button id="deleteMessage">Ghim</button>
-      </div>
-      <div class="style-popup-send">  
-      <img src="../images/icon-popup-send4.png" alt="Love"> 
-      <button class="deleteMessageButton" >Xóa tin nhắn</button>
-      </div>
-      </div>
-    `;
+        <div id="actionPopupMenu" class="popup-menu">
+        <div class="style-popup-send">  
+        <img src="../images/icon-popup-send.png" alt="Love"> 
+        <button id="editMessage">Chỉnh sửa</button>
+        </div>
+        <div class="style-popup-send">  
+        <img src="../images/icon-popup-send2.png" alt="Love"> 
+        <button id="replyMessage">Trả lời</button>
+        </div>
+        <div class="style-popup-send">  
+        <img src="../images/icon-popup-send3.png" alt="Love"> 
+        <button id="deleteMessage">Ghim</button>
+        </div>
+        <div class="style-popup-send">  
+        <img src="../images/icon-popup-send4.png" alt="Love"> 
+        <button class="deleteMessageButton" >Xóa tin nhắn</button>
+        </div>
+        </div>
+      `;
     document.body.insertAdjacentHTML("beforeend", actionPopupHTML);
   }
   messages.forEach((message, index) => {
@@ -553,7 +546,7 @@ function displayMessages(messages, friendInfo) {
     if (message.isSend === 0) {
       statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
     } else if (message.isSend === 1) {
-      statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
+      statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Read Icon">`;
     }
     let contentHtml = "";
     if (message.Images && message.Images.length > 0) {
@@ -580,42 +573,42 @@ function displayMessages(messages, friendInfo) {
     if (message.MessageType === 1) {
       messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
-      <div class="sender-msg-file" >
-       <div class="content-sender">
-          <div class="sender-img-cont">
-          ${contentHtml}
-          <p class="content-msg-sender" >${message.Content || ""}</p>
+        <div class="sender-msg-file" >
+        <div class="content-sender">
+            <div class="sender-img-cont">
+            ${contentHtml}
+            <p class="content-msg-sender" >${message.Content || ""}</p>
+            </div>
+            <div class="status-time"> ${statusIcon}
+            <span class="timestamp-sender">${formattedTimestamp}</span>
+            </div>
+            <div class="icon-container">
+            <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+          <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
-          <div class="status-time"> ${statusIcon}
-          <span class="timestamp-sender">${formattedTimestamp}</span>
-          </div>
-          <div class="icon-container">
-          <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
-         <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
         </div>
-       </div>
-      </div>
-        `;
+        </div>
+          `;
     } else {
       const avatarUrl = friendInfo.Avatar
         ? `${baseUrl}/images${friendInfo.Avatar}`
         : `../images/icon-user.png`;
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
-         <div class="style-receiver"><img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
-           <div class="content-receiver">
-            <div class="sender-img-cont-rc">
-           ${contentHtmlReceive}
-            <p class="content-msg-receiver">${message.Content || ""}</p>
+          <div class="style-receiver"><img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
+            <div class="content-receiver">
+              <div class="sender-img-cont-rc">
+            ${contentHtmlReceive}
+              <p class="content-msg-receiver">${message.Content || ""}</p>
+              </div>
+              <span class="timestamp-receiver">${formattedTimestamp}</span>
+              <div class="icon-container-receiver">
+              <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
+              <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
             </div>
-            <span class="timestamp-receiver">${formattedTimestamp}</span>
-            <div class="icon-container-receiver">
-            <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
-            <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
-           </div>
-          </div>
-        </div>  
-        `;
+            </div>
+          </div>  
+          `;
     }
     messagesContainer.appendChild(messageElement);
     messagesContainer.appendChild(messageElement);
@@ -692,7 +685,7 @@ function sendMessageToAPI(friendID, message) {
   if (message.isSend === 0) {
     statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
   } else if (message.isSend === 1) {
-    statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
+    statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Read Icon">`;
   }
   if (fileInput && fileInput.files.length > 0) {
     formData.append("files", fileInput.files[0]);
@@ -720,7 +713,7 @@ function sendMessageToAPI(friendID, message) {
         }
         if (data.data.Files && data.data.Files.length > 0) {
           data.data.Files.forEach((file) => {
-            contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
+            contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender">${file.FileName}</a>`;
           });
         }
         messageElement.classList.add("sender-message");
