@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.replace("../loginScreen/Login.html");
   });
 });
+//Chức năng sáng tối
 document.addEventListener("DOMContentLoaded", function () {
   const themeToggle = document.querySelector(".theme-toggle");
   themeToggle.addEventListener("click", toggleTheme);
@@ -107,25 +108,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 async function fetchAndDisplayUsers() {
   const userChatList = document.querySelector(".user-chat");
-  // userChatList.innerHTML = "";
-
+  userChatList.innerHTML = "";
   try {
     const token = localStorage.getItem("token");
     if (!token) {
       throw new Error("token chưa lưu vào localStorage");
     }
-
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
-
     const requestOptions = {
       method: "GET",
       headers: myHeaders,
       redirect: "follow",
     };
-
     const response = await fetch(LISTUSER, requestOptions);
-
     if (!response.ok) {
       throw new Error("Lỗi server không phản hồi");
     }
@@ -456,18 +452,12 @@ async function openChatWindow(friend) {
   messagesContainer.innerHTML = "";
 
   fetchMessages(friend.FriendID, friend);
-  // if (navigator.onLine) {
-  //   fetchMessages(friend.FriendID, friend);
-  // } else {
-  //   const cachedMessages = localStorage.getItem(`messages_${friend.FriendID}`);
-  //   if (cachedMessages) {
-  //     const parsedMessages = JSON.parse(cachedMessages);
-  //     console.log("Messages retrieved from localStorage:", parsedMessages); // Log để kiểm tra lấy dữ liệu
-  //     displayMessages(parsedMessages, friend);
-  //   } else {
-  //     displayNoMessages(); // Hiển thị tin nhắn rỗng hoặc thông báo khác khi không có dữ liệu
-  //   }
-  // }
+  const cachedMessages = localStorage.getItem(`messages_${friend.FriendID}`);
+  const parsedMessages = JSON.parse(cachedMessages);
+  displayMessages(parsedMessages, friend);
+
+  attachSendMessageEvents(friend.FriendID);
+  // console.log("Đang click vào id này :" + friend.FriendID);
 }
 
 //Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
@@ -681,7 +671,7 @@ function sendMessageToAPI(friendID, message) {
   }
   formData.append("FriendID", friendID);
   formData.append("Content", message);
-  console.log("Gửi cho id này : " + friendID);
+  // console.log("Gửi cho id này : " + friendID);
   if (message.isSend === 0) {
     statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Sent Icon">`;
   } else if (message.isSend === 1) {
@@ -855,7 +845,9 @@ function deleteMessage(index) {
 function displayErrorMessage() {
   const messagesContainer = document.getElementById("messagesContainer");
   const errorElement = document.createElement("p");
-  errorElement.textContent = "Đã xảy ra lỗi khi tải tin nhắn.";
+  errorElement.textContent =
+    "Đã mất kết nối mạng , vui lòng kiểm tra lại kết nối";
+  errorElement.style.textAlign = "center";
   messagesContainer.appendChild(errorElement);
 }
 //Giao diện không có tin nhắn
