@@ -109,10 +109,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
-//Lấy danh sách người dùng
+//Gọi đến hàm fetchAndDisplayUsers
 document.addEventListener("DOMContentLoaded", async function () {
   await fetchAndDisplayUsers();
 });
+//Lấy danh sách người dùng
 async function fetchAndDisplayUsers() {
   const userChatList = document.querySelector(".user-chat");
   userChatList.innerHTML = "";
@@ -196,9 +197,10 @@ function saveUsers(users) {
 function loadUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
 }
+//Hiển thị người dùng đến createFriendListItem
 function displayUsers(users) {
   const userChatList = document.querySelector(".user-chat");
-  userChatList.innerHTML = ""; // Xóa danh sách hiện tại
+  userChatList.innerHTML = "";
   if (users.length > 0) {
     users.forEach(async (friend) => {
       const listItem = await createFriendListItem(friend);
@@ -483,8 +485,11 @@ async function openChatWindow(friend) {
   // Đặt khoảng thời gian 5 giây để gọi lại hàm fetchMessages
   setInterval(() => {
     fetchMessages(friend.FriendID, friend);
-  }, 1000);
+  }, 2000);
 }
+let noMessagesDisplayed = false;
+let errorMessageDisplayed = false;
+
 //Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
 function fetchMessages(friendID, friendInfo) {
   const token = localStorage.getItem("token");
@@ -508,6 +513,18 @@ function fetchMessages(friendID, friendInfo) {
             JSON.stringify(data.data)
           );
           displayMessages(data.data, friendInfo);
+          // Đặt lại biến trạng thái khi có tin nhắn mới
+          noMessagesDisplayed = false;
+          errorMessageDisplayed = false;
+          const noMessagesElement =
+            document.getElementById("noMessagesElement");
+          const errorElement = document.getElementById("errorElement");
+          if (noMessagesElement) {
+            noMessagesElement.remove();
+          }
+          if (errorElement) {
+            errorElement.remove();
+          }
         }
       } else {
         displayNoMessages();
@@ -666,9 +683,6 @@ function displayMessages(messages, friendInfo) {
       toggleActionPopupMenu(event.target, index);
     });
   });
-  // setInterval(() => {
-  //   displayMessages(messages);
-  // }, 1000);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 //Chức năng lấy đúng id hiện tại click cuối cùng để gửi cho người hiện tại
@@ -883,28 +897,32 @@ function deleteMessage(index) {
     console.error("Không tìm thấy tin nhắn:", index);
   }
 }
-
-function displayErrorMessage() {
-  const messagesContainer = document.getElementById("messagesContainer");
-  const errorElement = document.createElement("p");
-  errorElement.textContent =
-    "Đã mất kết nối mạng , vui lòng kiểm tra lại kết nối";
-  errorElement.style.textAlign = "center";
-  messagesContainer.appendChild(errorElement);
-}
-//Giao diện không có tin nhắn
 function displayNoMessages() {
-  const messagesContainer = document.getElementById("messagesContainer");
-  const noMessagesDiv = document.createElement("div");
-  noMessagesDiv.classList.add("no-msg");
-  const imgNoMessages = document.createElement("img");
-  imgNoMessages.classList.add("img-no-msg");
-  imgNoMessages.src = "../images/no-msh.png";
-  noMessagesDiv.appendChild(imgNoMessages);
-  const h3NoMessages = document.createElement("h3");
-  h3NoMessages.textContent = "Chưa có tin nhắn ....";
-  noMessagesDiv.appendChild(h3NoMessages);
-  messagesContainer.appendChild(noMessagesDiv);
+  if (!noMessagesDisplayed) {
+    const messagesContainer = document.getElementById("messagesContainer");
+    const noMessagesDiv = document.createElement("div");
+    noMessagesDiv.classList.add("no-msg");
+    const imgNoMessages = document.createElement("img");
+    imgNoMessages.classList.add("img-no-msg");
+    imgNoMessages.src = "../images/no-msh.png";
+    noMessagesDiv.appendChild(imgNoMessages);
+    const h3NoMessages = document.createElement("h3");
+    h3NoMessages.textContent = "Chưa có tin nhắn ....";
+    noMessagesDiv.appendChild(h3NoMessages);
+    messagesContainer.appendChild(noMessagesDiv);
+    noMessagesDisplayed = true;
+  }
+}
+function displayErrorMessage() {
+  if (!errorMessageDisplayed) {
+    const messagesContainer = document.getElementById("messagesContainer");
+    const errorElement = document.createElement("p");
+    errorElement.textContent =
+      "Đã mất kết nối mạng , vui lòng kiểm tra lại kết nối";
+    errorElement.style.textAlign = "center";
+    messagesContainer.appendChild(errorElement);
+    errorMessageDisplayed = true;
+  }
 }
 //Picker emoji
 document.addEventListener("DOMContentLoaded", function () {
@@ -941,38 +959,48 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 //Pick-file-images
+const fileInputTrigger = document.getElementById("fileInputTrigger");
+const fileInput = document.getElementById("fileInput");
+const filePreviewContainer = document.getElementById("filePreviewContainer");
+let selectedFiles = [];
 fileInputTrigger.addEventListener("click", () => {
   fileInput.click();
 });
-const fileInput = document.getElementById("fileInput");
-const filePreviewContainer = document.getElementById("filePreviewContainer");
 fileInput.addEventListener("change", (e) => {
-  const files = e.target.files;
+  const files = Array.from(e.target.files);
+  selectedFiles = [...files]; // Cập nhật mảng các tệp đã chọn
+  updateFilePreview();
+});
+function updateFilePreview() {
   filePreviewContainer.innerHTML = "";
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
+  selectedFiles.forEach((file, index) => {
     const reader = new FileReader();
     reader.onload = function (event) {
       const previewElement = document.createElement("div");
       previewElement.classList.add("file-preview");
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "x";
+      closeButton.classList.add("close-button");
+      closeButton.addEventListener("click", () => {
+        selectedFiles.splice(index, 1);
+        updateFilePreview();
+      });
       if (file.type.startsWith("image/")) {
         const image = document.createElement("img");
         image.src = event.target.result;
-        image.style.maxWidth = "200px";
-        image.style.maxHeight = "auto";
         previewElement.appendChild(image);
       } else {
         const fileName = document.createElement("p");
         fileName.textContent = file.name;
         previewElement.appendChild(fileName);
       }
+      previewElement.appendChild(closeButton);
       filePreviewContainer.appendChild(previewElement);
-      adjustTextareaHeight();
     };
     reader.readAsDataURL(file);
-  }
-});
-//Thời gian hiênr thị
+  });
+}
+//Thời gian hiển thị
 function formatTimestamp(timestamp) {
   const date = new Date(timestamp);
   const now = new Date();
@@ -1003,3 +1031,16 @@ function adjustTextareaHeight() {
   messageInput.style.height = `${Math.min(messageInput.scrollHeight, 700)}px`;
 }
 messageInput.addEventListener("input", adjustTextareaHeight);
+//Chức năng ấn CTRL+Enter là xuống dòng
+document
+  .getElementById("messageInput")
+  .addEventListener("keydown", function (event) {
+    if (event.ctrlKey && event.key === "Enter") {
+      event.preventDefault();
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      const value = this.value;
+      this.value = value.substring(0, start) + "\n" + value.substring(end);
+      this.selectionStart = this.selectionEnd = start + 1;
+    }
+  });
