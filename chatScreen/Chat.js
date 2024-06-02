@@ -1,7 +1,5 @@
 import emojis from "../emoji/emoji.mjs";
 import { SENDMESSAGE, baseUrl, INFOUSER, LISTUSER } from "../config/api.mjs";
-// Hàm reloadMessages sẽ tự động gọi fetch và hiển thị tin nhắn mới sau mỗi khoảng thời gian
-
 //Menu-drop-USERINFO
 document.addEventListener("DOMContentLoaded", async function () {
   try {
@@ -487,10 +485,9 @@ async function openChatWindow(friend) {
     fetchMessages(friend.FriendID, friend);
   }, 2000);
 }
+//Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
 let noMessagesDisplayed = false;
 let errorMessageDisplayed = false;
-
-//Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
 function fetchMessages(friendID, friendInfo) {
   const token = localStorage.getItem("token");
   fetch(`${baseUrl}/message/get-message?FriendID=${friendID}`, {
