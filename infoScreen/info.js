@@ -1,6 +1,6 @@
 // import { INFOUSER, baseUrl, UPDATEUSER } from "../config/api.mjs";
-const baseUrl = "http://localhost:8888/api";
-// const baseUrl = "http://10.2.44.52:8888/api";
+// const baseUrl = "http://localhost:8888/api";
+const baseUrl = "http://10.2.44.52:8888/api";
 const INFOUSER = `${baseUrl}/user/info`;
 const UPDATEUSER = `${baseUrl}/user/update`;
 //Hiển thị thông tin người dùng
