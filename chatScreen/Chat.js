@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     avatarImg.src = "../images/icon-user.png";
     avatarImg.style.width = "36px";
     avatarImg.style.height = "36px";
-    avatarImg.style.borderRadius = "50%";
+    avatarImg.style.borderRadius = "50%"; 
     avatarImg.style.marginRight = "10px";
 
     chatTitle.style.fontSize = "20px";
@@ -237,8 +237,9 @@ async function createFriendListItem(friend, token) {
   avatar.style.height = "45px";
   avatar.style.borderRadius = "30px";
   avatar.style.marginRight = "10px";
-  avatar.style.backgroundColor = "#C3D4DF";
+  avatar.style.backgroundColor = "#ffffff";
   avatar.style.objectFit = "cover";
+  // avatar.style.overflow="hidden";
 
   const avatarWrapper = document.createElement("div");
   avatarWrapper.style.position = "relative";
@@ -443,7 +444,7 @@ async function openChatWindow(friend) {
   recipientAvatar.style.height = "40px";
   recipientAvatar.style.borderRadius = "25px";
   recipientAvatar.style.marginRight = "10px";
-  recipientAvatar.style.backgroundColor = "#C3D4DF";
+  recipientAvatar.style.backgroundColor = "#FFFFFF";
   recipientAvatar.style.objectFit = "cover";
 
   recipientName.textContent = displayName;
