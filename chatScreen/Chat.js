@@ -143,6 +143,7 @@ async function fetchAndDisplayUsers() {
           return { ...friend, lastMessageData };
         })
       );
+      saveFriendsWithLastMessage(friendsWithLastMessage);
       friendsWithLastMessage.sort((a, b) => {
         const aTime = a.lastMessageData ? a.lastMessageData.lastMessageTime : 0;
         const bTime = b.lastMessageData ? b.lastMessageData.lastMessageTime : 0;
@@ -178,9 +179,9 @@ async function fetchAndDisplayUsers() {
     }
   } catch (error) {
     console.error("Fetch error:", error);
-    const users = loadUsers(); // Tải danh sách người dùng từ localStorage khi gặp lỗi
-    if (users.length > 0) {
-      displayUsers(users);
+    const friendsWithLastMessage = loadFriendsWithLastMessage();
+    if (friendsWithLastMessage.length > 0) {
+      displayUsers(friendsWithLastMessage);
     } else {
       const errorMessage = document.createElement("li");
       errorMessage.textContent = "Đã xảy ra lỗi khi lấy danh sách người dùng.";
@@ -188,12 +189,19 @@ async function fetchAndDisplayUsers() {
     }
   }
 }
+// Lưu bạn bè và tin nhắn cuối cùng vào localStorage
+function saveFriendsWithLastMessage(friends) {
+  localStorage.setItem("friendsWithLastMessage", JSON.stringify(friends));
+}
+
+// Tải bạn bè và tin nhắn cuối cùng từ localStorage
+function loadFriendsWithLastMessage() {
+  return JSON.parse(localStorage.getItem("friendsWithLastMessage")) || [];
+}
+
 //lưu người dùng vào local
 function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
-}
-function loadUsers() {
-  return JSON.parse(localStorage.getItem("users")) || [];
 }
 //Hiển thị người dùng đến createFriendListItem
 function displayUsers(users) {
