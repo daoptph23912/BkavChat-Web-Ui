@@ -9,7 +9,7 @@ body {
   flex-direction: column;
   background-color: #f6f6f6;
   width: 200vh;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 .header-logo > img {
   padding: 15px 0 15px 35px;
@@ -17,7 +17,7 @@ body {
 }
 .container {
   width: 90%;
-  display: flex;  
+  display: flex;
 }
 
 .div-form {
@@ -27,23 +27,23 @@ body {
   margin-left: 220px;
 }
 
- .header {
+.header {
   display: flex;
   gap: 15px;
 }
 
- #choose-language {
-    height: 100%;
-    border: 0;
-    background-color: transparent;
-    font-family: "Roboto", sans-serif;
-    font-size: 17px;
-    font-weight: 500;
-    line-height: 19.92px;
-    letter-spacing: 6%;
+#choose-language {
+  height: 100%;
+  border: 0;
+  background-color: transparent;
+  font-family: "Roboto", sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 19.92px;
+  letter-spacing: 6%;
 }
 
- #choose-language:focus {
+#choose-language:focus {
   outline: none;
 }
 .choose-page {
@@ -73,23 +73,28 @@ body {
   display: inline-block;
 }
 
-.link-style:focus,
-.link-style:active,
-.link-style.current {
-  text-decoration: underline;
-  background-color: transparent; /* Ẩn nền */
+.link-style:focus::after,
+.link-style:active::after,
+.link-style.current::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -10px;
+  height: 3px;
+  background-color: #4461f2;
 }
 
 .btn-choose-page.current .content-btn {
   background-color: transparent; /* Ẩn nền của liên kết hiện tại */
 }
 
-.form-input{
+.form-input {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
- .form-control {
+.form-control {
   display: flex;
   width: 400px;
   height: 60px;
@@ -99,8 +104,7 @@ body {
   align-items: center;
 }
 
- .form-control
-  > input {
+.form-control > input {
   flex-grow: 1;
   border: 0;
   margin: 0;
@@ -114,22 +118,19 @@ body {
   font-weight: 500;
   line-height: 77px;
 }
- .form-control
-  > input[type="text"] {
+.form-control > input[type="text"] {
   letter-spacing: 9%;
 }
-.form-control
-  > input:focus {
+.form-control > input:focus {
   outline: none;
 }
- .option {
+.option {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
 }
-.option
-  > img:hover {
+.option > img:hover {
   cursor: pointer;
   background-color: #c7c7c7;
   border-radius: 10px;
@@ -139,11 +140,10 @@ body {
   width: 30px;
 }
 
-.div-btn-submit{
+.div-btn-submit {
   margin-top: 30px;
 }
-.div-btn-submit
-  > button {
+.div-btn-submit > button {
   width: 400px;
   height: 60px;
   border: 0;
@@ -156,8 +156,7 @@ body {
   font-weight: 700;
   letter-spacing: 9%;
 }
- .div-btn-submit
-  > button:hover {
+.div-btn-submit > button:hover {
   cursor: pointer;
 }
 .textbtn {

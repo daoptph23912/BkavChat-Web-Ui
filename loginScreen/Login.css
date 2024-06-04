@@ -307,7 +307,7 @@ body {
   display: flex;
 }
 .btn-choose-page.current .content-btn {
-  background-color: transparent; /* Ẩn nền của liên kết hiện tại */
+  background-color: transparent;
 }
 .link-style {
   font-size: 17px;
@@ -331,15 +331,8 @@ body {
   height: 3px;
   background-color: #4461f2;
 }
-
 .content-btn {
   padding: 8px 15px;
   border-radius: 21px;
   background-color: #ffffff;
 }
-/* .link-style:focus,
-.link-style:active,
-.link-style.current {
-  text-decoration: underline;
-  background-color: transparent;
-} */

@@ -920,8 +920,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const emojiList = document.getElementById("emojiList");
   const emojiSearch = document.getElementById("emojiSearch");
   const messageInput = document.getElementById("messageInput");
-  emojiSelectorIcon.addEventListener("click", () => {
+
+  emojiSelectorIcon.addEventListener("click", (e) => {
     emojiSelector.classList.toggle("active");
+    e.stopPropagation();
   });
   function loadEmoji(emojiArray) {
     emojiArray.forEach((emoji) => {
@@ -946,7 +948,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+  document.addEventListener("click", (e) => {
+    if (
+      !emojiSelector.contains(e.target) &&
+      !emojiSelectorIcon.contains(e.target)
+    ) {
+      emojiSelector.classList.remove("active");
+    }
+  });
 });
+
 //Pick-file-images
 const fileInputTrigger = document.getElementById("fileInputTrigger");
 const fileInput = document.getElementById("fileInput");
@@ -1024,7 +1035,7 @@ messageInput.addEventListener("input", adjustTextareaHeight);
 document
   .getElementById("messageInput")
   .addEventListener("keydown", function (event) {
-    if (event.ctrlKey && event.key === "Enter") {
+    if (event.shiftKey && event.key === "Enter") {
       event.preventDefault();
       const start = this.selectionStart;
       const end = this.selectionEnd;

@@ -30,7 +30,7 @@ body.dark-mode {
 }
 #messagesContainer {
   overflow-y: auto;
-  height: 80%;
+  height: 87%;
 }
 .left-menu {
   /* flex: 360px; */
@@ -40,7 +40,10 @@ body.dark-mode {
 .chat-window {
   overflow-y: hidden;
   flex: 75%;
-  padding: 10px;
+  padding-top: 10px;
+  padding-left: 7px;
+  padding-bottom: 5px;
+  margin-right: 5px;
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -85,16 +88,14 @@ body.dark-mode {
 }
 
 .input-area {
-  /* position: fixed; */
+  /* position: fixed;  */
   bottom: 3px;
   position: relative;
-  /* width: 76%; */
   display: flex;
   align-items: center;
   justify-content: center;
   right: 8px;
-  overflow-y: hidden;
-  flex-shrink: 0;
+  /* flex-shrink: 0; */
 }
 
 .input-area input[type="text"] {
@@ -624,28 +625,27 @@ body.dark-mode {
 .content-receiver:hover .icon-container-receiver {
   display: flex;
 }
-.pick-image-file {
-  /* display: flex; */
-  /* align-items: center; */
-  /* gap: 5px; */
-  /* position: absolute; */
-}
 /* nút xóa image-file picker */
 .file-preview {
   position: relative;
   display: inline-block;
   margin: 10px;
 }
-.file-preview img,
 .file-preview p {
+  background-color: #b0b1b3;
+  padding: 10px;
+  border-radius: 10px;
+  color: blue;
+}
+.file-preview img {
   display: block;
   max-width: 200px;
   border-radius: 10px;
 }
 .close-button {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 0px;
+  right: 0px;
   background-color: #000000;
   color: rgb(255, 255, 255);
   border: none;
@@ -655,4 +655,9 @@ body.dark-mode {
   text-align: center;
   line-height: 20px;
   cursor: pointer;
+}
+.pick-image-file {
+  position: absolute;
+  bottom: 60px;
+  right: 600px;
 }
