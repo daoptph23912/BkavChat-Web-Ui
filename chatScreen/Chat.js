@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     avatarImg.src = "../images/icon-user.png";
     avatarImg.style.width = "36px";
     avatarImg.style.height = "36px";
-    avatarImg.style.borderRadius = "50%"; 
+    avatarImg.style.borderRadius = "50%";
     avatarImg.style.marginRight = "10px";
 
     chatTitle.style.fontSize = "20px";
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (err) {
     console.log(err);
   }
-}); 
+});
 //Chức năng menu
 document.addEventListener("DOMContentLoaded", function () {
   var dropdownMenu = document.getElementById("dropdownMenu");
@@ -432,7 +432,7 @@ async function openChatWindow(friend) {
     return;
   }
   const nickname = getNickname(friend.FriendID);
-  const displayName = nickname || friend.FullName || '[ ]';
+  const displayName = nickname || friend.FullName || "[ ]";
   if (friend.Avatar) {
     recipientAvatar.src = `${baseUrl}/images${friend.Avatar}`;
   } else {
@@ -553,7 +553,6 @@ function displayMessages(messages, friendInfo) {
     console.error("Invalid messages data: ", messages);
     return;
   }
-
   if (!document.getElementById("iconPopupMenu")) {
     const iconPopupHTML = `
         <div id="iconPopupMenu" class="popup-menu">
@@ -873,10 +872,6 @@ function toggleActionPopupMenu(target, index) {
     popupMenu.style.display = "block";
     popupMenu.dataset.messageIndex = index;
     currentVisiblePopup = popupMenu;
-    const deleteButton = popupMenu.querySelector(".deleteMessageButton");
-    deleteButton.setAttribute("data-message-index", index);
-    deleteButton.removeEventListener("click", handleDeleteMessage);
-    deleteButton.addEventListener("click", handleDeleteMessage);
   }
 }
 document.addEventListener("click", (event) => {
@@ -899,36 +894,11 @@ document.addEventListener("click", (event) => {
     }
   }
 });
-function handleDeleteMessage(event) {
-  const index = event.target.getAttribute("data-message-index");
-  console.log("Xóa:", index);
-  deleteMessage(index);
-}
-function deleteMessage(index) {
-  console.log("Đang xóa tin nhắn", index);
-  const messagesContainer = document.getElementById("messagesContainer");
-  const messageElements = messagesContainer.getElementsByClassName("message");
-  console.log("Tổng tin nhắn được xóa :", messageElements.length);
-  if (index >= 0 && index < messageElements.length) {
-    messageElements[index].remove();
-    console.log("Đã xóa tin nhắn", index);
-  } else {
-    console.error("Không tìm thấy tin nhắn:", index);
-  }
-}
 function displayNoMessages() {
   if (!noMessagesDisplayed) {
     const messagesContainer = document.getElementById("messagesContainer");
-    const noMessagesDiv = document.createElement("div");
-    noMessagesDiv.classList.add("no-msg");
-    const imgNoMessages = document.createElement("img");
-    imgNoMessages.classList.add("img-no-msg");
-    imgNoMessages.src = "../images/no-msh.png";
-    noMessagesDiv.appendChild(imgNoMessages);
-    const h3NoMessages = document.createElement("h3");
-    h3NoMessages.textContent = "Chưa có tin nhắn ....";
-    noMessagesDiv.appendChild(h3NoMessages);
-    messagesContainer.appendChild(noMessagesDiv);
+    const noMessagesElement = document.createElement("p");
+    messagesContainer.appendChild(noMessagesElement);
     noMessagesDisplayed = true;
   }
 }
@@ -1031,7 +1001,7 @@ function formatTimestamp(timestamp) {
     return date.toLocaleTimeString("vi-VN", {
       hour: "2-digit",
       minute: "2-digit",
-      hour12: true,
+      hour24: true,
     });
   } else {
     return `${date.toLocaleDateString("vi-VN")} ${date.toLocaleTimeString(
@@ -1039,7 +1009,7 @@ function formatTimestamp(timestamp) {
       {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour24: true,
       }
     )}`;
   }

@@ -52,9 +52,9 @@
             <!--  -->
           </div>
         </div>
-       
+
         <div class="user-list">
-           <h4  id="resultCount"></h4>
+          <div id="resultCount"></div>
           <div style="display: flex; align-items: center">
             <img />
             <ul class="user-chat"></ul>
@@ -81,9 +81,11 @@
         <div class="pick-image-file" id="filePreviewContainer"></div>
         <div class="input-area" id="inputArea" style="display: none">
           <img class="icon-file-img" src="../images/file.png" id="fileInputTrigger" />
-          <input  type="file" id="fileInput" style="display: none" multiple />
+          <input type="file" id="fileInput" style="display: none" multiple />
           <div class="input-container">
-            <textarea class="textarea" type="text" id="messageInput" placeholder="Nhập tin nhắn..."></textarea>
+            <textarea class="textarea" type="text" id="messageInput" placeholder="Nhập tin nhắn...">
+            </textarea>
+
             <div class="utility-group">
               <li class="emoji-selector" id="emojiSelector">
                 <div class="input-container-icon">

@@ -23,14 +23,14 @@ body.dark-mode {
   display: flex;
   height: 100vh;
 }
-
 .user-list {
-  height: 92vh;
+  /* height: 92vh; */
+  max-height: calc(92vh - 20px);
   overflow-y: auto;
 }
-.messages {
-  height: 88vh;
+#messagesContainer {
   overflow-y: auto;
+  height: 80%;
 }
 .left-menu {
   /* flex: 360px; */
@@ -38,6 +38,7 @@ body.dark-mode {
   padding-top: 10px;
 }
 .chat-window {
+  overflow-y: hidden;
   flex: 75%;
   padding: 10px;
   background-color: #ffffff;
@@ -85,13 +86,15 @@ body.dark-mode {
 
 .input-area {
   /* position: fixed; */
-  bottom: -3px;
+  bottom: 3px;
   position: relative;
   /* width: 76%; */
   display: flex;
   align-items: center;
-  justify-content: end;
-  right: 10px;
+  justify-content: center;
+  right: 8px;
+  overflow-y: hidden;
+  flex-shrink: 0;
 }
 
 .input-area input[type="text"] {
@@ -243,7 +246,7 @@ body.dark-mode {
   overflow: hidden;
 }
 .icon-file-img {
-  margin: 3px;
+  margin-right: 4px;
 }
 .icon {
   position: absolute;
@@ -622,10 +625,10 @@ body.dark-mode {
   display: flex;
 }
 .pick-image-file {
-  display: flex;
-  position: absolute;
-  justify-content: space-between;
-  bottom: 45px;
+  /* display: flex; */
+  /* align-items: center; */
+  /* gap: 5px; */
+  /* position: absolute; */
 }
 /* nút xóa image-file picker */
 .file-preview {
@@ -641,10 +644,10 @@ body.dark-mode {
 }
 .close-button {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background: blue;
-  color: white;
+  top: -10px;
+  right: -10px;
+  background-color: #000000;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 50%;
   width: 20px;
