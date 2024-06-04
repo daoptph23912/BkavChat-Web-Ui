@@ -1,7 +1,7 @@
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
   background-color: #ffffff;
@@ -232,7 +232,9 @@ body.dark-mode {
   margin-top: 5px;
   overflow: hidden;
 }
-.icon-file-img
+.icon-file-img {
+  margin: 3px;
+}
 .icon {
   position: absolute;
   top: 50%;
