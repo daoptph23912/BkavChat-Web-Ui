@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (err) {
     console.log(err);
   }
-});
+}); 
 //Chức năng menu
 document.addEventListener("DOMContentLoaded", function () {
   var dropdownMenu = document.getElementById("dropdownMenu");
@@ -65,18 +65,22 @@ document.addEventListener("DOMContentLoaded", function () {
 //chức năng tìm kiếm người dùng
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchUser");
+  const resultCount = document.getElementById("resultCount");
   const userList = document.querySelector(".user-chat");
   searchInput.addEventListener("input", function () {
     const searchTerm = searchInput.value.toLowerCase();
     const users = document.querySelectorAll(".user-chat li");
+    let count = 0;
     users.forEach(function (user) {
       const userName = user.textContent.toLowerCase();
       if (userName.includes(searchTerm)) {
         user.style.display = "flex";
+        count++;
       } else {
         user.style.display = "none";
       }
     });
+    resultCount.textContent = `${count} results`;
   });
 });
 //Đăng xuất
@@ -250,7 +254,7 @@ async function createFriendListItem(friend, token) {
 
   const link = document.createElement("a");
   const nickname = getNickname(friend.FriendID);
-  link.textContent = nickname || friend.FullName || "No Name";
+  link.textContent = nickname || friend.FullName || "[ ]";
   link.setAttribute("href", "#");
   link.style.flexGrow = "1";
   link.style.fontSize = "16px";
@@ -311,14 +315,14 @@ async function createFriendListItem(friend, token) {
         lastMessage.Images.length === 0 &&
         lastMessage.Files.length === 0
       ) {
-        messageContent.textContent = "No Content";
+        messageContent.textContent = "[ ]";
       } else {
         messageContent.textContent = lastMessage.Content || "Files";
       }
       messageTime.textContent = formatTimestamp(lastMessage.CreatedAt);
     } else {
-      messageContent.textContent = "No Content";
-      messageTime.textContent = "";
+      messageContent.textContent = "[ ]";
+      messageTime.textContent = " ";
     }
   } catch (error) {
     console.error("Error fetching last message for friend:", error);
@@ -428,7 +432,7 @@ async function openChatWindow(friend) {
     return;
   }
   const nickname = getNickname(friend.FriendID);
-  const displayName = nickname || friend.FullName;
+  const displayName = nickname || friend.FullName || '[ ]';
   if (friend.Avatar) {
     recipientAvatar.src = `${baseUrl}/images${friend.Avatar}`;
   } else {
@@ -625,20 +629,22 @@ function displayMessages(messages, friendInfo) {
     if (message.MessageType === 1) {
       messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
-        <div class="sender-msg-file" >
         <div class="content-sender">
+
             <div class="sender-img-cont">
             ${contentHtml}
             <p class="content-msg-sender" >${message.Content || ""}</p>
             </div>
+
             <div class="status-time"> ${statusIcon}
             <span class="timestamp-sender">${formattedTimestamp}</span>
             </div>
+
             <div class="icon-container">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
           <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
-        </div>
+
         </div>
           `;
     } else {
@@ -647,19 +653,22 @@ function displayMessages(messages, friendInfo) {
         : `../images/icon-user.png`;
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
-          <div class="style-receiver"><img src="${avatarUrl}" class="avatar" alt="Receiver Avatar">
+      <img src="${avatarUrl}" class="avatar">
+
             <div class="content-receiver">
               <div class="sender-img-cont-rc">
             ${contentHtmlReceive}
               <p class="content-msg-receiver">${message.Content || ""}</p>
               </div>
+
               <span class="timestamp-receiver">${formattedTimestamp}</span>
+
               <div class="icon-container-receiver">
               <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
               <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+              </div>
+
             </div>
-            </div>
-          </div>  
           `;
     }
     messagesContainer.appendChild(messageElement);
@@ -770,21 +779,25 @@ function sendMessageToAPI(friendID, message) {
         }
         messageElement.classList.add("sender-message");
         messageElement.innerHTML = `
-          <div>
+
           <div class="content-sender">
+
             <div class="sender-img-cont">
               ${contentHtml}
             <p class="content-msg-sender" >${message}</p>
             </div>
+        
             <div class="status-time"> ${statusIcon}
             <span class="timestamp-sender">${formattedTimestamp}</span>
             </div>
+
             <div class="icon-container">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
+
           </div>
-        </div>
+
             `;
         document
           .getElementById("messagesContainer")
