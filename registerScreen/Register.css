@@ -15,8 +15,28 @@ body {
   padding: 15px 0 15px 35px;
   width: 100px;
 }
-.container {
+/* .content{
+  display: flex;
   width: 90%;
+  height: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  top: 10%;
+  position: relative;
+} */
+.container {
+  width: 80%;
+  height: 80%;
+  position: relative;
+  left: 10%;
+  right: 100px;
+  bottom: 10%;
+  top: 90px;
   display: flex;
 }
 
@@ -162,3 +182,5 @@ body {
 .textbtn {
   font-size: 20px;
 }
+
+
