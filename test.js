@@ -1,6 +1,15 @@
-var course = {
-    name : 'cdjnjdnc',
-    coin : 250
-}
-var result = course.coin > 0 ? `${course.coin} Coins`  : "Free";
-console.log(course,result);
+Array.prototype.testMethod1 = 1;
+Array.prototype.testMethod2 = function () {};
+Array.prototype.forEach2 = function (callback) {
+  for (var index in this) {
+    console.log("index", index);
+
+  }
+};
+
+console.log(Array.prototype);
+var courses = ["cdkcm", "cdcbs"];
+
+courses.forEach2(function (course, inde, array) {
+  console.log(course, inde, array);
+});

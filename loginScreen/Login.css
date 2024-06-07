@@ -285,7 +285,7 @@ body {
   width: 100%;
   object-fit: cover;
 }
-/* Định nghĩa animation */
+
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -295,15 +295,13 @@ body {
   }
 }
 
-/* Áp dụng animation cho phần tử */
 .login-success-animation {
   animation-name: fadeOut;
-  animation-duration: 2s; /* Thời gian mờ dần là 2 giây */
-  animation-fill-mode: forwards; /* Giữ cho phần tử ở trạng thái cuối cùng của animation */
-  opacity: 0; /* Đặt opacity ban đầu là 0 */
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  opacity: 0;
 }
 
-/* đăng nhập đăng ký */
 .btn-choose-page {
   display: flex;
   flex-direction: column;

@@ -15,13 +15,12 @@ body {
   width: 100px;
 }
 .container {
-  /* width: 80%;
+  width: 80%;
   height: 80%;
-  position: relative;
   left: 10%;
   right: 500px;
   bottom: 10%;
-  top: 90px; */
+  top: 90px;
   display: flex;
   position: relative;
 }
