@@ -1044,3 +1044,4 @@ document
       this.selectionStart = this.selectionEnd = start + 1;
     }
   });
+  

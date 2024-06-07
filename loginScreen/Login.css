@@ -10,6 +10,7 @@ body {
   background-color: #f6f6f6;
   font-family: "Roboto", sans-serif;
   width: 200vh;
+  z-index: 1;
 }
 
 .header > img {
@@ -18,12 +19,17 @@ body {
 }
 
 .container {
-  width: 90%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   margin: auto;
   display: flex;
   flex-direction: row;
   gap: 30px;
+  left: 5%;
+  right: 10%;
+  bottom: 10%;
+  top: 5%;
+  position: relative;
 }
 
 .text-des {

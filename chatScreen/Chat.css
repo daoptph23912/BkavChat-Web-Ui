@@ -22,6 +22,7 @@ body.dark-mode {
 .container {
   display: flex;
   height: 100vh;
+  position: relative;
 }
 .user-list {
   /* height: 92vh; */
@@ -30,7 +31,7 @@ body.dark-mode {
 }
 #messagesContainer {
   overflow-y: auto;
-  height: 87%;
+  height: 90%;
 }
 .left-menu {
   /* flex: 360px; */
@@ -45,8 +46,9 @@ body.dark-mode {
   padding-bottom: 5px;
   margin-right: 5px;
   background-color: #ffffff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-left: 2px solid rgba(190, 186, 186, 0.377);
 }
+
 #resultCount {
   margin-top: 10px;
   font-size: 14px;
@@ -87,16 +89,18 @@ body.dark-mode {
   text-align: left;
 }
 
-.input-area {
-  /* position: fixed;  */
-  bottom: 3px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  right: 8px;
-  /* flex-shrink: 0; */
-}
+  .input-area {
+    bottom: 0px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 8px;
+    flex-shrink: 0;
+    margin: 0 auto; 
+    left: 360px;
+    
+  }
 
 .input-area input[type="text"] {
   flex: 1;
@@ -659,5 +663,5 @@ body.dark-mode {
 .pick-image-file {
   position: absolute;
   bottom: 60px;
-  right: 600px;
+  left: 380px;
 }
