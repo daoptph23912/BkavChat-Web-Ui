@@ -43,7 +43,7 @@ body.dark-mode {
   flex: 75%;
   padding-top: 10px;
   padding-left: 7px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
   margin-right: 5px;
   background-color: #ffffff;
   border-left: 2px solid rgba(190, 186, 186, 0.377);
@@ -89,18 +89,17 @@ body.dark-mode {
   text-align: left;
 }
 
-  .input-area {
-    bottom: 0px;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    right: 8px;
-    flex-shrink: 0;
-    margin: 0 auto; 
-    left: 360px;
-    
-  }
+.input-area {
+  bottom: 0px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 8px;
+  flex-shrink: 0;
+  margin: 0 auto;
+  left: 360px;
+}
 
 .input-area input[type="text"] {
   flex: 1;
