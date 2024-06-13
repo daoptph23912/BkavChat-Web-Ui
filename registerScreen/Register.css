@@ -15,7 +15,12 @@ body {
   width: 100px;
 }
 .container {
-  gap: 30px;
+  width: 80%;
+  height: 80%;
+  left: 10%;
+  right: 500px;
+  bottom: 10%;
+  top: 90px;
   display: flex;
   position: relative;
 }
