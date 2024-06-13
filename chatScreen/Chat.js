@@ -265,6 +265,7 @@ async function createFriendListItem(friend, token) {
   link.style.maxWidth = "140px";
   link.style.whiteSpace = "nowrap";
   link.style.textOverflow = "ellipsis";
+  link.style.overflow = "hidden";
 
   const messageContent = document.createElement("span");
   messageContent.style.fontSize = "14px";
@@ -520,7 +521,8 @@ function fetchMessages(friendID, friendInfo) {
         ) {
           localStorage.setItem(
             `messages_${friendID}`,
-            JSON.stringify(data.data)
+            JSON.stringify(data.data),
+            console.log(data.data)
           );
           displayMessages(data.data, friendInfo);
           // Đặt lại biến trạng thái khi có tin nhắn mới
