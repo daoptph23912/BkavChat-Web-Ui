@@ -493,7 +493,7 @@ async function openChatWindow(friend) {
   fetchMessages(friend.FriendID, friend);
   // Gọi hàm handleCachedMessages ban đầu
   handleCachedMessages(friend);
-  // Đặt khoảng thời gian 5 giây để gọi lại hàm fetchMessages
+  //set thời gian load lại hàm lấy tin nhắn
   setInterval(() => {
     fetchMessages(friend.FriendID, friend);
   }, 2000);
@@ -1044,4 +1044,3 @@ document
       this.selectionStart = this.selectionEnd = start + 1;
     }
   });
-  
