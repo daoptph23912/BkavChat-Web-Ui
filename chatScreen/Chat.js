@@ -32,11 +32,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!response.ok) {
       throw new Error("Invaild");
     }
-    const resul = await response.json();
-    if (resul.status !== 1) {
-      throw new Error("cjc ko lay duoc ket qua ");
+    const result = await response.json();
+    if (result.status !== 1) {
+      throw new Error("không lấy được kết quả  ");
     }
-    const userData = resul.data;
+    const userData = result.data;
     if (userData.Avatar) {
       avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
     }
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchUser");
   const resultCount = document.getElementById("resultCount");
-  const userList = document.querySelector(".user-chat");
+  // const userList = document.querySelector(".user-chat");
   searchInput.addEventListener("input", function () {
     const searchTerm = searchInput.value.toLowerCase();
     const users = document.querySelectorAll(".user-chat li");
@@ -97,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   const themeToggle = document.querySelector(".theme-toggle");
   themeToggle.addEventListener("click", toggleTheme);
-
   function toggleTheme() {
     const body = document.body;
     const themeIcon = document.getElementById("theme-icon");
@@ -167,7 +166,7 @@ async function fetchAndDisplayUsers() {
             if (!userInfoResponse.ok) {
               throw new Error("Lỗi khi lấy thông tin người dùng");
             }
-            const userInfo = await userInfoResponse.json();
+            // const userInfo = await userInfoResponse.json();
             const inputArea = document.getElementById("inputArea");
             inputArea.style.display = "flex";
             openChatWindow(friend);
@@ -349,9 +348,9 @@ async function createFriendListItem(friend, token) {
   return listItem;
 }
 //Lưu biệt danh vào localStorage
-function saveNickname(friendID, nickname) {
+function saveNickname(friendID, nickName) {
   const nicknames = JSON.parse(localStorage.getItem("nicknames")) || {};
-  nicknames[friendID] = nickname;
+  nicknames[friendID] = nickName;
   localStorage.setItem("nicknames", JSON.stringify(nicknames));
 }
 function getNickname(friendID) {
@@ -611,6 +610,9 @@ function displayMessages(messages, friendInfo) {
         contentHtml += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-sender" >`;
       });
     }
+    const zoomImg = document.createElement("div");
+    
+
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
         contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
@@ -1027,7 +1029,7 @@ function formatTimestamp(timestamp) {
     )}`;
   }
 }
-//Chức năng căn đều chiều ngang tin nhắn
+//Chức năng căn đều chiều ngang khi nhắn tin nhắn
 function adjustTextareaHeight() {
   messageInput.style.height = "auto";
   messageInput.style.height = `${Math.min(messageInput.scrollHeight, 700)}px`;
