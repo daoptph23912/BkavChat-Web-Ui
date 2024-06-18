@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const FullName = localStorage.getItem("Logger");
     const chatTitle = document.querySelector(".chat-right");
     const avatarImg = document.querySelector(".avatar-img");
+
     if (FullName) {
       chatTitle.textContent = FullName;
     } else {
@@ -17,6 +18,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     avatarImg.style.height = "36px";
     avatarImg.style.borderRadius = "50%";
     avatarImg.style.marginRight = "10px";
+    avatarImg.style.objectFit = "cover";
+    avatarImg.style.overflow = "hidden";
 
     chatTitle.style.fontSize = "20px";
     chatTitle.style.fontWeight = "bold";
@@ -196,17 +199,15 @@ async function fetchAndDisplayUsers() {
 function saveFriendsWithLastMessage(friends) {
   localStorage.setItem("friendsWithLastMessage", JSON.stringify(friends));
 }
-
 // Tải bạn bè và tin nhắn cuối cùng từ localStorage
 function loadFriendsWithLastMessage() {
   return JSON.parse(localStorage.getItem("friendsWithLastMessage")) || [];
 }
-
 //lưu người dùng vào local
 function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
 }
-//Hiển thị người dùng đến createFriendListItem
+//Hiển thị người dùng đến function createFriendListItem
 function displayUsers(users) {
   const userChatList = document.querySelector(".user-chat");
   userChatList.innerHTML = "";
@@ -231,7 +232,7 @@ async function createFriendListItem(friend, token) {
   listItem.style.display = "flex";
   listItem.style.flexDirection = "row";
   listItem.style.gap = "10px";
-
+  //Avatar
   const avatar = document.createElement("img");
   avatar.src = friend.Avatar
     ? `${baseUrl}/images${friend.Avatar}`
@@ -243,17 +244,17 @@ async function createFriendListItem(friend, token) {
   avatar.style.backgroundColor = "#ffffff";
   avatar.style.objectFit = "cover";
   // avatar.style.overflow="hidden";
-
+  //Avatar
   const avatarWrapper = document.createElement("div");
   avatarWrapper.style.position = "relative";
   avatarWrapper.style.display = "flex";
   avatarWrapper.style.alignItems = "center";
   avatarWrapper.style.width = "45px";
   avatarWrapper.style.height = "45px";
-
+  //FullName
   const link = document.createElement("a");
   const nickname = getNickname(friend.FriendID);
-  link.textContent = nickname || friend.FullName || "[ ]";
+  link.textContent = nickname || friend.FullName || "Hello";
   link.setAttribute("href", "#");
   link.style.flexGrow = "1";
   link.style.fontSize = "16px";
@@ -265,7 +266,8 @@ async function createFriendListItem(friend, token) {
   link.style.whiteSpace = "nowrap";
   link.style.textOverflow = "ellipsis";
   link.style.overflow = "hidden";
-
+  link.style.alignContent = "center";
+  //Content
   const messageContent = document.createElement("span");
   messageContent.style.fontSize = "14px";
   messageContent.style.color = "#666";
@@ -276,18 +278,18 @@ async function createFriendListItem(friend, token) {
   messageContent.style.overflow = "hidden";
   messageContent.style.whiteSpace = "nowrap";
   messageContent.style.textOverflow = "ellipsis";
-
+  //Container
   const textContainer = document.createElement("div");
   textContainer.style.display = "flex";
   textContainer.style.flexDirection = "column";
   textContainer.style.gap = "5px";
-
+  //Message-current
   const messageTime = document.createElement("span");
   messageTime.style.fontSize = "12px";
   messageTime.style.color = "#999";
   messageTime.style.marginTop = "25.5px";
   messageTime.style.marginLeft = "auto";
-
+  //StatusDot
   const statusDot = document.createElement("span");
   statusDot.style.width = "11px";
   statusDot.style.height = "11px";
@@ -315,13 +317,13 @@ async function createFriendListItem(friend, token) {
         lastMessage.Images.length === 0 &&
         lastMessage.Files.length === 0
       ) {
-        messageContent.textContent = "[ ]";
+        messageContent.textContent = "";
       } else {
         messageContent.textContent = lastMessage.Content || "Files";
       }
       messageTime.textContent = formatTimestamp(lastMessage.CreatedAt);
     } else {
-      messageContent.textContent = "[ ]";
+      messageContent.textContent = "";
       messageTime.textContent = " ";
     }
   } catch (error) {
@@ -344,6 +346,16 @@ async function createFriendListItem(friend, token) {
         popup.style.display = "none";
       }
     };
+    nicknameInput.addEventListener("keypress", (event) => {
+      const newNickname = nicknameInput.value;
+      if (event.key === "Enter") {
+        if (newNickname.trim() !== "") {
+          saveNickname(friend.FriendID, newNickname);
+          link.textContent = newNickname;
+          popup.style.display = "none";
+        }
+      }
+    });
   });
   return listItem;
 }
@@ -360,15 +372,16 @@ function getNickname(friendID) {
 //Hiển thị đổi biệt danh khi lưu vào localStorage
 document.addEventListener("DOMContentLoaded", () => {
   const popup = document.createElement("div");
+  const popupDel = document.createElement("div");
   popup.id = "nicknamePopup";
   popup.className = "popup";
   popup.innerHTML = `
-    <div class="popup-content">
-      <span class="close">&times;</span>
-      <p class="text-nickname">Vui lòng nhập biệt danh:</p>
-      <input class="input-nickname" type="text" id="nicknameInput" />
-      <button class="btn-save-nickname" id="saveNicknameBtn">Lưu</button>
-    </div>
+      <div class="popup-content">
+        <span class="close">&times;</span>
+        <p class="text-nickname">Vui lòng nhập biệt danh</p>
+        <input class="input-nickname" type="text" id="nicknameInput" />
+        <button class="btn-save-nickname" id="saveNicknameBtn">Lưu</button>
+      </div>
   `;
   document.body.appendChild(popup);
   document.querySelector(".popup .close").onclick = function () {
@@ -377,6 +390,36 @@ document.addEventListener("DOMContentLoaded", () => {
   window.onclick = function (event) {
     if (event.target == popup) {
       popup.style.display = "none";
+    }
+  };
+  window.onkeydown = function (event) {
+    if (event.key == "Escape") {
+      popup.style.display = "none";
+    }
+  };
+  popupDel.id = "popupDel";
+  popupDel.className = "popup-del";
+  popupDel.innerHTML = `
+         <div class="popup-content1">
+       <p>Xóa tin nhắn</p>
+       <p>Bạn có chắc chắn muốn xóa tin nhắn này?</p>
+       <button id="btnDel" class="btn-save-nickname">Xóa</button>
+       <button class="btn-save-nickname" id="btn-save-nickname">Hủy bỏ</button>
+         </div>
+`;
+  document.body.appendChild(popupDel);
+  var hehe = document.getElementById("btn-save-nickname");
+  hehe.onclick = function () {
+    popupDel.style.display = "none";
+  };
+  window.onclick = function (event) {
+    if (event.target == popupDel) {
+      popupDel.style.display = "none";
+    }
+  };
+  document.onkeydown = function (event) {
+    if (event.key == "Escape") {
+      popupDel.style.display = "none";
     }
   };
 });
@@ -438,23 +481,24 @@ async function openChatWindow(friend) {
   } else {
     recipientAvatar.src = `../images/icon-user.png`;
   }
+  //Avartar-lon
   avatarWrapper.style.position = "relative";
   avatarWrapper.style.display = "flex";
   avatarWrapper.style.alignItems = "center";
   avatarWrapper.style.width = "40px";
   avatarWrapper.style.height = "40px";
-
+  //Avartar-con
   recipientAvatar.style.width = "40px";
   recipientAvatar.style.height = "40px";
   recipientAvatar.style.borderRadius = "25px";
   recipientAvatar.style.marginRight = "10px";
   recipientAvatar.style.backgroundColor = "#FFFFFF";
   recipientAvatar.style.objectFit = "cover";
-
+  //FullName
   recipientName.textContent = displayName;
   recipientName.style.fontSize = "16px";
   recipientName.style.fontSize = "16px";
-
+  //Status Dot
   statusDot.style.width = "10px";
   statusDot.style.height = "10px";
   statusDot.style.borderRadius = "50%";
@@ -462,7 +506,7 @@ async function openChatWindow(friend) {
   statusDot.style.top = "-3px";
   statusDot.style.right = "5px";
   statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
-
+  //Status-On
   statusInfo.innerHTML = friend.isOnline ? "Online" : "Offline";
   statusInfo.style.fontSize = "14px";
   statusInfo.style.color = friend.isOnline ? "green" : "red";
@@ -481,6 +525,7 @@ async function openChatWindow(friend) {
       if (parsedMessages && Array.isArray(parsedMessages)) {
         displayMessages(parsedMessages, friend);
       } else {
+        console.log("Khong co tin nhan ");
         // Xử lý trường hợp không có tin nhắn hoặc không phải mảng
       }
       attachSendMessageEvents(friend.FriendID);
@@ -520,8 +565,7 @@ function fetchMessages(friendID, friendInfo) {
         ) {
           localStorage.setItem(
             `messages_${friendID}`,
-            JSON.stringify(data.data),
-            console.log(data.data)
+            JSON.stringify(data.data)
           );
           displayMessages(data.data, friendInfo);
           // Đặt lại biến trạng thái khi có tin nhắn mới
@@ -594,6 +638,23 @@ function displayMessages(messages, friendInfo) {
   }
   messages.forEach((message, index) => {
     const messageElement = document.createElement("div");
+    const imgBtnDown = document.querySelector(".btn-down");
+    imgBtnDown.innerHTML = ` <img src="../images/luotxuong.png" style="width: 50px;
+             height: 50px;" alt="">`;
+    document.body.appendChild(imgBtnDown);
+    messagesContainer.addEventListener("scroll", () => {
+      if (
+        messagesContainer.scrollTop <
+        messagesContainer.scrollHeight - messagesContainer.clientHeight - 50 
+      ) {
+        imgBtnDown.style.display = "block";
+      } else {
+        imgBtnDown.style.display = "none";
+      }
+    });
+    imgBtnDown.addEventListener("click", function () {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
     messageElement.classList.add("message");
     messageElement.dataset.index = index;
     const timestamp = new Date(message.CreatedAt);
@@ -611,7 +672,6 @@ function displayMessages(messages, friendInfo) {
       });
     }
     const zoomImg = document.createElement("div");
-    
 
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
@@ -633,21 +693,17 @@ function displayMessages(messages, friendInfo) {
       messageElement.classList.add("sender-message");
       messageElement.innerHTML = `
         <div class="content-sender">
-
             <div class="sender-img-cont">
             ${contentHtml}
             <p class="content-msg-sender" >${message.Content || ""}</p>
             </div>
-
             <div class="status-time"> ${statusIcon}
             <span class="timestamp-sender">${formattedTimestamp}</span>
             </div>
-
             <div class="icon-container">
             <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
           <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
-
         </div>
           `;
     } else {
@@ -657,23 +713,26 @@ function displayMessages(messages, friendInfo) {
       messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
       <img src="${avatarUrl}" class="avatar">
-
             <div class="content-receiver">
               <div class="sender-img-cont-rc">
             ${contentHtmlReceive}
               <p class="content-msg-receiver">${message.Content || ""}</p>
               </div>
-
               <span class="timestamp-receiver">${formattedTimestamp}</span>
-
               <div class="icon-container-receiver">
               <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
               <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
               </div>
-
             </div>
           `;
     }
+    var popupDell = document.querySelector(".deleteMessageButton");
+    popupDell.addEventListener("click", function () {
+      const popup = document.getElementById("popupDel");
+      const actionPopupMenu = document.getElementById("actionPopupMenu");
+      popup.style.display = "flex";
+      actionPopupMenu.style.display = "none";
+    });
     messagesContainer.appendChild(messageElement);
     messagesContainer.appendChild(messageElement);
     const contentSender = messageElement.querySelector(".content-sender");
@@ -704,9 +763,9 @@ function displayMessages(messages, friendInfo) {
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 //Chức năng lấy đúng id hiện tại click cuối cùng để gửi cho người hiện tại
-let currentFriendID = null;
 let sendMessageHandler = null;
 let keyPressHandler = null;
+let currentFriendID = null;
 function attachSendMessageEvents(friendID) {
   const sendMessageBtn = document.getElementById("sendMessageBtn");
   const messageInput = document.getElementById("messageInput");
@@ -735,7 +794,7 @@ function attachSendMessageEvents(friendID) {
   messageInput.addEventListener("keypress", keyPressHandler);
   currentFriendID = friendID;
 }
-//Chức năng gửi tin nhắn cho người đã click cuối cùng
+//Chức năng gửi tin nhắn cho người click cuối cùng
 function sendMessageToAPI(friendID, message) {
   const token = localStorage.getItem("token");
   const formData = new FormData();
@@ -782,25 +841,19 @@ function sendMessageToAPI(friendID, message) {
         }
         messageElement.classList.add("sender-message");
         messageElement.innerHTML = `
-
           <div class="content-sender">
-
             <div class="sender-img-cont">
-              ${contentHtml}
-            <p class="content-msg-sender" >${message}</p>
-            </div>
-        
-            <div class="status-time"> ${statusIcon}
-            <span class="timestamp-sender">${formattedTimestamp}</span>
-            </div>
-
-            <div class="icon-container">
-            <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+                ${contentHtml}
+                <p class="content-msg-sender">${message}</p>
+                </div>
+               <div class="status-time">${statusIcon}
+                <span class="timestamp-sender">${formattedTimestamp}</span>
+               </div>
+               <div class="icon-container">
+              <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
             <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
           </div>
-
           </div>
-
             `;
         document
           .getElementById("messagesContainer")
@@ -837,7 +890,7 @@ function addHoverEffect(element, iconSelector) {
     if (iconContainer) {
       hoverTimeout = setTimeout(() => {
         iconContainer.style.display = "none";
-      }, 100);
+      }, 200);
     }
   });
 }
@@ -961,7 +1014,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-
 //Pick-file-images
 const fileInputTrigger = document.getElementById("fileInputTrigger");
 const fileInput = document.getElementById("fileInput");
@@ -972,7 +1024,7 @@ fileInputTrigger.addEventListener("click", () => {
 });
 fileInput.addEventListener("change", (e) => {
   const files = Array.from(e.target.files);
-  selectedFiles = [...files]; // Cập nhật mảng các tệp đã chọn
+  selectedFiles = [...files];
   updateFilePreview();
 });
 function updateFilePreview() {
@@ -1019,7 +1071,7 @@ function formatTimestamp(timestamp) {
       hour24: true,
     });
   } else {
-    return `${date.toLocaleDateString("vi-VN")} ${date.toLocaleTimeString(
+    return `${date.toLocaleDateString("vi-VN")}  - ${date.toLocaleTimeString(
       "vi-VN",
       {
         hour: "2-digit",
@@ -1048,3 +1100,52 @@ document
       this.selectionStart = this.selectionEnd = start + 1;
     }
   });
+document.addEventListener('DOMContentLoaded', () => {
+  const chatContent = document.getElementById('messagesContainer');
+
+  chatContent.addEventListener('touchstart', handleTouchStart, false);
+  chatContent.addEventListener('touchmove', handleTouchMove, false);
+
+  let xDown = null;                                                        
+  let yDown = null;
+
+  function getTouches(evt) {
+      return evt.touches || evt.originalEvent.touches;
+  }
+
+  function handleTouchStart(evt) {
+      const firstTouch = getTouches(evt)[0];
+      xDown = firstTouch.clientX;
+      yDown = firstTouch.clientY;
+  }
+
+  function handleTouchMove(evt) {
+      if (!xDown || !yDown) {
+          return;
+      }
+
+      let xUp = evt.touches[0].clientX;
+      let yUp = evt.touches[0].clientY;
+
+      let xDiff = xDown - xUp;
+      let yDiff = yDown - yUp;
+
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {
+          // Quẹt ngang
+          if (xDiff > 0) {
+              // Vuốt sang trái
+          } else {
+              // Vuốt sang phải
+          }
+      } else {
+          // Quẹt dọc
+          if (yDiff > 0) {
+              // Vuốt lên
+          } else { 
+              // Vuốt xuống
+          }
+      }
+      xDown = null;
+      yDown = null;
+  }
+});

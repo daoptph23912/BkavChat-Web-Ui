@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const data = await response.json();
       if (data.status === 1) {
         localStorage.setItem("Logger", data.data.FullName);
+        localStorage.setItem("Username", data.data.Username);
         localStorage.setItem("token", data.data.token);
         const loginSuccessMessage = document.getElementById(
           "login-success-message"

@@ -64,6 +64,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       const data = await response.json();
       if (data.status === 1) {
+        localStorage.getItem('token',data.data.token);
+        localStorage.getItem('FullName',data.data.FullName);
+        localStorage.getItem('Username',data.data.Username);
         const registerSuccessMessage = document.getElementById(
           "register-success-message"
         );
