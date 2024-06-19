@@ -28,14 +28,14 @@ body.dark-mode {
   height: 92vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin; 
+  scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 #messagesContainer {
   overflow-y: auto;
-  height: 90%;  
+  height: 90%;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin; 
+  scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Firefox */
 }
 #messagesContainer::-webkit-scrollbar {
@@ -567,8 +567,7 @@ body.dark-mode {
   word-wrap: break-word;
   overflow-wrap: break-word;
   position: relative;
-  right: 5px
-
+  right: 5px;
 }
 .content-msg-sender {
   padding-top: 8px;

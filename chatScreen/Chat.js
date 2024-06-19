@@ -645,7 +645,7 @@ function displayMessages(messages, friendInfo) {
     messagesContainer.addEventListener("scroll", () => {
       if (
         messagesContainer.scrollTop <
-        messagesContainer.scrollHeight - messagesContainer.clientHeight - 50 
+        messagesContainer.scrollHeight - messagesContainer.clientHeight - 50
       ) {
         imgBtnDown.style.display = "block";
       } else {
@@ -1100,52 +1100,52 @@ document
       this.selectionStart = this.selectionEnd = start + 1;
     }
   });
-document.addEventListener('DOMContentLoaded', () => {
-  const chatContent = document.getElementById('messagesContainer');
+document.addEventListener("DOMContentLoaded", () => {
+  const chatContent = document.getElementById("messagesContainer");
 
-  chatContent.addEventListener('touchstart', handleTouchStart, false);
-  chatContent.addEventListener('touchmove', handleTouchMove, false);
+  chatContent.addEventListener("touchstart", handleTouchStart, false);
+  chatContent.addEventListener("touchmove", handleTouchMove, false);
 
-  let xDown = null;                                                        
+  let xDown = null;
   let yDown = null;
 
   function getTouches(evt) {
-      return evt.touches || evt.originalEvent.touches;
+    return evt.touches || evt.originalEvent.touches;
   }
 
   function handleTouchStart(evt) {
-      const firstTouch = getTouches(evt)[0];
-      xDown = firstTouch.clientX;
-      yDown = firstTouch.clientY;
+    const firstTouch = getTouches(evt)[0];
+    xDown = firstTouch.clientX;
+    yDown = firstTouch.clientY;
   }
 
   function handleTouchMove(evt) {
-      if (!xDown || !yDown) {
-          return;
-      }
+    if (!xDown || !yDown) {
+      return;
+    }
 
-      let xUp = evt.touches[0].clientX;
-      let yUp = evt.touches[0].clientY;
+    let xUp = evt.touches[0].clientX;
+    let yUp = evt.touches[0].clientY;
 
-      let xDiff = xDown - xUp;
-      let yDiff = yDown - yUp;
+    let xDiff = xDown - xUp;
+    let yDiff = yDown - yUp;
 
-      if (Math.abs(xDiff) > Math.abs(yDiff)) {
-          // Quẹt ngang
-          if (xDiff > 0) {
-              // Vuốt sang trái
-          } else {
-              // Vuốt sang phải
-          }
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+      // Quẹt ngang
+      if (xDiff > 0) {
+        // Vuốt sang trái
       } else {
-          // Quẹt dọc
-          if (yDiff > 0) {
-              // Vuốt lên
-          } else { 
-              // Vuốt xuống
-          }
+        // Vuốt sang phải
       }
-      xDown = null;
-      yDown = null;
+    } else {
+      // Quẹt dọc
+      if (yDiff > 0) {
+        // Vuốt lên
+      } else {
+        // Vuốt xuống
+      }
+    }
+    xDown = null;
+    yDown = null;
   }
 });
