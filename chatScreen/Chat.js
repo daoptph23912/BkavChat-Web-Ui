@@ -1,13 +1,12 @@
 import emojis from "../emoji/emoji.mjs";
 import { SENDMESSAGE, baseUrl, INFOUSER, LISTUSER } from "../config/api.mjs";
 //Menu-drop-USERINFO
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async () => {
   try {
     const token = localStorage.getItem("token");
     const FullName = localStorage.getItem("Logger");
     const chatTitle = document.querySelector(".chat-right");
     const avatarImg = document.querySelector(".avatar-img");
-
     if (FullName) {
       chatTitle.textContent = FullName;
     } else {
@@ -20,33 +19,45 @@ document.addEventListener("DOMContentLoaded", async function () {
     avatarImg.style.marginRight = "10px";
     avatarImg.style.objectFit = "cover";
     avatarImg.style.overflow = "hidden";
-
     chatTitle.style.fontSize = "20px";
     chatTitle.style.fontWeight = "bold";
-    if (!token) {
-      throw new Error("Invalid token");
-    }
-    const response = await fetch(INFOUSER, {
+    // const res = await fetch(INFOUSER, {
+    //   method: "GET",
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+    // const result = await res.json();
+    // const userData = result.data;
+    // if (userData.Avatar) {
+    //   avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
+    // }
+    // if (userData.FullName) {
+    //   chatTitle.textContent = userData.FullName;
+    //   localStorage.setItem("Logger", userData.FullName);
+    // }
+    fetch(INFOUSER, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Loi");
+      }
+      return res.json();
+    })
+    .then((res) => {
+      const userData = res.data;
+      if (userData.Avatar) {
+        avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
+      }
+      if (userData.FullName) {
+        chatTitle.textContent = userData.FullName;
+        localStorage.setItem("Logger", userData.FullName);
+      }
     });
-    if (!response.ok) {
-      throw new Error("Invaild");
-    }
-    const result = await response.json();
-    if (result.status !== 1) {
-      throw new Error("không lấy được kết quả  ");
-    }
-    const userData = result.data;
-    if (userData.Avatar) {
-      avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
-    }
-    if (userData.FullName) {
-      chatTitle.textContent = userData.FullName;
-      localStorage.setItem("Logger", userData.FullName);
-    }
   } catch (err) {
     console.log(err);
   }
@@ -66,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 //chức năng tìm kiếm người dùng
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   const searchInput = document.getElementById("searchUser");
   const resultCount = document.getElementById("resultCount");
   // const userList = document.querySelector(".user-chat");
@@ -333,10 +344,10 @@ async function createFriendListItem(friend, token) {
   }
   link.addEventListener("dblclick", function () {
     const popup = document.getElementById("nicknamePopup");
+    popup.style.display = "block";
     const nicknameInput = document.getElementById("nicknameInput");
     const saveNicknameBtn = document.getElementById("saveNicknameBtn");
     nicknameInput.value = link.textContent;
-    popup.style.display = "block";
 
     saveNicknameBtn.onclick = function () {
       const newNickname = nicknameInput.value;
@@ -455,6 +466,7 @@ async function openChatWindow(friend) {
   const sendMessageBtn = document.getElementById("sendMessageBtn");
   const messageInput = document.getElementById("messageInput");
   const avatarWrapper = document.getElementById("avatarWrapperr");
+  
   const requiredElements = [
     { element: recipientName, name: "recipientName" },
     { element: recipientAvatar, name: "recipientAvatar" },
@@ -668,20 +680,25 @@ function displayMessages(messages, friendInfo) {
     let contentHtml = "";
     if (message.Images && message.Images.length > 0) {
       message.Images.forEach((img) => {
-        contentHtml += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-sender" >`;
+        contentHtml += `
+           <a href="${baseUrl}${img.urlImage}" download="${baseUrl}${img.urlImage}">
+        <img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-sender" >
+      </a>
+        `;
       });
     }
-    const zoomImg = document.createElement("div");
-
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
         contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
       });
     }
+
     let contentHtmlReceive = "";
     if (message.Images && message.Images.length > 0) {
       message.Images.forEach((img) => {
-        contentHtmlReceive += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-receiver" >`;
+        contentHtmlReceive += `<a href="${baseUrl}${img.urlImage}" download ="${baseUrl}${img.urlImage}">
+        <img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-receiver">
+        </a>`;
       });
     }
     if (message.Files && message.Files.length > 0) {
@@ -831,7 +848,8 @@ function sendMessageToAPI(friendID, message) {
         let contentHtml = "";
         if (data.data.Images && data.data.Images.length > 0) {
           data.data.Images.forEach((img) => {
-            contentHtml += `<img src="${baseUrl}${img.urlImage}" alt="${img.FileName}"  class="image-sender"  >`;
+            contentHtml += `<a href="${baseUrl}${img.urlImage}"  download = "${baseUrl}${img.urlImage}">
+            <img src="${baseUrl}${img.urlImage}" alt="${img.FileName}"  class="image-sender"></a>`;
           });
         }
         if (data.data.Files && data.data.Files.length > 0) {
@@ -1100,52 +1118,3 @@ document
       this.selectionStart = this.selectionEnd = start + 1;
     }
   });
-document.addEventListener("DOMContentLoaded", () => {
-  const chatContent = document.getElementById("messagesContainer");
-
-  chatContent.addEventListener("touchstart", handleTouchStart, false);
-  chatContent.addEventListener("touchmove", handleTouchMove, false);
-
-  let xDown = null;
-  let yDown = null;
-
-  function getTouches(evt) {
-    return evt.touches || evt.originalEvent.touches;
-  }
-
-  function handleTouchStart(evt) {
-    const firstTouch = getTouches(evt)[0];
-    xDown = firstTouch.clientX;
-    yDown = firstTouch.clientY;
-  }
-
-  function handleTouchMove(evt) {
-    if (!xDown || !yDown) {
-      return;
-    }
-
-    let xUp = evt.touches[0].clientX;
-    let yUp = evt.touches[0].clientY;
-
-    let xDiff = xDown - xUp;
-    let yDiff = yDown - yUp;
-
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-      // Quẹt ngang
-      if (xDiff > 0) {
-        // Vuốt sang trái
-      } else {
-        // Vuốt sang phải
-      }
-    } else {
-      // Quẹt dọc
-      if (yDiff > 0) {
-        // Vuốt lên
-      } else {
-        // Vuốt xuống
-      }
-    }
-    xDown = null;
-    yDown = null;
-  }
-});
