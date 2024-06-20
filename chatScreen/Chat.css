@@ -139,7 +139,7 @@ body.dark-mode {
 }
 
 .input-area button:hover {
-  background-color: #0056b3;
+  background-color: #91bdff;
 }
 .input-area img {
   width: 20px;
@@ -333,9 +333,6 @@ body.dark-mode {
   width: 35px;
   border-radius: 0.25rem;
   font-size: 1.5rem;
-}
-.icon:hover {
-  background-color: rgba(0, 0, 0, 0.1);
 }
 .emoji-list h2:hover {
   background-color: rgba(0, 0, 0, 0.1);
@@ -548,15 +545,27 @@ body.dark-mode {
   max-width: 300px;
   height: auto;
   margin-bottom: -20px;
-  border-radius: 20px 20px 20px 20px;
+  border-radius: 20px 20px 0px 20px;
+}
+.file-display {
+  width: auto;
+  height: 30px;
+  margin-right: 5px;
 }
 .file-sender {
   margin-top: 10px;
   margin-bottom: -20px;
   position: relative;
   display: flex;
-  position: relative;
   padding: 10px;
+  background-color: rgb(176, 177, 179);
+  border-radius: 10px 10px 0px 10px;
+  color: #595050;
+  align-items: center;
+  text-decoration: none;
+}
+.file-sender:hover {
+  background-color: #5f778d;
 }
 .icon-status {
   width: 12px;
@@ -568,7 +577,7 @@ body.dark-mode {
 }
 .content-sender {
   max-width: 700px;
-  color: #000000;
+  color: #2c0f0f;
   border-radius: 10px;
   font-size: 14px;
   line-height: 20px;
@@ -620,7 +629,7 @@ body.dark-mode {
   cursor: pointer;
 }
 .sender-img-cont {
-  background-color: #91bdff;
+  background-color: rgb(176, 177, 179);
   border-radius: 20px 20px 0px 20px;
   margin-bottom: 22px;
   margin-top: 10px;
@@ -637,15 +646,21 @@ body.dark-mode {
   height: auto;
   margin-bottom: -20px;
   position: relative;
-  border-radius: 20px 20px 20px 20px;
+  border-radius: 20px 20px 20px 0px;
 }
 .file-receiver {
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 10px 10px 10px 0px;
   position: relative;
   display: flex;
   margin-bottom: -20px;
   position: relative;
+  text-decoration: none;
+  align-items: center;
+  color: #585454;
+}
+.file-receiver:hover {
+  background-color: #b5a88f;
 }
 .receiver-message {
   justify-content: flex-start;
@@ -697,7 +712,7 @@ body.dark-mode {
   background-color: #b0b1b3;
   padding: 10px;
   border-radius: 10px;
-  color: blue;
+  color: rgb(2, 2, 2);
 }
 .file-preview img {
   display: block;

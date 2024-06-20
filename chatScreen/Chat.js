@@ -689,7 +689,10 @@ function displayMessages(messages, friendInfo) {
     }
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
-        contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >${file.FileName}</a>`;
+        contentHtml += `<a 
+        href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >
+        <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}  
+        </a>`;
       });
     }
 
@@ -703,7 +706,9 @@ function displayMessages(messages, friendInfo) {
     }
     if (message.Files && message.Files.length > 0) {
       message.Files.forEach((file) => {
-        contentHtmlReceive += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-receiver" >${file.FileName}</a>`;
+        contentHtmlReceive += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-receiver" >
+         <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}
+        </a>`;
       });
     }
     if (message.MessageType === 1) {
@@ -854,7 +859,8 @@ function sendMessageToAPI(friendID, message) {
         }
         if (data.data.Files && data.data.Files.length > 0) {
           data.data.Files.forEach((file) => {
-            contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender">${file.FileName}</a>`;
+            contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender">
+            <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}</a>`;
           });
         }
         messageElement.classList.add("sender-message");
