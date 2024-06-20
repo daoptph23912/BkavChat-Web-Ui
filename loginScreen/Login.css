@@ -11,6 +11,7 @@ body {
   font-family: "Roboto", sans-serif;
   width: 200vh;
   z-index: 1;
+  overflow: hidden;
 }
 
 .header > img {

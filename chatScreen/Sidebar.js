@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const isDarkMode = body.classList.contains("dark-mode");
       if (isDarkMode) {
         body.classList.remove("dark-mode");
-        themeIcon.src = "sun.png";
+        themeIcon.src = "";
       } else {
         body.classList.add("dark-mode");
         themeIcon.src = "moon.png";

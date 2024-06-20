@@ -1,4 +1,3 @@
-
 import { SENDMESSAGE, baseUrl, INFOUSER, LISTUSER } from "../config/api.mjs";
 import formatTimestamp from "./script.js";
 import adjustTextareaHeight from "./script.js";
@@ -139,12 +138,14 @@ async function createFriendListItem(friend, token) {
     ? `${baseUrl}/images${friend.Avatar}`
     : `../images/icon-user.png`;
   avatar.style.width = "45px";
+  avatar.style.minWidth = "45px";
+  avatar.style.minHeight = "45px";
   avatar.style.height = "45px";
-  avatar.style.borderRadius = "30px";
+  avatar.style.borderRadius = "50%";
   avatar.style.marginRight = "10px";
   avatar.style.backgroundColor = "#ffffff";
   avatar.style.objectFit = "cover";
-  // avatar.style.overflow="hidden";
+  avatar.style.overflow = "hidden";
   //Avatar
   const avatarWrapper = document.createElement("div");
   avatarWrapper.style.position = "relative";
@@ -220,7 +221,7 @@ async function createFriendListItem(friend, token) {
       ) {
         messageContent.textContent = "";
       } else {
-        messageContent.textContent = lastMessage.Content || "Files";
+        messageContent.textContent = lastMessage.Content || "Đã gửi Files";
       }
       messageTime.textContent = formatTimestamp(lastMessage.CreatedAt);
     } else {
@@ -392,6 +393,8 @@ async function openChatWindow(friend) {
   //Avartar-con
   recipientAvatar.style.width = "40px";
   recipientAvatar.style.height = "40px";
+  recipientAvatar.style.minHeight = "40px";
+  recipientAvatar.style.minWidth = "40px";
   recipientAvatar.style.borderRadius = "25px";
   recipientAvatar.style.marginRight = "10px";
   recipientAvatar.style.backgroundColor = "#FFFFFF";
@@ -491,11 +494,11 @@ function fetchMessages(friendID, friendInfo) {
       } else {
         // displayNoMessages();
       }
+    })
+    .catch((error) => {
+      console.error("Error fetching messages:", error);
+      displayErrorMessage();
     });
-  // .catch((error) => {
-  //   console.error("Error fetching messages:", error);
-  //   displayErrorMessage();
-  // });
 }
 //Hiển thị tin nhắn ra khung chat
 function isSameMinute(time1, time2) {
@@ -508,7 +511,8 @@ function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
   let lastMessageTime = null;
-  // let lastReceiverAvatarShown = false;
+  let lastReceiverAvatarShown = false;
+
   if (!messages || !Array.isArray(messages)) {
     console.error("Invalid messages data: ", messages);
     return;
@@ -574,12 +578,18 @@ function displayMessages(messages, friendInfo) {
     messageElement.dataset.index = index;
     const timestamp = new Date(message.CreatedAt);
     let formattedTimestamp = formatTimestamp(timestamp);
-    if (!lastMessageTime || !isSameMinute(timestamp, lastMessageTime)) {
-      formattedTimestamp = formatTimestamp(timestamp);
-      lastMessageTime = timestamp;
-    } else {
-      formattedTimestamp = "";
-    }
+    // let showAvatar = false;
+    // let hideStatusTime = false;
+
+    // if (!lastMessageTime || !isSameMinute(timestamp, lastMessageTime)) {
+    //   formattedTimestamp = formatTimestamp(timestamp);
+    //   lastMessageTime = timestamp;
+    //   lastReceiverAvatarShown = false;
+    // } else {
+    //   formattedTimestamp = "";
+    //   showAvatar = lastReceiverAvatarShown;
+    //   hideStatusTime = true;
+    // }
     let statusIcon = "";
     if (message.isSend === 0) {
       statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
@@ -600,11 +610,9 @@ function displayMessages(messages, friendInfo) {
       message.Files.forEach((file) => {
         contentHtml += `<a 
         href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender" >
-        <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}  
-        </a>`;
+        <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}</a>`;
       });
     }
-
     let contentHtmlReceive = "";
     if (message.Images && message.Images.length > 0) {
       message.Images.forEach((img) => {
@@ -628,7 +636,8 @@ function displayMessages(messages, friendInfo) {
             ${contentHtml}
             <p class="content-msg-sender" >${message.Content || ""}</p>
             </div>
-            <div class="status-time">${statusIcon}
+            <div class="status-time">
+            ${statusIcon}
             <span class="timestamp-sender">${formattedTimestamp}</span>
             </div>
             <div class="icon-container">
@@ -641,16 +650,14 @@ function displayMessages(messages, friendInfo) {
       const avatarUrl = friendInfo.Avatar
         ? `${baseUrl}/images${friendInfo.Avatar}`
         : `../images/icon-user.png`;
-      // if (message.MessageType === 0) {
-      //   const avatarUrl = friendInfo.Avatar
-      //     ? `${baseUrl}/images${friendInfo.Avatar}`
-      //     : `../images/icon-user.png`;
-      //   const avatarHtml = !lastReceiverAvatarShown
-      //     ? `<img src="${avatarUrl}" class="avatar">`
-      //     : "";
+      // const avatarUrl = friendInfo.Avatar
+      //   ? `${baseUrl}/images${friendInfo.Avatar}`
+      //   : `../images/icon-user.png`;
+      // let avatarHtml = "";
+      // if (!showAvatar && !lastReceiverAvatarShown) {
+      //   avatarHtml = `<img src="${avatarUrl}" class="avatar">`;
       //   lastReceiverAvatarShown = true;
-      //   messageElement.classList.add("receiver-message");
-      //   messageElement.classList.add("receiver-message");
+      // }
       messageElement.innerHTML = `
              <img src="${avatarUrl}" class="avatar">
               <div class="content-receiver">
@@ -666,12 +673,16 @@ function displayMessages(messages, friendInfo) {
             </div>
           `;
     }
-    if (
-      lastMessageTime &&
-      isSameMinute(new Date(message.CreatedAt), lastMessageTime)
-    ) {
+
+    if (formattedTimestamp === "") {
       messageElement.classList.add("same-minute");
     }
+    // if (
+    //   lastMessageTime &&
+    //   isSameMinute(new Date(message.CreatedAt), lastMessageTime)
+    // ) {
+    //   messageElement.classList.add("same-minute");
+    // }
     var popupDell = document.querySelector(".deleteMessageButton");
     popupDell.addEventListener("click", function () {
       const popup = document.getElementById("popupDel");
