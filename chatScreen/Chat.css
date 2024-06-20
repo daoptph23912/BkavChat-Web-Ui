@@ -15,6 +15,9 @@ body.light-mode {
   color: #000000;
 }
 
+/* .same-minute {
+  margin-top: 110px; 
+} */
 body.dark-mode {
   background-color: #111111;
   color: #ffffff;
@@ -379,7 +382,7 @@ body.dark-mode {
   height: 36px;
   border-radius: 50%;
   background-color: rgb(255, 255, 255);
-  margin-top: 15px;
+  margin-top: 10px;
   object-fit: cover;
   overflow: hidden;
   margin-right: 5px;
@@ -576,7 +579,8 @@ body.dark-mode {
   justify-content: flex-end;
 }
 .content-sender {
-  max-width: 700px;
+  max-width: 550px;
+  min-width: 100px;
   color: #2c0f0f;
   border-radius: 10px;
   font-size: 14px;
@@ -594,7 +598,7 @@ body.dark-mode {
   padding-bottom: 8px;
   padding-right: 12px;
   padding-left: 12px;
-  border-radius: 20px;
+  border-radius: 20px;  
   text-align: left;
   white-space: pre-wrap;
 }
@@ -673,7 +677,9 @@ body.dark-mode {
   align-items: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  max-width: 700px;
+  max-width: 550px;
+  min-width: 100px;
+  margin-top: -7px;
 }
 .content-msg-receiver {
   padding-top: 8px;

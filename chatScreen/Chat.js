@@ -1,102 +1,9 @@
-import emojis from "../emoji/emoji.mjs";
+
 import { SENDMESSAGE, baseUrl, INFOUSER, LISTUSER } from "../config/api.mjs";
-//Menu-drop-USERINFO
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const token = localStorage.getItem("token");
-    const FullName = localStorage.getItem("Logger");
-    const chatTitle = document.querySelector(".chat-right");
-    const avatarImg = document.querySelector(".avatar-img");
-    if (FullName) {
-      chatTitle.textContent = FullName;
-    } else {
-      chatTitle.textContent = "Undefined";
-    }
-    avatarImg.src = "../images/icon-user.png";
-    avatarImg.style.width = "36px";
-    avatarImg.style.height = "36px";
-    avatarImg.style.borderRadius = "50%";
-    avatarImg.style.marginRight = "10px";
-    avatarImg.style.objectFit = "cover";
-    avatarImg.style.overflow = "hidden";
-    chatTitle.style.fontSize = "20px";
-    chatTitle.style.fontWeight = "bold";
-    // const res = await fetch(INFOUSER, {
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // });
-    // const result = await res.json();
-    // const userData = result.data;
-    // if (userData.Avatar) {
-    //   avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
-    // }
-    // if (userData.FullName) {
-    //   chatTitle.textContent = userData.FullName;
-    //   localStorage.setItem("Logger", userData.FullName);
-    // }
-    fetch(INFOUSER, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("Loi");
-      }
-      return res.json();
-    })
-    .then((res) => {
-      const userData = res.data;
-      if (userData.Avatar) {
-        avatarImg.src = `${baseUrl}/images${userData.Avatar}`;
-      }
-      if (userData.FullName) {
-        chatTitle.textContent = userData.FullName;
-        localStorage.setItem("Logger", userData.FullName);
-      }
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
-//Chức năng menu
-document.addEventListener("DOMContentLoaded", function () {
-  var dropdownMenu = document.getElementById("dropdownMenu");
-  var dropdownContent = document.getElementById("dropdownContent");
-  dropdownMenu.addEventListener("click", function () {
-    dropdownContent.style.display =
-      dropdownContent.style.display === "block" ? "none" : "block";
-  });
-  document.addEventListener("click", function (event) {
-    if (!dropdownMenu.contains(event.target)) {
-      dropdownContent.style.display = "none";
-    }
-  });
-});
-//chức năng tìm kiếm người dùng
-document.addEventListener("DOMContentLoaded", async function () {
-  const searchInput = document.getElementById("searchUser");
-  const resultCount = document.getElementById("resultCount");
-  // const userList = document.querySelector(".user-chat");
-  searchInput.addEventListener("input", function () {
-    const searchTerm = searchInput.value.toLowerCase();
-    const users = document.querySelectorAll(".user-chat li");
-    let count = 0;
-    users.forEach(function (user) {
-      const userName = user.textContent.toLowerCase();
-      if (userName.includes(searchTerm)) {
-        user.style.display = "flex";
-        count++;
-      } else {
-        user.style.display = "none";
-      }
-    });
-    resultCount.textContent = `${count} results`;
-  });
-});
+import formatTimestamp from "./script.js";
+import adjustTextareaHeight from "./script.js";
+import displayNoMessages from "./script.js";
+import displayErrorMessage from "./script.js";
 //Đăng xuất
 document.addEventListener("DOMContentLoaded", function () {
   const logoutLink = document.querySelector("#logout");
@@ -106,23 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.history.pushState({}, "", "../loginScreen/Login.html");
     window.location.replace("../loginScreen/Login.html");
   });
-});
-//Chức năng sáng tối
-document.addEventListener("DOMContentLoaded", function () {
-  const themeToggle = document.querySelector(".theme-toggle");
-  themeToggle.addEventListener("click", toggleTheme);
-  function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.getElementById("theme-icon");
-    const isDarkMode = body.classList.contains("dark-mode");
-    if (isDarkMode) {
-      body.classList.remove("dark-mode");
-      themeIcon.src = "sun.png";
-    } else {
-      body.classList.add("dark-mode");
-      themeIcon.src = "moon.png";
-    }
-  }
 });
 //Gọi đến hàm fetchAndDisplayUsers
 document.addEventListener("DOMContentLoaded", async function () {
@@ -466,7 +356,7 @@ async function openChatWindow(friend) {
   const sendMessageBtn = document.getElementById("sendMessageBtn");
   const messageInput = document.getElementById("messageInput");
   const avatarWrapper = document.getElementById("avatarWrapperr");
-  
+
   const requiredElements = [
     { element: recipientName, name: "recipientName" },
     { element: recipientAvatar, name: "recipientAvatar" },
@@ -487,7 +377,7 @@ async function openChatWindow(friend) {
     return;
   }
   const nickname = getNickname(friend.FriendID);
-  const displayName = nickname || friend.FullName || "[ ]";
+  const displayName = nickname || friend.FullName || "Hello";
   if (friend.Avatar) {
     recipientAvatar.src = `${baseUrl}/images${friend.Avatar}`;
   } else {
@@ -537,8 +427,13 @@ async function openChatWindow(friend) {
       if (parsedMessages && Array.isArray(parsedMessages)) {
         displayMessages(parsedMessages, friend);
       } else {
-        console.log("Khong co tin nhan ");
-        // Xử lý trường hợp không có tin nhắn hoặc không phải mảng
+        const mes = document.getElementById("messagesContainer");
+        const noMsg = document.createElement("div");
+        noMsg.innerHTML = `<div style="display: block;" id="send-no-messsage" class="no-msg">
+            <img class="img-no-msg" src="../images/no-msh.png">
+            <h3>Chưa có tin nhắn ....</h3>
+          </div>`;
+        mes.appendChild(noMsg);
       }
       attachSendMessageEvents(friend.FriendID);
       console.log("Đang click vào id này :" + friend.FriendID);
@@ -594,47 +489,55 @@ function fetchMessages(friendID, friendInfo) {
           }
         }
       } else {
-        displayNoMessages();
+        // displayNoMessages();
       }
-    })
-    .catch((error) => {
-      console.error("Error fetching messages:", error);
-      displayErrorMessage();
     });
+  // .catch((error) => {
+  //   console.error("Error fetching messages:", error);
+  //   displayErrorMessage();
+  // });
 }
 //Hiển thị tin nhắn ra khung chat
+function isSameMinute(time1, time2) {
+  return (
+    time1.getHours() === time2.getHours() &&
+    time1.getMinutes() === time2.getMinutes()
+  );
+}
 function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
+  let lastMessageTime = null;
+  // let lastReceiverAvatarShown = false;
   if (!messages || !Array.isArray(messages)) {
     console.error("Invalid messages data: ", messages);
     return;
   }
   if (!document.getElementById("iconPopupMenu")) {
     const iconPopupHTML = `
-        <div id="iconPopupMenu" class="popup-menu">
-          <div class="icon-row">
-            <img src="../images/icon-love.png" alt="Love">
-            <img src="../images/icon-like.png" alt="Like">
-            <img src="../images/icon-dislike.png" alt="Dislike">
-            <img src="../images/icon-funny.png" alt="Funny">
+    <div id="iconPopupMenu" class="popup-menu">
+    <div class="icon-row">
+    <img src="../images/icon-love.png" alt="Love">
+    <img src="../images/icon-like.png" alt="Like">
+    <img src="../images/icon-dislike.png" alt="Dislike">
+    <img src="../images/icon-funny.png" alt="Funny">
             <img src="../images/iconwow.png" alt="Wow">
             <img style="width:20px;height:20px;position:relative;alignItems:center;justify-content:center;margin-top:4px" src="../images/sad.png" alt="Sad">
-          </div>
-        </div>
-      `;
+            </div>
+            </div>
+            `;
     document.body.insertAdjacentHTML("beforeend", iconPopupHTML);
   }
   if (!document.getElementById("actionPopupMenu")) {
     const actionPopupHTML = `
-        <div id="actionPopupMenu" class="popup-menu">
-        <div class="style-popup-send">  
-        <img src="../images/icon-popup-send.png" alt="Love"> 
-        <button id="editMessage">Chỉnh sửa</button>
-        </div>
-        <div class="style-popup-send">  
-        <img src="../images/icon-popup-send2.png" alt="Love"> 
-        <button id="replyMessage">Trả lời</button>
+            <div id="actionPopupMenu" class="popup-menu">
+            <div class="style-popup-send">  
+            <img src="../images/icon-popup-send.png" alt="Love"> 
+            <button id="editMessage">Chỉnh sửa</button>
+            </div>
+            <div class="style-popup-send">  
+            <img src="../images/icon-popup-send2.png" alt="Love"> 
+            <button id="replyMessage">Trả lời</button>
         </div>
         <div class="style-popup-send">  
         <img src="../images/icon-popup-send3.png" alt="Love"> 
@@ -645,13 +548,13 @@ function displayMessages(messages, friendInfo) {
         <button class="deleteMessageButton" >Xóa tin nhắn</button>
         </div>
         </div>
-      `;
+        `;
     document.body.insertAdjacentHTML("beforeend", actionPopupHTML);
   }
   messages.forEach((message, index) => {
     const messageElement = document.createElement("div");
     const imgBtnDown = document.querySelector(".btn-down");
-    imgBtnDown.innerHTML = ` <img src="../images/luotxuong.png" style="width: 50px;
+    imgBtnDown.innerHTML = ` <img src="../images/luotxuong.png" style="width: 50px;display: block;
              height: 50px;" alt="">`;
     document.body.appendChild(imgBtnDown);
     messagesContainer.addEventListener("scroll", () => {
@@ -670,7 +573,13 @@ function displayMessages(messages, friendInfo) {
     messageElement.classList.add("message");
     messageElement.dataset.index = index;
     const timestamp = new Date(message.CreatedAt);
-    const formattedTimestamp = formatTimestamp(timestamp);
+    let formattedTimestamp = formatTimestamp(timestamp);
+    if (!lastMessageTime || !isSameMinute(timestamp, lastMessageTime)) {
+      formattedTimestamp = formatTimestamp(timestamp);
+      lastMessageTime = timestamp;
+    } else {
+      formattedTimestamp = "";
+    }
     let statusIcon = "";
     if (message.isSend === 0) {
       statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
@@ -719,7 +628,7 @@ function displayMessages(messages, friendInfo) {
             ${contentHtml}
             <p class="content-msg-sender" >${message.Content || ""}</p>
             </div>
-            <div class="status-time"> ${statusIcon}
+            <div class="status-time">${statusIcon}
             <span class="timestamp-sender">${formattedTimestamp}</span>
             </div>
             <div class="icon-container">
@@ -732,10 +641,19 @@ function displayMessages(messages, friendInfo) {
       const avatarUrl = friendInfo.Avatar
         ? `${baseUrl}/images${friendInfo.Avatar}`
         : `../images/icon-user.png`;
-      messageElement.classList.add("receiver-message");
+      // if (message.MessageType === 0) {
+      //   const avatarUrl = friendInfo.Avatar
+      //     ? `${baseUrl}/images${friendInfo.Avatar}`
+      //     : `../images/icon-user.png`;
+      //   const avatarHtml = !lastReceiverAvatarShown
+      //     ? `<img src="${avatarUrl}" class="avatar">`
+      //     : "";
+      //   lastReceiverAvatarShown = true;
+      //   messageElement.classList.add("receiver-message");
+      //   messageElement.classList.add("receiver-message");
       messageElement.innerHTML = `
-      <img src="${avatarUrl}" class="avatar">
-            <div class="content-receiver">
+             <img src="${avatarUrl}" class="avatar">
+              <div class="content-receiver">
               <div class="sender-img-cont-rc">
             ${contentHtmlReceive}
               <p class="content-msg-receiver">${message.Content || ""}</p>
@@ -747,6 +665,12 @@ function displayMessages(messages, friendInfo) {
               </div>
             </div>
           `;
+    }
+    if (
+      lastMessageTime &&
+      isSameMinute(new Date(message.CreatedAt), lastMessageTime)
+    ) {
+      messageElement.classList.add("same-minute");
     }
     var popupDell = document.querySelector(".deleteMessageButton");
     popupDell.addEventListener("click", function () {
@@ -975,152 +899,3 @@ document.addEventListener("click", (event) => {
     }
   }
 });
-function displayNoMessages() {
-  if (!noMessagesDisplayed) {
-    const messagesContainer = document.getElementById("messagesContainer");
-    const noMessagesElement = document.createElement("p");
-    messagesContainer.appendChild(noMessagesElement);
-    noMessagesDisplayed = true;
-  }
-}
-function displayErrorMessage() {
-  if (!errorMessageDisplayed) {
-    const messagesContainer = document.getElementById("messagesContainer");
-    const errorElement = document.createElement("p");
-    errorElement.textContent =
-      "Đã mất kết nối mạng , vui lòng kiểm tra lại kết nối";
-    errorElement.style.textAlign = "center";
-    messagesContainer.appendChild(errorElement);
-    errorMessageDisplayed = true;
-  }
-}
-//Picker emoji
-document.addEventListener("DOMContentLoaded", function () {
-  const emojiSelectorIcon = document.getElementById("emojiSelectorIcon");
-  const emojiSelector = document.getElementById("emojiSelector");
-  const emojiList = document.getElementById("emojiList");
-  const emojiSearch = document.getElementById("emojiSearch");
-  const messageInput = document.getElementById("messageInput");
-
-  emojiSelectorIcon.addEventListener("click", (e) => {
-    emojiSelector.classList.toggle("active");
-    e.stopPropagation();
-  });
-  function loadEmoji(emojiArray) {
-    emojiArray.forEach((emoji) => {
-      let li = document.createElement("h2");
-      li.setAttribute("emoji-name", emoji);
-      li.textContent = emoji;
-      li.addEventListener("click", () => {
-        messageInput.value += emoji;
-      });
-      emojiList.appendChild(li);
-    });
-  }
-  loadEmoji(emojis);
-  emojiSearch.addEventListener("keyup", (e) => {
-    let value = e.target.value.toLowerCase();
-    let emojis = document.querySelectorAll("#emojiList h2");
-    emojis.forEach((emoji) => {
-      if (emoji.getAttribute("emoji-name").toLowerCase().includes(value)) {
-        emoji.style.display = "flex";
-      } else {
-        emoji.style.display = "none";
-      }
-    });
-  });
-  document.addEventListener("click", (e) => {
-    if (
-      !emojiSelector.contains(e.target) &&
-      !emojiSelectorIcon.contains(e.target)
-    ) {
-      emojiSelector.classList.remove("active");
-    }
-  });
-});
-//Pick-file-images
-const fileInputTrigger = document.getElementById("fileInputTrigger");
-const fileInput = document.getElementById("fileInput");
-const filePreviewContainer = document.getElementById("filePreviewContainer");
-let selectedFiles = [];
-fileInputTrigger.addEventListener("click", () => {
-  fileInput.click();
-});
-fileInput.addEventListener("change", (e) => {
-  const files = Array.from(e.target.files);
-  selectedFiles = [...files];
-  updateFilePreview();
-});
-function updateFilePreview() {
-  filePreviewContainer.innerHTML = "";
-  selectedFiles.forEach((file, index) => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const previewElement = document.createElement("div");
-      previewElement.classList.add("file-preview");
-      const closeButton = document.createElement("button");
-      closeButton.textContent = "x";
-      closeButton.classList.add("close-button");
-      closeButton.addEventListener("click", () => {
-        selectedFiles.splice(index, 1);
-        updateFilePreview();
-      });
-      if (file.type.startsWith("image/")) {
-        const image = document.createElement("img");
-        image.src = event.target.result;
-        previewElement.appendChild(image);
-      } else {
-        const fileName = document.createElement("p");
-        fileName.textContent = file.name;
-        previewElement.appendChild(fileName);
-      }
-      previewElement.appendChild(closeButton);
-      filePreviewContainer.appendChild(previewElement);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-//Thời gian hiển thị
-function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const isToday =
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear();
-  if (isToday) {
-    return date.toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour24: true,
-    });
-  } else {
-    return `${date.toLocaleDateString("vi-VN")}  - ${date.toLocaleTimeString(
-      "vi-VN",
-      {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour24: true,
-      }
-    )}`;
-  }
-}
-//Chức năng căn đều chiều ngang khi nhắn tin nhắn
-function adjustTextareaHeight() {
-  messageInput.style.height = "auto";
-  messageInput.style.height = `${Math.min(messageInput.scrollHeight, 700)}px`;
-}
-messageInput.addEventListener("input", adjustTextareaHeight);
-//Chức năng ấn CTRL+Enter là xuống dòng
-document
-  .getElementById("messageInput")
-  .addEventListener("keydown", function (event) {
-    if (event.shiftKey && event.key === "Enter") {
-      event.preventDefault();
-      const start = this.selectionStart;
-      const end = this.selectionEnd;
-      const value = this.value;
-      this.value = value.substring(0, start) + "\n" + value.substring(end);
-      this.selectionStart = this.selectionEnd = start + 1;
-    }
-  });
