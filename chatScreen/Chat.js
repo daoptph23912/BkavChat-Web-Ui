@@ -74,7 +74,7 @@ async function fetchAndDisplayUsers() {
             inputArea.style.display = "flex";
             openChatWindow(friend);
           } catch (error) {
-            console.error("Lỗi khi tải dữ liệu:", error);
+            console.error("Lỗi ", error);
           }
         });
       }
@@ -84,7 +84,7 @@ async function fetchAndDisplayUsers() {
       userChatList.appendChild(noUserMessage);
     }
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Lỗi", error);
     const friendsWithLastMessage = loadFriendsWithLastMessage();
     if (friendsWithLastMessage.length > 0) {
       displayUsers(friendsWithLastMessage);
@@ -136,7 +136,7 @@ async function createFriendListItem(friend, token) {
   const avatar = document.createElement("img");
   avatar.src = friend.Avatar
     ? `${baseUrl}/images${friend.Avatar}`
-    : `../images/icon-user.png`;
+    : `../images/user_face.png`;
   avatar.style.width = "45px";
   avatar.style.minWidth = "45px";
   avatar.style.minHeight = "45px";
@@ -201,7 +201,7 @@ async function createFriendListItem(friend, token) {
   statusDot.style.right = "5px";
   statusDot.style.backgroundColor = friend.isOnline ? "green" : "red";
   avatar.onerror = function () {
-    avatar.src = "../images/icon-user.png";
+    avatar.src = "../images/user_face.png";
   };
   avatarWrapper.appendChild(avatar);
   avatarWrapper.appendChild(statusDot);
@@ -229,7 +229,7 @@ async function createFriendListItem(friend, token) {
       messageTime.textContent = " ";
     }
   } catch (error) {
-    console.error("Error fetching last message for friend:", error);
+    console.error("Lỗi", error);
     messageContent.textContent = "Error";
     messageTime.textContent = "Error";
   }
@@ -382,7 +382,7 @@ async function openChatWindow(friend) {
   if (friend.Avatar) {
     recipientAvatar.src = `${baseUrl}/images${friend.Avatar}`;
   } else {
-    recipientAvatar.src = `../images/icon-user.png`;
+    recipientAvatar.src = `../images/user_face.png`;
   }
   //Avartar-lon
   avatarWrapper.style.position = "relative";
@@ -441,7 +441,7 @@ async function openChatWindow(friend) {
       attachSendMessageEvents(friend.FriendID);
       console.log("Đang click vào id này :" + friend.FriendID);
     } catch (error) {
-      console.error("Lỗi khi xử lý tin nhắn từ cache:", error);
+      console.error("Lỗi ", error);
     }
   }
   // Gọi hàm fetchMessages ngay lập tức
@@ -496,7 +496,7 @@ function fetchMessages(friendID, friendInfo) {
       }
     })
     .catch((error) => {
-      console.error("Error fetching messages:", error);
+      console.error("Không lấy được tin nhắn", error);
       displayErrorMessage();
     });
 }
@@ -514,7 +514,7 @@ function displayMessages(messages, friendInfo) {
   let lastReceiverAvatarShown = false;
 
   if (!messages || !Array.isArray(messages)) {
-    console.error("Invalid messages data: ", messages);
+    console.error("Lỗi", messages);
     return;
   }
   if (!document.getElementById("iconPopupMenu")) {
@@ -649,7 +649,7 @@ function displayMessages(messages, friendInfo) {
     } else {
       const avatarUrl = friendInfo.Avatar
         ? `${baseUrl}/images${friendInfo.Avatar}`
-        : `../images/icon-user.png`;
+        : `../images/user_face.png`;
       // const avatarUrl = friendInfo.Avatar
       //   ? `${baseUrl}/images${friendInfo.Avatar}`
       //   : `../images/icon-user.png`;
@@ -826,12 +826,11 @@ function sendMessageToAPI(friendID, message) {
           sendNoMsg.style.display = "none";
         }
       } else {
-        alert("Đã xảy ra lỗi khi gửi tin nhắn.");
+        console.log("lỗi");
       }
     })
     .catch((error) => {
       console.error("Error:", error);
-      alert("Đã xảy ra lỗi khi gửi tin nhắn.");
     });
 }
 //Chức năng hiển thị popupmenu
@@ -857,7 +856,7 @@ let currentVisiblePopup = null;
 function toggleIconPopupMenu(target, index) {
   const popupMenu = document.getElementById("iconPopupMenu");
   if (!popupMenu) {
-    console.error("Không tìm thấy nội dung .");
+    console.error("Lỗi");
     return;
   }
   const rect = target.getBoundingClientRect();
@@ -875,7 +874,7 @@ function toggleIconPopupMenu(target, index) {
 function toggleActionPopupMenu(target, index) {
   const popupMenu = document.getElementById("actionPopupMenu");
   if (!popupMenu) {
-    console.error("Không tìm thấy nội dung .");
+    console.error("Lỗi");
     return;
   }
   const rect = target.getBoundingClientRect();

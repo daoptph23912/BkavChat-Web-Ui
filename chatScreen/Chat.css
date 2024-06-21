@@ -639,8 +639,11 @@ body.dark-mode {
   margin-bottom: 22px;
   margin-top: 10px;
 }
+.file-receiver:hover {
+  background-color: #6faeed;
+}
 .sender-img-cont-rc {
-  background-color: #f4cc9f;
+  background-color: #6faeed;
   border-radius: 20px 20px 20px 0px;
   margin-bottom: 30px;
   margin-top: 10px;
@@ -664,9 +667,7 @@ body.dark-mode {
   align-items: center;
   color: #585454;
 }
-.file-receiver:hover {
-  background-color: #b5a88f;
-}
+
 .receiver-message {
   justify-content: flex-start;
 }
