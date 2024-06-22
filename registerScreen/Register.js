@@ -32,7 +32,7 @@ function togglePassword(inputField) {
 
 //Chức năng đăng ký tài khoản
 const errorConfirmPw = document.getElementById("error-confirmPw");
-const errorUser = document.getElementById("error-User");
+const errorUser = document.getElementById("errorUser");
 document.addEventListener("DOMContentLoaded", async function () {
   const form = document.querySelector("form");
   form.addEventListener("submit", async function (event) {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const Password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
     if (Password !== confirmPassword) {
-      const errorConfirmPw = document.getElementById("error-confirmPw");
+      const errorConfirmPw = document.getElementById("errorConfirm");
       errorConfirmPw.textContent = "Mật khẩu không trùng khớp ";
       return;
     }
@@ -60,28 +60,25 @@ document.addEventListener("DOMContentLoaded", async function () {
         body: JSON.stringify(userData),
       });
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        // throw new Error("Network response was not ok");
       }
       const data = await response.json();
       if (data.status === 1) {
-        localStorage.getItem('token',data.data.token);
-        localStorage.getItem('FullName',data.data.FullName);
-        localStorage.getItem('Username',data.data.Username);
-        const registerSuccessMessage = document.getElementById(
-          "register-success-message"
-        );
+        localStorage.getItem("token", data.data.token);
+        localStorage.getItem("FullName", data.data.FullName);
+        localStorage.getItem("Username", data.data.Username);
+        const registerSuccessMessage = document.getElementById("registerMsg");
         registerSuccessMessage.style.display = "block";
         setTimeout(function () {
           registerSuccessMessage.style.display = "none";
           window.location.href = "/loginScreen/Login.html";
         }, 1000);
       } else {
-        alert("Đăng ký không thành công: " + data.message);
+        errorUser.textContent = "Tài khoản bị trùng vui lòng nhập lại ";
       }
     } catch (err) {
       console.error("Fetch error:", err);
-      errorUser.textContent = "Tài khoản bị trùng vui lòng nhập lại ";
-      // alert("Vui lòng nhập lại tài khoản , tài khoản đã bị trùng.");
+      alert("Server đã bị lỗi ");
     }
   });
 });

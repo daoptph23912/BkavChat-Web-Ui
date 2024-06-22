@@ -21,8 +21,8 @@ function clearErrorMessages() {
 }
 
 //Chức năng đăng nhập
-const errorEmail = document.getElementById("error-email");
-const errorPassword = document.getElementById("error-password");
+const errorEmail = document.getElementById("errorEmail");
+const errorPassword = document.getElementById("errorPassword");
 document.addEventListener("DOMContentLoaded", async function () {
   const form = document.querySelector("form");
   form.addEventListener("submit", async function (event) {
@@ -44,28 +44,27 @@ document.addEventListener("DOMContentLoaded", async function () {
         body: JSON.stringify(userData),
       });
       if (!response.ok) {
-        throw new Error("Máy chủ không phản hồi ");
+        // throw new Error("Máy chủ không phản hồi ");
       }
       const data = await response.json();
       if (data.status === 1) {
         localStorage.setItem("Logger", data.data.FullName);
         localStorage.setItem("Username", data.data.Username);
         localStorage.setItem("token", data.data.token);
-        const loginSuccessMessage = document.getElementById(
-          "login-success-message"
-        );
+        const loginSuccessMessage = document.getElementById("loginMsg");
         loginSuccessMessage.style.display = "block";
         setTimeout(function () {
           loginSuccessMessage.style.display = "none";
           window.location.href = "/chatScreen/Chat.html";
         }, 500);
       } else {
-        alert("Đăng nhập không thành công: " + data.message);
+        // alert("Đăng nhập không thành công: " + data.message);
+        errorEmail.textContent = "Tên người dùng hoặc mật khẩu không đúng";
       }
     } catch (err) {
       console.error("Fetch error:", err);
-      errorEmail.textContent = "Tên người dùng hoặc mật khẩu không đúng";
-      // alert("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+      // errorEmail.textContent = "Tên người dùng hoặc mật khẩu không đúng";
+      alert("Server đã bị lỗi ");
     }
   });
 });

@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (image && image.size < 2000000) {
       const reader = new FileReader();
       reader.onload = () => {
-        imgArea.innerHTML = ""; // Clear previous content
+        imgArea.innerHTML = "";
         const imgUrl = reader.result;
         const img = document.createElement("img");
         img.src = imgUrl;
