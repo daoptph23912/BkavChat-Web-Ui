@@ -8,20 +8,20 @@ function formatTimestamp(timestamp) {
     date.getDate() === now.getDate() &&
     date.getMonth() === now.getMonth() &&
     date.getFullYear() === now.getFullYear();
+
+  const options = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+  function formatAMPM(timeString) {
+    return timeString.replace("SA", "AM").replace("CH", "PM");
+  }
   if (isToday) {
-    return date.toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour24: true,
-    });
+    return formatAMPM(date.toLocaleTimeString("en-US", options));
   } else {
-    return `${date.toLocaleDateString("vi-VN")}-${date.toLocaleTimeString(
-      "vi-VN",
-      {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour24: true,
-      }
+    return `${date.toLocaleDateString("vi-VN")}-${formatAMPM(
+      date.toLocaleTimeString("en-US", options)
     )}`;
   }
 }
