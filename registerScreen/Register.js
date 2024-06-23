@@ -31,7 +31,7 @@ function togglePassword(inputField) {
 }
 
 //Chức năng đăng ký tài khoản
-const errorConfirmPw = document.getElementById("error-confirmPw");
+const errorConfirmPw = document.getElementById("errorConfirmPw");
 const errorUser = document.getElementById("errorUser");
 document.addEventListener("DOMContentLoaded", async function () {
   const form = document.querySelector("form");

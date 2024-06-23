@@ -37,7 +37,7 @@ body {
   display: flex;
   gap: 15px;
 }
-#choose-language {
+#chooseLanguage {
   height: 100%;
   border: 0;
   background-color: transparent;
@@ -48,7 +48,7 @@ body {
   letter-spacing: 6%;
 }
 
-#choose-language:focus {
+#chooseLanguage:focus {
   outline: none;
 }
 .choose-page {

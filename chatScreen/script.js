@@ -149,7 +149,13 @@ function updateFilePreview() {
     reader.readAsDataURL(file);
   });
 }
-
+//Hiển thị tin nhắn cùng thời điểm
+function isSameMinute(time1, time2) {
+  return (
+    time1.getHours() === time2.getHours() &&
+    time1.getMinutes() === time2.getMinutes()
+  );
+}
 export default formatTimestamp;
 adjustTextareaHeight;
 displayNoMessages;

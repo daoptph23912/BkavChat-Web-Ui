@@ -130,7 +130,7 @@ function closeEditModal() {
 }
 function toggleTheme() {
   const body = document.body;
-  const themeIcon = document.getElementById("theme-icon");
+  const themeIcon = document.getElementById("themIcon");
   const isDarkMode = body.classList.contains("dark-mode");
   if (isDarkMode) {
     body.classList.remove("dark-mode");

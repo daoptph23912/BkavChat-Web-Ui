@@ -110,7 +110,7 @@ body {
   gap: 15px;
 }
 
-#choose-language {
+#chooseLanguages {
   height: 100%;
   border: 0;
   background-color: transparent;
@@ -121,7 +121,7 @@ body {
   letter-spacing: 6%;
 }
 
-#choose-language:focus {
+#chooseLanguages:focus {
   outline: none;
 }
 

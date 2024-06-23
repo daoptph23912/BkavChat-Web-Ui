@@ -14,9 +14,6 @@ body.light-mode {
   background-color: #ffffff;
   color: #000000;
 }
-.hidden {
-  display: none;  
-}
 body.dark-mode {
   background-color: #6faeed;
   color: #000000;
@@ -38,7 +35,7 @@ body.dark-mode {
   height: 90%;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 #messagesContainer::-webkit-scrollbar {
   width: 0.4em;
@@ -599,7 +596,7 @@ body.dark-mode {
   padding-bottom: 8px;
   padding-right: 12px;
   padding-left: 12px;
-  border-radius: 20px;  
+  border-radius: 20px;
   text-align: left;
   white-space: pre-wrap;
 }
@@ -676,7 +673,7 @@ body.dark-mode {
   font-size: 14px;
   line-height: 20px;
   position: relative;
-  align-items: center;  
+  align-items: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 550px;
@@ -745,4 +742,7 @@ body.dark-mode {
   position: absolute;
   bottom: 60px;
   left: 380px;
+}
+.hidden {
+  display: none;
 }
