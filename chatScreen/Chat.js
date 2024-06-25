@@ -450,7 +450,7 @@ async function openChatWindow(friend) {
   //set thời gian load lại hàm lấy tin nhắn
   setInterval(() => {
     fetchMessages(friend.FriendID, friend);
-  }, 2000);
+  }, 3000);
 }
 // Chức năng lấy tất cả cuộc thoại và lấy id của mỗi cuộc hội thoại
 let noMessagesDisplayed = false;
@@ -499,6 +499,7 @@ function fetchMessages(friendID, friendInfo) {
       displayErrorMessage();
     });
 }
+
 const baseUrlS = "http://localhost:8888";
 const socket = io(baseUrlS, { withCredentials: true });
 socket.on("connect", () => {
@@ -509,7 +510,7 @@ socket.on("disconnect", () => {
 });
 socket.on("newMessage", (data) => {
   console.log("New message received:", data);
-  displayMessages(data);
+  displaySingleMessage(data);
 });
 function sendMessageToAPI(friendID, message) {
   const token = localStorage.getItem("token");
@@ -520,15 +521,11 @@ function sendMessageToAPI(friendID, message) {
   }
   formData.append("FriendID", friendID);
   formData.append("Content", message);
-  console.log("Gửi cho id này : " + friendID);
-  if (message.isSend === 0) {
-    statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
-  } else if (message.isSend === 1) {
-    statusIcon = `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
-  }
+
   if (fileInput && fileInput.files.length > 0) {
     formData.append("files", fileInput.files[0]);
   }
+
   fetch(SENDMESSAGE, {
     method: "POST",
     headers: {
@@ -541,49 +538,14 @@ function sendMessageToAPI(friendID, message) {
       if (data.status === 1) {
         const timestamp = new Date(data.data.CreatedAt);
         const formattedTimestamp = formatTimestamp(timestamp);
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("message");
-        let statusIcon = `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`;
-        let contentHtml = "";
-        if (data.data.Images && data.data.Images.length > 0) {
-          data.data.Images.forEach((img) => {
-            contentHtml += `<a href="${baseUrl}${img.urlImage}"  download = "${baseUrl}${img.urlImage}">
-            <img src="${baseUrl}${img.urlImage}" alt="${img.FileName}"  class="image-sender"></a>`;
-          });
-        }
-        if (data.data.Files && data.data.Files.length > 0) {
-          data.data.Files.forEach((file) => {
-            contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender">
-            <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}</a>`;
-          });
-        }
-        messageElement.classList.add("sender-message");
-        messageElement.innerHTML = `
-          <div class="content-sender">
-            <div class="sender-img-cont">
-                ${contentHtml}
-                <p class="content-msg-sender">${message}</p>
-                </div>
-               <div class="status-time">${statusIcon}
-                <span class="timestamp-sender">${formattedTimestamp}</span>
-               </div>
-               <div class="icon-container">
-              <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
-            <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
-          </div>
-          </div>
-            `;
-        document
-          .getElementById("messagesContainer")
-          .appendChild(messageElement);
-        const messagesContainer = document.getElementById("messagesContainer");
-        messagesContainer.appendChild(messageElement);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        adjustTextareaHeight();
-        const sendNoMsg = document.getElementById("send-no-messsage");
-        if (sendNoMsg) {
-          sendNoMsg.style.display = "none";
-        }
+        displaySingleMessage({
+          id: data.data.id,
+          Content: data.data.Content,
+          Files: data.data.Files,
+          Images: data.data.Images,
+          isSend: data.data.isSend,
+          CreatedAt: data.data.CreatedAt,
+        });
       } else {
         console.log("lỗi");
       }
@@ -592,6 +554,59 @@ function sendMessageToAPI(friendID, message) {
       console.error("Error:", error);
     });
 }
+function displaySingleMessage(messageData) {
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("message");
+
+  let statusIcon =
+    messageData.isSend === 0
+      ? `<img src="../images/sentttttttttt.png" class="icon-status" alt="Sent Icon">`
+      : `<img src="../images/sent.png" class="icon-status" alt="Read Icon">`;
+
+  let contentHtml = "";
+  if (messageData.Images && messageData.Images.length > 0) {
+    messageData.Images.forEach((img) => {
+      contentHtml += `<a href="${baseUrl}${img.urlImage}" download="${baseUrl}${img.urlImage}">
+        <img src="${baseUrl}${img.urlImage}" alt="${img.FileName}" class="image-sender"></a>`;
+    });
+  }
+  if (messageData.Files && messageData.Files.length > 0) {
+    messageData.Files.forEach((file) => {
+      contentHtml += `<a href="${baseUrl}${file.urlFile}" download="${file.FileName}" class="file-sender">
+        <img class="file-display" src="../images/file-regular.svg"/>${file.FileName}</a>`;
+    });
+  }
+
+  const formattedTimestamp = formatTimestamp(new Date(messageData.CreatedAt));
+
+  messageElement.classList.add("sender-message");
+  messageElement.innerHTML = `
+    <div class="content-sender">
+      <div class="sender-img-cont">
+        ${contentHtml}
+        <p class="content-msg-sender">${messageData.Content}</p>
+      </div>
+      <div class="status-time">
+        ${statusIcon}
+        <span class="timestamp-sender">${formattedTimestamp}</span>
+      </div>
+      <div class="icon-container">
+        <img class="menu-icon" src="../images/icon-icon.png" alt="Menu Icon">
+        <img class="menu-cham" src="../images/menu-cham.png" alt="Menu Icon">
+      </div>
+    </div>
+  `;
+
+  const messagesContainer = document.getElementById("messagesContainer");
+  messagesContainer.appendChild(messageElement);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  adjustTextareaHeight();
+  const sendNoMsg = document.getElementById("send-no-messsage");
+  if (sendNoMsg) {
+    sendNoMsg.style.display = "none";
+  }
+}
+
 function displayMessages(messages, friendInfo) {
   const messagesContainer = document.getElementById("messagesContainer");
   messagesContainer.innerHTML = "";
